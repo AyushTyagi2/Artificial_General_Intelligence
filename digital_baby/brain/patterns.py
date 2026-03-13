@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, Iterable, List, Set, Tuple
 
 
 @dataclass
@@ -20,8 +20,9 @@ class PatternDiscoverer:
     """Detects recurring relation structures from graph triplets."""
 
     def discover(self, triplets: Iterable[Tuple[str, str, str]], min_support: int = 2) -> List[PatternRule]:
+        triplet_list = list(triplets)
         relation_counts: Dict[str, int] = {}
-        for _subject, relation, _obj in triplets:
+        for _subject, relation, _obj in triplet_list:
             relation_counts[relation] = relation_counts.get(relation, 0) + 1
 
         rules: List[PatternRule] = []
@@ -37,7 +38,41 @@ class PatternDiscoverer:
                     )
                 )
 
+        # Multi-hop generalized structures (e.g., predator-prey food chain).
+        chain_count = self._count_food_chain_motifs(triplet_list)
+        if chain_count >= min_support:
+            rules.append(
+                PatternRule(
+                    relation="food_chain",
+                    count=chain_count,
+                    label="three-step food chain",
+                    template="X hunts Y; Y eats Z; Z grows_in W -> food-chain relationship",
+                )
+            )
+
         return sorted(rules, key=lambda r: r.count, reverse=True)
+
+    def _count_food_chain_motifs(self, triplets: List[Tuple[str, str, str]]) -> int:
+        hunts: Dict[str, Set[str]] = {}
+        eats: Dict[str, Set[str]] = {}
+        grows_in: Dict[str, Set[str]] = {}
+
+        for s, r, o in triplets:
+            if r == "hunts":
+                hunts.setdefault(s, set()).add(o)
+            elif r == "eats":
+                eats.setdefault(s, set()).add(o)
+            elif r == "grows_in":
+                grows_in.setdefault(s, set()).add(o)
+
+        motifs = 0
+        for predator, prey_set in hunts.items():
+            for prey in prey_set:
+                plants = eats.get(prey, set())
+                for plant in plants:
+                    if plant in grows_in:
+                        motifs += 1
+        return motifs
 
     @staticmethod
     def _label_for_relation(relation: str) -> str:

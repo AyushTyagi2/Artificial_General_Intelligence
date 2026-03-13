@@ -97,7 +97,7 @@ class BabyEventLoop:
 
     def _maybe_generate_topic(self, pages: List[Dict], best_score: float) -> Optional[Dict]:
         """Generate a fresh topic when exploration stalls or novelty gets too low."""
-        if self.stall_ticks >= 2 or best_score < 0.15:
+        if self.stall_ticks >= 2 or best_score < 0.2:
             page = self.generator.generate_topic(persist=True)
             pages.append(page)
             self.logger.info("generated new topic=%s domain=%s", page["topic"], page.get("domain"))
@@ -137,11 +137,21 @@ class BabyEventLoop:
             selected_topic = selected_page["topic"]
             self.logger.info("[tick=%s] selected_topic=%s reason=%s", tick, selected_topic, selection_reason)
 
+            prev_pattern_count = len(self.memory.patterns)
             result = self.learner.learn_from_page(selected_page)
+
             if result.new_facts == 0:
                 self.stall_ticks += 1
             else:
                 self.stall_ticks = 0
+
+            # Structural novelty from entities, relation types, and fresh facts.
+            structural_novelty = (
+                (len(result.new_entities) * 0.12)
+                + (len(result.new_relation_types) * 0.2)
+                + (result.new_facts * 0.08)
+            )
+            self.curiosity.register_structural_novelty(result.topic, structural_novelty)
 
             self.curiosity.register_unknowns(result.topic, result.unknown_concepts)
             self.curiosity.register_unknowns(result.topic, result.unknown_relations)
@@ -154,7 +164,6 @@ class BabyEventLoop:
                     self.logger.info("[tick=%s] conflict entity=%s relation=%s ranked_values=%s", tick, entity, relation, ranked_values)
                     concepts = [entity, relation] + [value for value, _evidence in ranked_values]
                     self.curiosity.register_unknowns(result.topic, concepts)
-                    # Prediction error signal rises with evidence ambiguity.
                     if len(ranked_values) > 1:
                         delta = abs(ranked_values[0][1] - ranked_values[1][1])
                         self.curiosity.register_prediction_error(result.topic, 1.0 / (1 + delta))
@@ -170,6 +179,10 @@ class BabyEventLoop:
             # Pattern discovery + hierarchy updates.
             triplets = self.memory.relation_triplets()
             discovered_rules = self.patterns.discover(triplets, min_support=2)
+            pattern_delta = max(0, len(discovered_rules) - prev_pattern_count)
+            if pattern_delta:
+                self.curiosity.register_structural_novelty(result.topic, pattern_delta * 0.35)
+
             self.memory.update_patterns(
                 [
                     PatternRecord(
@@ -185,7 +198,7 @@ class BabyEventLoop:
             self.concepts.ingest_triplets(triplets)
 
             # Memory compression for repeated relation structures.
-            compressed = self.memory.compress_relation_facts("hunts", min_objects=3)
+            compressed = self.memory.compress_relation_facts("hunts", min_objects=2)
 
             novelty_score = self.curiosity.score_topics([selected_topic], weak_by_topic)[0].score
             curiosity_reward = self.curiosity.reward(novelty=novelty_score, conflict_bonus=conflict_bonus)
@@ -194,11 +207,13 @@ class BabyEventLoop:
             self.memory.save()
 
             self.logger.info(
-                "[tick=%s] learned=%s new_facts=%s unknown=%s patterns=%s compressed=%s memory=%s reward=%.2f",
+                "[tick=%s] learned=%s new_facts=%s unknown=%s new_entities=%s new_relations=%s patterns=%s compressed=%s memory=%s reward=%.2f",
                 tick,
                 result.learned_facts,
                 result.new_facts,
                 sorted(result.unknown_concepts),
+                len(result.new_entities),
+                len(result.new_relation_types),
                 len(discovered_rules),
                 len(compressed),
                 len(self.memory.facts),

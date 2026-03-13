@@ -17,13 +17,14 @@ class CuriositySignal:
 
 
 class CuriosityModel:
-    """Tracks unknown concepts, prediction error, and topic novelty over time."""
+    """Tracks unknown concepts, prediction error, and structural novelty over time."""
 
     def __init__(self) -> None:
         self.topic_visits: Dict[str, int] = defaultdict(int)
         self.unknown_concepts_by_topic: Dict[str, Set[str]] = defaultdict(set)
         self.pending_concepts: Deque[str] = deque()
         self.prediction_error_by_topic: Dict[str, float] = defaultdict(float)
+        self.structural_novelty_by_topic: Dict[str, float] = defaultdict(float)
 
     def register_unknowns(self, topic: str, unknown_concepts: Iterable[str]) -> None:
         """Record concepts encountered but not yet grounded in memory."""
@@ -36,6 +37,10 @@ class CuriosityModel:
     def register_prediction_error(self, topic: str, error: float) -> None:
         """Increase prediction error signal for topic; decays over visits."""
         self.prediction_error_by_topic[topic] += max(0.0, error)
+
+    def register_structural_novelty(self, topic: str, novelty: float) -> None:
+        """Track novelty from new entities/relations/pattern structures."""
+        self.structural_novelty_by_topic[topic] += max(0.0, novelty)
 
     def reward(self, novelty: float, conflict_bonus: float = 0.0) -> float:
         """Compute curiosity reward from novelty and conflict pressure."""
@@ -57,10 +62,11 @@ class CuriosityModel:
             unknown_weight = len(self.unknown_concepts_by_topic.get(topic, set())) * 0.3
             weak_bonus = weak_fact_ratio_by_topic.get(topic, 0.0) * 1.0
             prediction_error = self.prediction_error_by_topic.get(topic, 0.0)
-            score = max(0.0, unknown_weight + weak_bonus + novelty + prediction_error - visit_penalty)
+            structural = self.structural_novelty_by_topic.get(topic, 0.0)
+            score = max(0.0, unknown_weight + weak_bonus + novelty + prediction_error + structural - visit_penalty)
             reason = (
                 f"unknown={unknown_weight:.2f}, weak={weak_bonus:.2f}, novelty={novelty:.2f}, "
-                f"pred_err={prediction_error:.2f}, visits={visits}"
+                f"pred_err={prediction_error:.2f}, structural={structural:.2f}, visits={visits}"
             )
             signals.append(CuriositySignal(topic=topic, score=score, reason=reason))
 
@@ -73,3 +79,5 @@ class CuriosityModel:
             self.unknown_concepts_by_topic[topic].clear()
         if topic in self.prediction_error_by_topic:
             self.prediction_error_by_topic[topic] *= 0.8
+        if topic in self.structural_novelty_by_topic:
+            self.structural_novelty_by_topic[topic] *= 0.6

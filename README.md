@@ -42,6 +42,11 @@ tools/
 ## Key V3 Features
 
 - **Procedural world generation** (`world/generator.py`) for unbounded new topics.
+- **Combinatorial procedural generation** with randomized entity pools to avoid duplicate generated pages.
+- **Duplicate-safe ingestion**: repeated observations increase evidence but do not count as new learning events.
+- **Structural novelty scoring** from new entities, relation types, and pattern growth.
+- **Generalized motif discovery** including multi-hop food-chain patterns.
+- **Working memory compression** for repeated hunt structures (e.g. predator -> herbivores).
 - **Evidence-aware memory** (`evidence` counts per fact/relation).
 - **Conflict comparison with evidence** (competing values ranked by support).
 - **Pattern discovery** (`brain/patterns.py`) from recurring relation types.

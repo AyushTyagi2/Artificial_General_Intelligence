@@ -18,6 +18,8 @@ class LearningResult:
     new_facts: int
     unknown_concepts: Set[str]
     unknown_relations: Set[str]
+    new_entities: Set[str]
+    new_relation_types: Set[str]
     weak_fact_ratio: float
 
 
@@ -34,6 +36,8 @@ class Learner:
         facts: List[str] = page.get("facts", [])
         unknown_concepts: Set[str] = set()
         unknown_relations: Set[str] = set()
+        new_entities: Set[str] = set()
+        new_relation_types: Set[str] = set()
         weak_facts = 0
         new_facts = 0
 
@@ -44,17 +48,23 @@ class Learner:
                 subj, rel, obj = relation
                 known_entities = self.memory.all_entities()
                 known_subject_relations = self.memory.get_relations(subj)
+
                 if subj not in known_entities:
                     unknown_concepts.add(subj)
+                    new_entities.add(subj)
                 if obj not in known_entities:
                     unknown_concepts.add(obj)
+                    new_entities.add(obj)
                 if rel not in known_subject_relations:
                     unknown_relations.add(rel)
+                    new_relation_types.add(rel)
+
                 self.memory.add_relation(subj, rel, obj, evidence_increment=1)
 
             existing = self.memory.get_fact(fact)
             if existing is not None:
-                confidence = min(1.0, existing.confidence + 0.1)
+                # Duplicate observation: evidence updates only, not a new learning event.
+                confidence = existing.confidence
             else:
                 new_facts += 1
 
@@ -69,5 +79,7 @@ class Learner:
             new_facts=new_facts,
             unknown_concepts=unknown_concepts,
             unknown_relations=unknown_relations,
+            new_entities=new_entities,
+            new_relation_types=new_relation_types,
             weak_fact_ratio=weak_ratio,
         )
