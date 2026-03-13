@@ -86,3 +86,27 @@ Then open:
 
 - `http://localhost:5055/`
 - `http://localhost:5055/graph`
+
+
+## Dashboard Architecture (Live AI Brain Monitor)
+
+```text
+Agent Log + Memory JSON
+        |
+        v
+  dashboard/log_parser.py -----> dashboard/state_manager.py -----> API layer (Flask)
+                                        |                           |                                        |                           | \__ /api/metrics
+                                        |                           |____ /api/graph
+                                        |                           |____ /api/state
+                                        |                           |____ /ws/stream
+                                        v
+                             dashboard/graph_builder.py
+                                        |
+                                        v
+                                 Frontend (index.html)
+                              - vis-network graph
+                              - ECharts metrics
+                              - live event feed
+```
+
+The dashboard is read-only and does not alter the learning engine.
