@@ -75,6 +75,16 @@ class BabyEventLoop:
 
         return None
 
+
+    def _get_or_regenerate_page(self, topic: str, pages: List[Dict]) -> Dict:
+        """Safely get topic page; regenerate dynamically when missing."""
+        page = next((p for p in pages if p["topic"] == topic), None)
+        if page is None:
+            self.logger.warning(f"topic_missing: {topic}")
+            page = self.generator.generate_topic(persist=True)
+            pages.append(page)
+        return page
+
     def _select_topic(self, pages: List[Dict], weak_by_topic: Dict[str, float]) -> Tuple[Dict, str, float]:
         topics = [page["topic"] for page in pages]
 
@@ -85,14 +95,15 @@ class BabyEventLoop:
                 topic, reason = matched
                 min_visits = min(self.curiosity.topic_visits[t] for t in topics)
                 if self.curiosity.topic_visits[topic] <= min_visits + 1:
-                    page = next(p for p in pages if p["topic"] == topic)
-                    goal_score = self.curiosity.score_topics([topic], weak_by_topic)[0].score
+                    page = self._get_or_regenerate_page(topic, pages)
+                    resolved_topic = page["topic"]
+                    goal_score = self.curiosity.score_topics([resolved_topic], weak_by_topic)[0].score
                     return page, reason, goal_score
             goal = self.curiosity.pop_goal_concept()
 
         topic_scores = self.curiosity.score_topics(topics, weak_by_topic)
         selected = topic_scores[0]
-        page = next(p for p in pages if p["topic"] == selected.topic)
+        page = self._get_or_regenerate_page(selected.topic, pages)
         return page, f"curiosity:{selected.reason}", selected.score
 
     def _maybe_generate_topic(self, pages: List[Dict], best_score: float) -> Optional[Dict]:
