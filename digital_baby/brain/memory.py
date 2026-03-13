@@ -29,6 +29,7 @@ class Memory:
     def __init__(self, storage_path: str | Path) -> None:
         self.storage_path = Path(storage_path)
         self.facts: Dict[str, FactRecord] = {}
+        # Graph shape: entity_relations[subject][relation] -> set(objects)
         self.entity_relations: Dict[str, Dict[str, Set[str]]] = {}
         self._load()
 
@@ -65,16 +66,28 @@ class Memory:
         return sorted(self.facts.values(), key=lambda f: f.confidence)[:top_n]
 
     def add_relation(self, subject: str, relation: str, obj: str) -> None:
-        """Add a relation edge in a simple in-memory graph.
-
-        Graph shape: entity_relations[subject][relation] -> set(objects)
-        """
+        """Add a relation edge in the graph."""
         relation_map = self.entity_relations.setdefault(subject, {})
         relation_map.setdefault(relation, set()).add(obj)
 
     def get_relations(self, subject: str) -> Dict[str, Set[str]]:
         """Get all outgoing relations for a subject."""
         return self.entity_relations.get(subject, {})
+
+    def query_entities(self, keyword: str) -> List[str]:
+        """Query known entities by keyword match for fuzzy concept discovery."""
+        lowered = keyword.lower().strip()
+        return sorted([entity for entity in self.all_entities() if lowered in entity])
+
+    def find_topics_for_concept(self, concept: str) -> List[str]:
+        """Find source topics that mention a concept in their fact statement."""
+        lowered = concept.lower().strip()
+        topics = {
+            record.source_topic
+            for record in self.facts.values()
+            if lowered in record.statement.lower()
+        }
+        return sorted(topics)
 
     def all_entities(self) -> Set[str]:
         """Return a set of known entities from the graph."""
@@ -83,6 +96,24 @@ class Memory:
             for objects in rel_map.values():
                 entities.update(objects)
         return entities
+
+    def relation_triplets(self) -> List[Tuple[str, str, str]]:
+        """Return all graph edges as triplets."""
+        triplets: List[Tuple[str, str, str]] = []
+        for subject, rel_map in self.entity_relations.items():
+            for relation, objects in rel_map.items():
+                for obj in objects:
+                    triplets.append((subject, relation, obj))
+        return triplets
+
+    def conflicting_relations(self) -> List[Tuple[str, str, List[str]]]:
+        """Return conflicting edges where one (subject, relation) has multiple values."""
+        conflicts: List[Tuple[str, str, List[str]]] = []
+        for subject, rel_map in self.entity_relations.items():
+            for relation, objects in rel_map.items():
+                if len(objects) > 1:
+                    conflicts.append((subject, relation, sorted(objects)))
+        return conflicts
 
     def save(self) -> None:
         """Persist memory state to disk as JSON."""
@@ -110,12 +141,3 @@ class Memory:
             self.entity_relations[subject] = {
                 relation: set(objects) for relation, objects in rel_map.items()
             }
-
-    def relation_triplets(self) -> List[Tuple[str, str, str]]:
-        """Return all graph edges as triplets."""
-        triplets: List[Tuple[str, str, str]] = []
-        for subject, rel_map in self.entity_relations.items():
-            for relation, objects in rel_map.items():
-                for obj in objects:
-                    triplets.append((subject, relation, obj))
-        return triplets

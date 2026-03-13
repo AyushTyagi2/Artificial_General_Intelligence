@@ -1,0 +1,101 @@
+{
+  "facts": [
+    {
+      "statement": "cat is mammal",
+      "confidence": 0.9833333333333328,
+      "source_topic": "animals",
+      "timestamp": 1773217909.7698944
+    },
+    {
+      "statement": "bird is animal",
+      "confidence": 0.9833333333333328,
+      "source_topic": "animals",
+      "timestamp": 1773217909.7698944
+    },
+    {
+      "statement": "octopus has intelligence",
+      "confidence": 0.9833333333333328,
+      "source_topic": "animals",
+      "timestamp": 1773217909.7698944
+    },
+    {
+      "statement": "cell is living_unit",
+      "confidence": 0.0,
+      "source_topic": "biology",
+      "timestamp": 1773217184.9408064
+    },
+    {
+      "statement": "dna stores information",
+      "confidence": 0.0,
+      "source_topic": "biology",
+      "timestamp": 1773217184.9408064
+    },
+    {
+      "statement": "cat is reptile",
+      "confidence": 0.0,
+      "source_topic": "biology",
+      "timestamp": 1773217184.9408064
+    },
+    {
+      "statement": "light has speed",
+      "confidence": 0.0,
+      "source_topic": "physics",
+      "timestamp": 1773217192.9822843
+    },
+    {
+      "statement": "gravity affects mass",
+      "confidence": 0.0,
+      "source_topic": "physics",
+      "timestamp": 1773217192.9822843
+    },
+    {
+      "statement": "energy is conserved",
+      "confidence": 0.0,
+      "source_topic": "physics",
+      "timestamp": 1773217192.9822843
+    }
+  ],
+  "entity_relations": {
+    "cat": {
+      "is": [
+        "mammal",
+        "reptile"
+      ]
+    },
+    "bird": {
+      "is": [
+        "animal"
+      ]
+    },
+    "octopus": {
+      "has": [
+        "intelligence"
+      ]
+    },
+    "cell": {
+      "is": [
+        "living_unit"
+      ]
+    },
+    "dna": {
+      "stores": [
+        "information"
+      ]
+    },
+    "light": {
+      "has": [
+        "speed"
+      ]
+    },
+    "gravity": {
+      "affects": [
+        "mass"
+      ]
+    },
+    "energy": {
+      "is": [
+        "conserved"
+      ]
+    }
+  }
+}

@@ -16,6 +16,7 @@ class LearningResult:
     topic: str
     learned_facts: int
     unknown_concepts: Set[str]
+    unknown_relations: Set[str]
     weak_fact_ratio: float
 
 
@@ -31,6 +32,7 @@ class Learner:
         topic = page["topic"]
         facts: List[str] = page.get("facts", [])
         unknown_concepts: Set[str] = set()
+        unknown_relations: Set[str] = set()
         weak_facts = 0
 
         for fact in facts:
@@ -39,11 +41,13 @@ class Learner:
             if relation:
                 subj, rel, obj = relation
                 known_entities = self.memory.all_entities()
-                # New entities indicate uncertainty and future curiosity.
+                known_subject_relations = self.memory.get_relations(subj)
                 if subj not in known_entities:
                     unknown_concepts.add(subj)
                 if obj not in known_entities:
                     unknown_concepts.add(obj)
+                if rel not in known_subject_relations:
+                    unknown_relations.add(rel)
                 self.memory.add_relation(subj, rel, obj)
 
             existing = self.memory.get_fact(fact)
@@ -59,5 +63,6 @@ class Learner:
             topic=topic,
             learned_facts=len(facts),
             unknown_concepts=unknown_concepts,
+            unknown_relations=unknown_relations,
             weak_fact_ratio=weak_ratio,
         )
