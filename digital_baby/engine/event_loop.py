@@ -9,10 +9,11 @@ import logging
 import time
 
 from digital_baby.brain.concepts import ConceptHierarchy, ConceptTypeSystem
+from digital_baby.brain.experimenter import Experimenter
 from digital_baby.brain.curiosity import CuriosityModel
 from digital_baby.brain.hypothesis import Hypothesis, HypothesisEngine
 from digital_baby.brain.learner import Learner
-from digital_baby.brain.memory import HypothesisRecord, Memory, PatternRecord, PredictionRecord
+from digital_baby.brain.memory import ExperimentRecord, HypothesisRecord, Memory, PatternRecord, PredictionRecord
 from digital_baby.brain.patterns import PatternDiscoverer
 from digital_baby.brain.predictor import Predictor
 from digital_baby.brain.questions import QuestionGenerator
@@ -38,6 +39,7 @@ class BabyEventLoop:
         self.patterns = PatternDiscoverer()
         self.hypothesis_engine = HypothesisEngine()
         self.predictor = Predictor()
+        self.experimenter = Experimenter()
         self.concepts = ConceptHierarchy()
         self.type_system = ConceptTypeSystem()
         self.generator = KnowledgeGenerator(self.world_path)
@@ -192,6 +194,24 @@ class BabyEventLoop:
             uncertainty = self.memory.hypothesis_uncertainty()
             self.curiosity.register_structural_novelty(result.topic, uncertainty * 0.4)
             self.curiosity.register_hypothesis_uncertainty(result.topic, uncertainty)
+
+            # Periodic active experiments on uncertain hypotheses.
+            if hypotheses and tick % 3 == 0:
+                pred_err = self.curiosity.prediction_error_by_topic.get(result.topic, 0.0)
+                candidate = sorted(hypotheses, key=lambda h: h.confidence)[0]
+                if self.experimenter.should_schedule(candidate, pred_err):
+                    experiment = self.experimenter.generate(candidate, self.memory.all_entities(), self.type_system, n=3)
+                    self.logger.info("[tick=%s] experiment_generated=%s", tick, experiment.name)
+                    outcome = self.experimenter.evaluate(experiment, triplets, self.type_system)
+                    status = "supported" if outcome.supported >= outcome.contradicted else "contradicted"
+                    self.logger.info("[tick=%s] experiment_result=%s rule=%s", tick, status, outcome.rule)
+                    updated = self.memory.update_hypothesis_evidence(outcome.rule, outcome.supported, outcome.contradicted)
+                    self.memory.add_experiment(ExperimentRecord(rule=outcome.rule, name=experiment.name, supported=outcome.supported, contradicted=outcome.contradicted, timestamp=time.time()))
+                    if updated is not None:
+                        self.logger.info("[tick=%s] hypothesis_updated confidence=%.2f", tick, float(updated.get("confidence", 0.0)))
+                        # experiment contradiction increases exploration pressure.
+                        contradiction_ratio = outcome.contradicted / max(1, outcome.supported + outcome.contradicted)
+                        self.curiosity.register_experiment_signal(result.topic, contradiction_ratio)
 
             test_domain = None
             if hypotheses:

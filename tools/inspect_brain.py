@@ -39,6 +39,7 @@ def main() -> None:
     print(f"Patterns: {len(memory.patterns)}")
     print(f"Rules: {len(memory.world_model.get('rules', []))}")
     print(f"Predictions logged: {len(memory.world_model.get('predictions', []))}")
+    print(f"Experiments logged: {len(memory.world_model.get('experiments', []))}")
     print(f"Conflicts: {len(conflicts)}")
     print()
 

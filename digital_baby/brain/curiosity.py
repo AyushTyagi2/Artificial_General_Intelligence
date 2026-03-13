@@ -24,6 +24,7 @@ class CuriosityModel:
         self.prediction_error_by_topic: Dict[str, float] = defaultdict(float)
         self.structural_novelty_by_topic: Dict[str, float] = defaultdict(float)
         self.hypothesis_uncertainty_by_topic: Dict[str, float] = defaultdict(float)
+        self.experiment_signal_by_topic: Dict[str, float] = defaultdict(float)
 
     def register_unknowns(self, topic: str, unknown_concepts: Iterable[str]) -> None:
         clean = [c.strip().lower() for c in unknown_concepts if c.strip()]
@@ -40,6 +41,9 @@ class CuriosityModel:
 
     def register_hypothesis_uncertainty(self, topic: str, uncertainty: float) -> None:
         self.hypothesis_uncertainty_by_topic[topic] += max(0.0, uncertainty)
+
+    def register_experiment_signal(self, topic: str, signal: float) -> None:
+        self.experiment_signal_by_topic[topic] += max(0.0, signal)
 
     def reward(self, novelty: float, conflict_bonus: float = 0.0) -> float:
         return max(0.0, novelty + conflict_bonus)
@@ -60,15 +64,16 @@ class CuriosityModel:
             prediction_error = self.prediction_error_by_topic.get(topic, 0.0)
             structural = self.structural_novelty_by_topic.get(topic, 0.0)
             hypothesis_uncertainty = self.hypothesis_uncertainty_by_topic.get(topic, 0.0)
+            experiment_signal = self.experiment_signal_by_topic.get(topic, 0.0)
 
             score = max(
                 0.0,
-                novelty + unknown_weight + weak_bonus + prediction_error + structural + hypothesis_uncertainty - visit_penalty,
+                novelty + unknown_weight + weak_bonus + prediction_error + structural + hypothesis_uncertainty + experiment_signal - visit_penalty,
             )
             reason = (
                 f"novelty={novelty:.2f}, unknown={unknown_weight:.2f}, weak={weak_bonus:.2f}, "
                 f"pred_err={prediction_error:.2f}, structural={structural:.2f}, "
-                f"hyp_unc={hypothesis_uncertainty:.2f}, visits={visits}"
+                f"hyp_unc={hypothesis_uncertainty:.2f}, exp={experiment_signal:.2f}, visits={visits}"
             )
             signals.append(CuriositySignal(topic=topic, score=score, reason=reason))
 
@@ -81,3 +86,4 @@ class CuriosityModel:
         self.prediction_error_by_topic[topic] *= 0.8
         self.structural_novelty_by_topic[topic] *= 0.6
         self.hypothesis_uncertainty_by_topic[topic] *= 0.7
+        self.experiment_signal_by_topic[topic] *= 0.7
