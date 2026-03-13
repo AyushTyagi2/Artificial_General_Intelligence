@@ -17,12 +17,13 @@ class CuriositySignal:
 
 
 class CuriosityModel:
-    """Tracks unknown concepts, question queue, and topic novelty over time."""
+    """Tracks unknown concepts, prediction error, and topic novelty over time."""
 
     def __init__(self) -> None:
         self.topic_visits: Dict[str, int] = defaultdict(int)
         self.unknown_concepts_by_topic: Dict[str, Set[str]] = defaultdict(set)
         self.pending_concepts: Deque[str] = deque()
+        self.prediction_error_by_topic: Dict[str, float] = defaultdict(float)
 
     def register_unknowns(self, topic: str, unknown_concepts: Iterable[str]) -> None:
         """Record concepts encountered but not yet grounded in memory."""
@@ -31,6 +32,10 @@ class CuriosityModel:
         for concept in clean:
             if concept not in self.pending_concepts:
                 self.pending_concepts.append(concept)
+
+    def register_prediction_error(self, topic: str, error: float) -> None:
+        """Increase prediction error signal for topic; decays over visits."""
+        self.prediction_error_by_topic[topic] += max(0.0, error)
 
     def reward(self, novelty: float, conflict_bonus: float = 0.0) -> float:
         """Compute curiosity reward from novelty and conflict pressure."""
@@ -43,10 +48,7 @@ class CuriosityModel:
         return self.pending_concepts.popleft()
 
     def score_topics(self, topics: Iterable[str], weak_fact_ratio_by_topic: Dict[str, float]) -> List[CuriositySignal]:
-        """Prioritize topics with novelty and weak-confidence knowledge.
-
-        score = unknown_weight + weak_knowledge_bonus + novelty - visit_penalty
-        """
+        """Prioritize topics with novelty, unknowns, weak confidence, and prediction error."""
         signals: List[CuriositySignal] = []
         for topic in topics:
             visits = self.topic_visits[topic]
@@ -54,17 +56,20 @@ class CuriosityModel:
             visit_penalty = visits * 0.25
             unknown_weight = len(self.unknown_concepts_by_topic.get(topic, set())) * 0.3
             weak_bonus = weak_fact_ratio_by_topic.get(topic, 0.0) * 1.0
-            score = max(0.0, unknown_weight + weak_bonus + novelty - visit_penalty)
+            prediction_error = self.prediction_error_by_topic.get(topic, 0.0)
+            score = max(0.0, unknown_weight + weak_bonus + novelty + prediction_error - visit_penalty)
             reason = (
-                f"unknown_weight={unknown_weight:.2f}, "
-                f"weak_bonus={weak_bonus:.2f}, novelty={novelty:.2f}, visits={visits}"
+                f"unknown={unknown_weight:.2f}, weak={weak_bonus:.2f}, novelty={novelty:.2f}, "
+                f"pred_err={prediction_error:.2f}, visits={visits}"
             )
             signals.append(CuriositySignal(topic=topic, score=score, reason=reason))
 
         return sorted(signals, key=lambda s: s.score, reverse=True)
 
     def mark_visited(self, topic: str) -> None:
-        """Update exploration history and reduce novelty pressure for visited topic."""
+        """Update exploration history and decay pressure for visited topic."""
         self.topic_visits[topic] += 1
         if topic in self.unknown_concepts_by_topic:
             self.unknown_concepts_by_topic[topic].clear()
+        if topic in self.prediction_error_by_topic:
+            self.prediction_error_by_topic[topic] *= 0.8

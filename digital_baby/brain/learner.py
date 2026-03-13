@@ -15,6 +15,7 @@ class LearningResult:
 
     topic: str
     learned_facts: int
+    new_facts: int
     unknown_concepts: Set[str]
     unknown_relations: Set[str]
     weak_fact_ratio: float
@@ -34,6 +35,7 @@ class Learner:
         unknown_concepts: Set[str] = set()
         unknown_relations: Set[str] = set()
         weak_facts = 0
+        new_facts = 0
 
         for fact in facts:
             relation = self.reasoner.extract_relation(fact)
@@ -48,13 +50,15 @@ class Learner:
                     unknown_concepts.add(obj)
                 if rel not in known_subject_relations:
                     unknown_relations.add(rel)
-                self.memory.add_relation(subj, rel, obj)
+                self.memory.add_relation(subj, rel, obj, evidence_increment=1)
 
             existing = self.memory.get_fact(fact)
             if existing is not None:
                 confidence = min(1.0, existing.confidence + 0.1)
+            else:
+                new_facts += 1
 
-            self.memory.upsert_fact(fact, confidence, source_topic=topic)
+            self.memory.upsert_fact(fact, confidence, source_topic=topic, evidence_increment=1)
             if confidence < 0.5:
                 weak_facts += 1
 
@@ -62,6 +66,7 @@ class Learner:
         return LearningResult(
             topic=topic,
             learned_facts=len(facts),
+            new_facts=new_facts,
             unknown_concepts=unknown_concepts,
             unknown_relations=unknown_relations,
             weak_fact_ratio=weak_ratio,

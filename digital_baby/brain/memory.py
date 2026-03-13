@@ -1,12 +1,12 @@
 """Memory subsystem for the digital baby agent.
 
-Stores facts with confidence scores, a lightweight knowledge graph, and supports
-persistence so learning survives across runs.
+Stores facts with confidence/evidence, a scalable knowledge graph, discovered patterns,
+and supports persistence so learning survives across runs.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 import json
@@ -21,6 +21,19 @@ class FactRecord:
     confidence: float
     source_topic: str
     timestamp: float
+    evidence: int = 1
+    compressed: bool = False
+
+
+@dataclass
+class PatternRecord:
+    """Stores one discovered generalized rule."""
+
+    template: str
+    relation: str
+    support: int
+    label: str
+    timestamp: float
 
 
 class Memory:
@@ -31,16 +44,21 @@ class Memory:
         self.facts: Dict[str, FactRecord] = {}
         # Graph shape: entity_relations[subject][relation] -> set(objects)
         self.entity_relations: Dict[str, Dict[str, Set[str]]] = {}
+        # Evidence shape: relation_evidence[(subject, relation, object)] -> count
+        self.relation_evidence: Dict[Tuple[str, str, str], int] = {}
+        self.patterns: List[PatternRecord] = []
         self._load()
 
-    def upsert_fact(self, statement: str, confidence: float, source_topic: str) -> None:
+    def upsert_fact(self, statement: str, confidence: float, source_topic: str, evidence_increment: int = 1) -> None:
         """Insert or update a fact with confidence clamped to [0, 1]."""
         bounded_confidence = max(0.0, min(1.0, confidence))
         now = time.time()
         if statement in self.facts:
             existing = self.facts[statement]
-            # Blend old and new confidence for stability.
-            blended = (existing.confidence * 0.7) + (bounded_confidence * 0.3)
+            existing.evidence += max(1, evidence_increment)
+            # Evidence-weighted confidence update.
+            existing.confidence = min(1.0, existing.confidence + (0.03 * evidence_increment))
+            blended = (existing.confidence * 0.8) + (bounded_confidence * 0.2)
             existing.confidence = max(0.0, min(1.0, blended))
             existing.source_topic = source_topic
             existing.timestamp = now
@@ -50,6 +68,7 @@ class Memory:
                 confidence=bounded_confidence,
                 source_topic=source_topic,
                 timestamp=now,
+                evidence=max(1, evidence_increment),
             )
 
     def decay_confidence(self, decay_rate: float = 0.01) -> None:
@@ -65,10 +84,16 @@ class Memory:
         """Return the lowest-confidence facts to drive curiosity."""
         return sorted(self.facts.values(), key=lambda f: f.confidence)[:top_n]
 
-    def add_relation(self, subject: str, relation: str, obj: str) -> None:
-        """Add a relation edge in the graph."""
+    def add_relation(self, subject: str, relation: str, obj: str, evidence_increment: int = 1) -> None:
+        """Add a relation edge in the graph and track evidence count."""
         relation_map = self.entity_relations.setdefault(subject, {})
         relation_map.setdefault(relation, set()).add(obj)
+        key = (subject, relation, obj)
+        self.relation_evidence[key] = self.relation_evidence.get(key, 0) + max(1, evidence_increment)
+
+    def relation_evidence_count(self, subject: str, relation: str, obj: str) -> int:
+        """Return evidence count for one relation edge."""
+        return self.relation_evidence.get((subject, relation, obj), 0)
 
     def get_relations(self, subject: str) -> Dict[str, Set[str]]:
         """Get all outgoing relations for a subject."""
@@ -115,6 +140,36 @@ class Memory:
                     conflicts.append((subject, relation, sorted(objects)))
         return conflicts
 
+    def conflicting_relations_with_evidence(self) -> List[Tuple[str, str, List[Tuple[str, int]]]]:
+        """Return conflicts enriched with evidence counts per competing value."""
+        enriched: List[Tuple[str, str, List[Tuple[str, int]]]] = []
+        for subject, relation, values in self.conflicting_relations():
+            ranked = sorted(
+                [(value, self.relation_evidence_count(subject, relation, value)) for value in values],
+                key=lambda item: item[1],
+                reverse=True,
+            )
+            enriched.append((subject, relation, ranked))
+        return enriched
+
+    def update_patterns(self, rules: List[PatternRecord]) -> None:
+        """Replace stored pattern records with latest discovery pass."""
+        self.patterns = rules
+
+    def compress_relation_facts(self, relation: str, min_objects: int = 3) -> List[str]:
+        """Compress redundant relation facts for same subject into a summary fact."""
+        summaries: List[str] = []
+        for subject, rel_map in self.entity_relations.items():
+            objs = rel_map.get(relation, set())
+            if len(objs) >= min_objects:
+                summary = f"{subject} {relation} multiple_entities"
+                if summary not in self.facts:
+                    self.upsert_fact(summary, confidence=0.55, source_topic="memory_compression", evidence_increment=len(objs))
+                    if summary in self.facts:
+                        self.facts[summary].compressed = True
+                summaries.append(summary)
+        return summaries
+
     def save(self) -> None:
         """Persist memory state to disk as JSON."""
         self.storage_path.parent.mkdir(parents=True, exist_ok=True)
@@ -124,6 +179,11 @@ class Memory:
                 subject: {relation: sorted(list(objects)) for relation, objects in rel_map.items()}
                 for subject, rel_map in self.entity_relations.items()
             },
+            "relation_evidence": [
+                {"subject": s, "relation": r, "object": o, "evidence": ev}
+                for (s, r, o), ev in self.relation_evidence.items()
+            ],
+            "patterns": [asdict(pattern) for pattern in self.patterns],
         }
         self.storage_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
@@ -134,10 +194,19 @@ class Memory:
 
         payload = json.loads(self.storage_path.read_text(encoding="utf-8"))
         for item in payload.get("facts", []):
+            if "evidence" not in item:
+                item["evidence"] = 1
+            if "compressed" not in item:
+                item["compressed"] = False
             record = FactRecord(**item)
             self.facts[record.statement] = record
 
         for subject, rel_map in payload.get("entity_relations", {}).items():
-            self.entity_relations[subject] = {
-                relation: set(objects) for relation, objects in rel_map.items()
-            }
+            self.entity_relations[subject] = {relation: set(objects) for relation, objects in rel_map.items()}
+
+        for entry in payload.get("relation_evidence", []):
+            key = (entry["subject"], entry["relation"], entry["object"])
+            self.relation_evidence[key] = int(entry.get("evidence", 1))
+
+        for entry in payload.get("patterns", []):
+            self.patterns.append(PatternRecord(**entry))

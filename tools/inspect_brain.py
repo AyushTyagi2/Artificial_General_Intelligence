@@ -10,27 +10,15 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from digital_baby.brain.concepts import ConceptHierarchy
 from digital_baby.brain.memory import Memory
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Inspect digital baby memory state.")
-    parser.add_argument(
-        "--memory",
-        default="digital_baby/world/memory_store.json",
-        help="Path to memory JSON file.",
-    )
-    parser.add_argument(
-        "--max-facts",
-        type=int,
-        default=20,
-        help="Max number of facts to print.",
-    )
-    parser.add_argument(
-        "--export-triplets",
-        default=None,
-        help="Optional path to export graph triplets TSV.",
-    )
+    parser.add_argument("--memory", default="digital_baby/world/memory_store.json", help="Path to memory JSON file.")
+    parser.add_argument("--max-facts", type=int, default=20, help="Max number of facts to print.")
+    parser.add_argument("--export-triplets", default=None, help="Optional path to export graph triplets TSV.")
     return parser
 
 
@@ -45,46 +33,57 @@ def main() -> None:
     memory = Memory(memory_path)
     facts = sorted(memory.facts.values(), key=lambda f: f.confidence, reverse=True)
     entities = sorted(memory.all_entities())
-    conflicts = memory.conflicting_relations()
+    triplets = memory.relation_triplets()
+    relation_count = len(triplets)
+    conflicts = memory.conflicting_relations_with_evidence()
+
+    hierarchy = ConceptHierarchy()
+    hierarchy.ingest_triplets(triplets)
+    top_concepts = hierarchy.top_concepts_by_connectivity(top_n=10)
 
     print("=== DIGITAL BABY BRAIN INSPECTION ===")
     print(f"Memory file: {memory_path}")
-    print(f"Stored facts: {len(facts)}")
-    print(f"Known concepts/entities: {len(entities)}")
-    print(f"Conflicting relations: {len(conflicts)}")
+    print(f"Facts: {len(facts)}")
+    print(f"Concepts: {len(entities)}")
+    print(f"Relations: {relation_count}")
+    print(f"Patterns: {len(memory.patterns)}")
+    print(f"Conflicts: {len(conflicts)}")
+    print()
+
+    print("-- Top Concepts by Connectivity --")
+    if not top_concepts:
+        print("<none>")
+    else:
+        for concept, score in top_concepts:
+            print(f"{concept}: {score}")
     print()
 
     print("-- Top Facts (by confidence) --")
     for fact in facts[: args.max_facts]:
-        print(f"[{fact.confidence:.3f}] ({fact.source_topic}) {fact.statement}")
+        marker = " [compressed]" if fact.compressed else ""
+        print(f"[{fact.confidence:.3f}] ev={fact.evidence} ({fact.source_topic}) {fact.statement}{marker}")
     print()
 
-    print("-- Concept List --")
-    print(", ".join(entities[:80]) if entities else "<empty>")
-    if len(entities) > 80:
-        print(f"... and {len(entities) - 80} more")
+    print("-- Patterns --")
+    if not memory.patterns:
+        print("<none>")
+    else:
+        for p in memory.patterns:
+            print(f"{p.template} | support={p.support} | label={p.label}")
     print()
 
-    print("-- Relation Graph --")
-    for subject in sorted(memory.entity_relations):
-        rel_map = memory.entity_relations[subject]
-        for relation in sorted(rel_map):
-            for obj in sorted(rel_map[relation]):
-                print(f"{subject} -> {relation} -> {obj}")
-    print()
-
-    print("-- Conflicts --")
+    print("-- Conflicts (with evidence) --")
     if not conflicts:
         print("<none>")
     else:
-        for subject, relation, values in conflicts:
-            print(f"{subject} -> {relation} -> {values}")
+        for subject, relation, ranked in conflicts:
+            print(f"{subject} -> {relation} -> {ranked}")
 
     if args.export_triplets:
         export_path = Path(args.export_triplets)
         export_path.parent.mkdir(parents=True, exist_ok=True)
         lines = ["subject\trelation\tobject"]
-        for subject, relation, obj in memory.relation_triplets():
+        for subject, relation, obj in triplets:
             lines.append(f"{subject}\t{relation}\t{obj}")
         export_path.write_text("\n".join(lines), encoding="utf-8")
         print()
