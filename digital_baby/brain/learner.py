@@ -11,8 +11,6 @@ from .reasoning import Reasoner
 
 @dataclass
 class LearningResult:
-    """Outcome of a single topic learning step."""
-
     topic: str
     learned_facts: int
     new_facts: int
@@ -24,14 +22,11 @@ class LearningResult:
 
 
 class Learner:
-    """Parses facts, updates confidence, and populates knowledge graph edges."""
-
     def __init__(self, memory: Memory, reasoner: Reasoner) -> None:
         self.memory = memory
         self.reasoner = reasoner
 
     def learn_from_page(self, page: Dict) -> LearningResult:
-        """Learn facts from one knowledge page dictionary."""
         topic = page["topic"]
         facts: List[str] = page.get("facts", [])
         unknown_concepts: Set[str] = set()
@@ -59,17 +54,18 @@ class Learner:
                     unknown_relations.add(rel)
                     new_relation_types.add(rel)
 
-                self.memory.add_relation(subj, rel, obj, evidence_increment=1)
+                is_new = self.memory.add_relation_fact(subj, rel, obj, source_topic=topic, base_confidence=confidence)
+                if is_new:
+                    new_facts += 1
+            else:
+                # fallback for unparsable text facts
+                existing = self.memory.get_fact(fact)
+                if existing is None:
+                    new_facts += 1
+                self.memory.upsert_fact(fact, confidence, source_topic=topic, evidence_increment=1)
 
             existing = self.memory.get_fact(fact)
-            if existing is not None:
-                # Duplicate observation: evidence updates only, not a new learning event.
-                confidence = existing.confidence
-            else:
-                new_facts += 1
-
-            self.memory.upsert_fact(fact, confidence, source_topic=topic, evidence_increment=1)
-            if confidence < 0.5:
+            if existing and existing.confidence < 0.5:
                 weak_facts += 1
 
         weak_ratio = (weak_facts / len(facts)) if facts else 0.0

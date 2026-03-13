@@ -1,18 +1,17 @@
-# Digital Baby: Open-Ended Curiosity Engine (V3)
+# Digital Baby: World-Model Curiosity Engine
 
-`digital_baby` is an extensible developmental learning prototype.
+`digital_baby` is a developmental learning prototype that now supports long-term
+stability and proto-scientific behavior.
 
-The agent continuously:
+## Core Capabilities
 
-1. explores world topics,
-2. learns facts into persistent graph memory,
-3. tracks evidence and contradictions,
-4. discovers recurring relational patterns,
-5. forms concept hierarchies,
-6. compresses redundant memories,
-7. procedurally generates new topics when learning stalls.
-
-This enables open-ended behavior instead of stopping after static pages are exhausted.
+- Curiosity-driven topic exploration with novelty and prediction-error signals.
+- Procedural knowledge generation with **stable domain registry** (e.g. chemistry, astronomy).
+- Evidence-weighted, deduplicated memory using unique fact index `(entity, relation, value)`.
+- Belief resolution for conflicts (`best` + alternatives + confidence).
+- Pattern discovery and concept hierarchy extraction.
+- Hypothesis formation and prediction generation/testing.
+- Memory compression and persistent world model storage.
 
 ## Project Structure
 
@@ -20,98 +19,41 @@ This enables open-ended behavior instead of stopping after static pages are exha
 digital_baby/
   brain/
     memory.py
-    curiosity.py
     reasoning.py
     learner.py
-    questions.py
+    curiosity.py
     patterns.py
     concepts.py
-  world/
-    knowledge_pages/
-      *.json
-    generator.py
-    memory_store.json   # generated at runtime
+    questions.py
+    hypothesis.py
+    predictor.py
   engine/
     event_loop.py
+  world/
+    generator.py
+    knowledge_pages/*.json
   main.py
 
 tools/
   inspect_brain.py
 ```
 
-## Key V3 Features
+## Stability Improvements
 
-- **Procedural world generation** (`world/generator.py`) for unbounded new topics.
-- **Combinatorial procedural generation** with randomized entity pools to avoid duplicate generated pages.
-- **Duplicate-safe ingestion**: repeated observations increase evidence but do not count as new learning events.
-- **Structural novelty scoring** from new entities, relation types, and pattern growth.
-- **Generalized motif discovery** including multi-hop food-chain patterns.
-- **Working memory compression** for repeated hunt structures (e.g. predator -> herbivores).
-- **Evidence-aware memory** (`evidence` counts per fact/relation).
-- **Conflict comparison with evidence** (competing values ranked by support).
-- **Pattern discovery** (`brain/patterns.py`) from recurring relation types.
-- **Concept hierarchies** (`brain/concepts.py`) inferred from `is` relations.
-- **Memory compression** for repeated structures (e.g. summarized `hunts` facts).
-- **Prediction-error curiosity** (contradictions raise exploration pressure).
-- **Improved logging** with topic reason, new facts, patterns, compression, memory size.
-- **Brain inspection tool** including concepts/relations/pattern/conflict summaries.
+- Duplicate facts are not re-added as separate entries; evidence increments instead.
+- Belief resolution summarizes conflicts by strongest evidence.
+- Topic selection uses safe lookup and regeneration fallback.
+- Generator updates existing domains (topic registry) instead of drifting to random IDs.
 
-## Knowledge Page Format
-
-```json
-{
-  "topic": "animals",
-  "facts": [
-    "cat is mammal",
-    "bird is animal"
-  ]
-}
-```
-
-You can keep adding static pages under `digital_baby/world/knowledge_pages/`, and the
-agent can also generate procedural pages automatically.
-
-## Run the Agent
+## Run
 
 ```bash
 python -m digital_baby.main
+python -m digital_baby.main --ticks 30 --sleep 0.0
 ```
 
-Useful options:
-
-```bash
-python -m digital_baby.main --ticks 20 --sleep 0.2
-python -m digital_baby.main --world digital_baby/world/knowledge_pages --memory digital_baby/world/memory_store.json
-```
-
-## Inspect the Brain
+## Inspect Brain State
 
 ```bash
 python tools/inspect_brain.py --memory digital_baby/world/memory_store.json
 ```
-
-Optional export:
-
-```bash
-python tools/inspect_brain.py --export-triplets artifacts/brain_triplets.tsv
-```
-
-Example metrics printed:
-
-- Facts
-- Concepts
-- Relations
-- Patterns
-- Conflicts
-- Top concepts by connectivity
-
-## Tick Lifecycle (V3)
-
-1. Discover pages.
-2. Select by concept-goal or curiosity score.
-3. If low novelty/stalled, generate a new topic procedurally.
-4. Learn facts + update evidence.
-5. Detect contradiction evidence and raise prediction error.
-6. Discover patterns and concept hierarchy.
-7. Compress redundant memory structures.
-8. Persist memory and continue.

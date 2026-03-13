@@ -10,9 +10,11 @@ import time
 
 from digital_baby.brain.concepts import ConceptHierarchy
 from digital_baby.brain.curiosity import CuriosityModel
+from digital_baby.brain.hypothesis import Hypothesis, HypothesisEngine
 from digital_baby.brain.learner import Learner
-from digital_baby.brain.memory import Memory, PatternRecord
+from digital_baby.brain.memory import HypothesisRecord, Memory, PatternRecord, PredictionRecord
 from digital_baby.brain.patterns import PatternDiscoverer
+from digital_baby.brain.predictor import Predictor
 from digital_baby.brain.questions import QuestionGenerator
 from digital_baby.brain.reasoning import Reasoner
 from digital_baby.world.generator import KnowledgeGenerator
@@ -34,6 +36,8 @@ class BabyEventLoop:
         self.curiosity = CuriosityModel()
         self.questions = QuestionGenerator()
         self.patterns = PatternDiscoverer()
+        self.hypothesis_engine = HypothesisEngine()
+        self.predictor = Predictor()
         self.concepts = ConceptHierarchy()
         self.generator = KnowledgeGenerator(self.world_path)
         self.tick_sleep_seconds = tick_sleep_seconds
@@ -41,49 +45,41 @@ class BabyEventLoop:
         self.stall_ticks = 0
 
     def _load_pages(self) -> List[Dict]:
-        """Auto-discover all JSON pages in world directory."""
         pages = []
         for file_path in sorted(self.world_path.glob("*.json")):
-            page = json.loads(file_path.read_text(encoding="utf-8"))
-            pages.append(page)
+            pages.append(json.loads(file_path.read_text(encoding="utf-8")))
         return pages
+
+    def _safe_topic_lookup(self, topic: str, pages: List[Dict]) -> Dict:
+        page = next((p for p in pages if p["topic"] == topic), None)
+        if page is None:
+            self.logger.warning(f"topic_missing: {topic}")
+            # regenerate inside same domain if possible, else fallback generator domain.
+            domain = topic.split("_")[0]
+            page = self.generator.generate_topic(persist=True, domain=domain)
+            pages.append(page)
+        return page
 
     @staticmethod
     def _page_keywords(page: Dict) -> List[str]:
-        words = {page.get("topic", "").lower()}
+        words = {page.get("topic", "").lower(), page.get("domain", "").lower()}
         for fact in page.get("facts", []):
             for token in fact.lower().split():
                 words.add(token.strip())
         return sorted(words)
 
     def _find_topic_for_concept(self, concept: str, pages: List[Dict]) -> Optional[Tuple[str, str]]:
-        """Find a topic tied to a concept by direct/fuzzy matching."""
         lowered = concept.lower().strip()
-        topic_names = {page["topic"]: page for page in pages}
-
-        if lowered in topic_names:
-            return lowered, f"goal_direct_match:{lowered}"
-
         for page in pages:
-            keywords = self._page_keywords(page)
-            if lowered in keywords or any(lowered in keyword for keyword in keywords):
+            if lowered in {page.get("topic", "").lower(), page.get("domain", "").lower()}:
+                return page["topic"], f"goal_direct_match:{lowered}"
+        for page in pages:
+            if lowered in self._page_keywords(page):
                 return page["topic"], f"goal_keyword_match:{lowered}"
-
         memory_topics = self.memory.find_topics_for_concept(lowered)
         if memory_topics:
             return memory_topics[0], f"goal_memory_match:{lowered}"
-
         return None
-
-
-    def _get_or_regenerate_page(self, topic: str, pages: List[Dict]) -> Dict:
-        """Safely get topic page; regenerate dynamically when missing."""
-        page = next((p for p in pages if p["topic"] == topic), None)
-        if page is None:
-            self.logger.warning(f"topic_missing: {topic}")
-            page = self.generator.generate_topic(persist=True)
-            pages.append(page)
-        return page
 
     def _select_topic(self, pages: List[Dict], weak_by_topic: Dict[str, float]) -> Tuple[Dict, str, float]:
         topics = [page["topic"] for page in pages]
@@ -93,31 +89,51 @@ class BabyEventLoop:
             matched = self._find_topic_for_concept(goal, pages)
             if matched:
                 topic, reason = matched
-                min_visits = min(self.curiosity.topic_visits[t] for t in topics)
+                min_visits = min(self.curiosity.topic_visits[t] for t in topics) if topics else 0
                 if self.curiosity.topic_visits[topic] <= min_visits + 1:
-                    page = self._get_or_regenerate_page(topic, pages)
-                    resolved_topic = page["topic"]
-                    goal_score = self.curiosity.score_topics([resolved_topic], weak_by_topic)[0].score
-                    return page, reason, goal_score
+                    page = self._safe_topic_lookup(topic, pages)
+                    score = self.curiosity.score_topics([page["topic"]], weak_by_topic)[0].score
+                    return page, reason, score
             goal = self.curiosity.pop_goal_concept()
 
         topic_scores = self.curiosity.score_topics(topics, weak_by_topic)
         selected = topic_scores[0]
-        page = self._get_or_regenerate_page(selected.topic, pages)
+        page = self._safe_topic_lookup(selected.topic, pages)
         return page, f"curiosity:{selected.reason}", selected.score
 
-    def _maybe_generate_topic(self, pages: List[Dict], best_score: float) -> Optional[Dict]:
-        """Generate a fresh topic when exploration stalls or novelty gets too low."""
-        if self.stall_ticks >= 2 or best_score < 0.2:
-            page = self.generator.generate_topic(persist=True)
+    def _maybe_generate_topic(self, pages: List[Dict], best_score: float, test_domain: str | None = None) -> Optional[Dict]:
+        if self.stall_ticks >= 2 or best_score < 0.2 or test_domain is not None:
+            page = self.generator.generate_topic(persist=True, domain=test_domain)
             pages.append(page)
-            self.logger.info("generated new topic=%s domain=%s", page["topic"], page.get("domain"))
+            self.logger.info("generated domain=%s generation=%s", page.get("domain"), page.get("generation"))
             self.stall_ticks = 0
             return page
         return None
 
+    def _update_hypotheses(self, discovered_rules: List[PatternRecord]) -> List[Hypothesis]:
+        # Convert to PatternRule-like simple objects via template parsing through hypothesis engine input type.
+        from digital_baby.brain.patterns import PatternRule
+
+        pattern_rules = [
+            PatternRule(relation=r.relation, count=r.support, label=r.label, template=r.template)
+            for r in discovered_rules
+        ]
+        hypotheses = self.hypothesis_engine.from_patterns(pattern_rules)
+        self.memory.set_world_model_rules(
+            [
+                HypothesisRecord(
+                    rule=h.rule,
+                    concepts=h.concepts,
+                    confidence=h.confidence,
+                    supporting_evidence=h.supporting_evidence,
+                    contradicting_evidence=h.contradicting_evidence,
+                )
+                for h in hypotheses
+            ]
+        )
+        return hypotheses
+
     def run(self, max_ticks: Optional[int] = None) -> None:
-        """Run the agent indefinitely unless max_ticks is provided."""
         tick = 0
         while True:
             tick += 1
@@ -128,42 +144,20 @@ class BabyEventLoop:
 
             topics = [page["topic"] for page in pages]
             weak_by_topic = {
-                topic: len(
-                    [
-                        record
-                        for record in self.memory.facts.values()
-                        if record.source_topic == topic and record.confidence < 0.5
-                    ]
-                )
+                topic: len([r for r in self.memory.facts.values() if r.source_topic == topic and r.confidence < 0.5])
                 / max(1, len([r for r in self.memory.facts.values() if r.source_topic == topic]))
                 for topic in topics
             }
 
             selected_page, selection_reason, selection_score = self._select_topic(pages, weak_by_topic)
-            maybe_generated = self._maybe_generate_topic(pages, selection_score)
-            if maybe_generated is not None:
-                selected_page = maybe_generated
-                selection_reason = "procedural_generation:stalled_or_low_novelty"
-
             selected_topic = selected_page["topic"]
             self.logger.info("[tick=%s] selected_topic=%s reason=%s", tick, selected_topic, selection_reason)
 
-            prev_pattern_count = len(self.memory.patterns)
             result = self.learner.learn_from_page(selected_page)
+            self.stall_ticks = self.stall_ticks + 1 if result.new_facts == 0 else 0
 
-            if result.new_facts == 0:
-                self.stall_ticks += 1
-            else:
-                self.stall_ticks = 0
-
-            # Structural novelty from entities, relation types, and fresh facts.
-            structural_novelty = (
-                (len(result.new_entities) * 0.12)
-                + (len(result.new_relation_types) * 0.2)
-                + (result.new_facts * 0.08)
-            )
+            structural_novelty = (len(result.new_entities) * 0.12) + (len(result.new_relation_types) * 0.2) + (result.new_facts * 0.08)
             self.curiosity.register_structural_novelty(result.topic, structural_novelty)
-
             self.curiosity.register_unknowns(result.topic, result.unknown_concepts)
             self.curiosity.register_unknowns(result.topic, result.unknown_relations)
             self.curiosity.mark_visited(result.topic)
@@ -172,43 +166,59 @@ class BabyEventLoop:
             conflict_bonus = 0.0
             if conflicts:
                 for entity, relation, ranked_values in conflicts:
-                    self.logger.info("[tick=%s] conflict entity=%s relation=%s ranked_values=%s", tick, entity, relation, ranked_values)
-                    concepts = [entity, relation] + [value for value, _evidence in ranked_values]
-                    self.curiosity.register_unknowns(result.topic, concepts)
-                    if len(ranked_values) > 1:
-                        delta = abs(ranked_values[0][1] - ranked_values[1][1])
-                        self.curiosity.register_prediction_error(result.topic, 1.0 / (1 + delta))
+                    belief = self.memory.resolve_belief(entity, relation)
+                    if belief:
+                        self.logger.info(
+                            "[tick=%s] conflict entity=%s relation=%s belief=%s confidence=%.2f ranked_values=%s",
+                            tick,
+                            entity,
+                            relation,
+                            belief.best,
+                            belief.confidence,
+                            ranked_values,
+                        )
+                        self.curiosity.register_prediction_error(result.topic, 1.0 - belief.confidence)
                 conflict_bonus = len(conflicts) * 0.3
 
             generated_questions = self.questions.from_unknown_concepts(result.unknown_concepts)
             generated_questions.extend(self.questions.from_unknown_concepts(result.unknown_relations))
-            generated_questions.extend(
-                self.questions.from_conflicts([(e, r, [v for v, _ in vals]) for e, r, vals in conflicts])
-            )
             self.curiosity.register_unknowns(result.topic, [q.target_concept for q in generated_questions])
 
-            # Pattern discovery + hierarchy updates.
             triplets = self.memory.relation_triplets()
-            discovered_rules = self.patterns.discover(triplets, min_support=2)
-            pattern_delta = max(0, len(discovered_rules) - prev_pattern_count)
-            if pattern_delta:
-                self.curiosity.register_structural_novelty(result.topic, pattern_delta * 0.35)
-
+            discovered = self.patterns.discover(triplets, min_support=2)
             self.memory.update_patterns(
-                [
-                    PatternRecord(
-                        template=rule.template,
-                        relation=rule.relation,
-                        support=rule.count,
-                        label=rule.label,
-                        timestamp=time.time(),
-                    )
-                    for rule in discovered_rules
-                ]
+                [PatternRecord(template=r.template, relation=r.relation, support=r.count, label=r.label, timestamp=time.time()) for r in discovered]
             )
             self.concepts.ingest_triplets(triplets)
 
-            # Memory compression for repeated relation structures.
+            hypotheses = self._update_hypotheses(self.memory.patterns)
+            uncertainty = self.memory.hypothesis_uncertainty()
+            self.curiosity.register_structural_novelty(result.topic, uncertainty * 0.4)
+
+            # Active hypothesis testing: generate domain matching uncertain hypotheses.
+            test_domain = None
+            if hypotheses:
+                most_uncertain = sorted(hypotheses, key=lambda h: h.confidence)[0]
+                rel = most_uncertain.rule.split()[1]
+                rel_to_domain = {"hunts": "ecosystem", "orbits": "astronomy", "reacts_with": "chemistry"}
+                test_domain = rel_to_domain.get(rel)
+
+            maybe_generated = self._maybe_generate_topic(pages, selection_score, test_domain=test_domain if tick % 5 == 0 else None)
+            if maybe_generated is not None and tick % 5 == 0 and hypotheses:
+                self.logger.info("[tick=%s] hypothesis_test_domain=%s", tick, maybe_generated.get("domain"))
+
+            predictions = self.predictor.predict(hypotheses, self.memory.all_entities())
+            observed_set = set(self.memory.relation_triplets())
+            failed = 0
+            for prediction in predictions[:3]:
+                success = self.predictor.evaluate(prediction, list(observed_set))
+                if not success:
+                    failed += 1
+                    self.logger.info("[tick=%s] prediction_failed=%s rule=%s", tick, prediction.statement, prediction.rule)
+                self.memory.add_prediction(PredictionRecord(rule=prediction.rule, statement=prediction.statement, success=success, timestamp=time.time()))
+            if predictions:
+                self.curiosity.register_prediction_error(result.topic, failed / max(1, len(predictions)))
+
             compressed = self.memory.compress_relation_facts("hunts", min_objects=2)
 
             novelty_score = self.curiosity.score_topics([selected_topic], weak_by_topic)[0].score
@@ -218,16 +228,16 @@ class BabyEventLoop:
             self.memory.save()
 
             self.logger.info(
-                "[tick=%s] learned=%s new_facts=%s unknown=%s new_entities=%s new_relations=%s patterns=%s compressed=%s memory=%s reward=%.2f",
+                "[tick=%s] learned=%s new_facts=%s unknown=%s patterns=%s hypotheses=%s compressed=%s memory=%s unique_facts=%s reward=%.2f",
                 tick,
                 result.learned_facts,
                 result.new_facts,
                 sorted(result.unknown_concepts),
-                len(result.new_entities),
-                len(result.new_relation_types),
-                len(discovered_rules),
+                len(self.memory.patterns),
+                len(self.memory.world_model.get('rules', [])),
                 len(compressed),
                 len(self.memory.facts),
+                len(self.memory.fact_index),
                 curiosity_reward,
             )
 

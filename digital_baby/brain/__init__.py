@@ -1,1 +1,1 @@
-"""Brain modules for memory, curiosity, reasoning, learning, patterns, concepts, and questions."""
+"""Brain modules for memory, curiosity, reasoning, learning, patterns, concepts, hypotheses, and prediction."""
