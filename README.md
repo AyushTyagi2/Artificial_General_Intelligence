@@ -11,6 +11,7 @@ stability and proto-scientific behavior.
 - Belief resolution for conflicts (`best` + alternatives + confidence).
 - Pattern discovery and concept hierarchy extraction.
 - Hypothesis formation and prediction generation/testing.
+- Concept type system with typed hypotheses and relation constraints.
 - Memory compression and persistent world model storage.
 
 ## Project Structure
@@ -41,6 +42,7 @@ tools/
 ## Stability Improvements
 
 - Duplicate facts are not re-added as separate entries; evidence increments instead.
+- Prediction filtering rejects type-invalid facts before storage.
 - Belief resolution summarizes conflicts by strongest evidence.
 - Topic selection uses safe lookup and regeneration fallback.
 - Generator updates existing domains (topic registry) instead of drifting to random IDs.

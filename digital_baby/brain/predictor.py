@@ -6,16 +6,16 @@ from dataclasses import dataclass
 from typing import Iterable, List, Sequence, Tuple
 import random
 
+from .concepts import ConceptTypeSystem
 from .hypothesis import Hypothesis
 
 
 @dataclass
 class Prediction:
-    """Predicted relation expected from a hypothesis."""
-
     rule: str
     statement: str
     relation: str
+    valid: bool
 
 
 class Predictor:
@@ -24,26 +24,35 @@ class Predictor:
     def __init__(self, seed: int | None = None) -> None:
         self.random = random.Random(seed)
 
-    def predict(self, hypotheses: Sequence[Hypothesis], entities: Iterable[str]) -> List[Prediction]:
+    def predict(
+        self,
+        hypotheses: Sequence[Hypothesis],
+        entities: Iterable[str],
+        concept_types: ConceptTypeSystem,
+    ) -> List[Prediction]:
         entity_list = sorted(set(entities))
         if len(entity_list) < 2:
             return []
 
         predictions: List[Prediction] = []
-        for hypothesis in hypotheses[:5]:
+        for hypothesis in hypotheses[:6]:
             parts = hypothesis.rule.split()
             if len(parts) < 3:
                 continue
+            # typed rules like "predator hunts prey"
             relation = parts[1]
-            subj = self.random.choice(entity_list)
-            obj = self.random.choice([e for e in entity_list if e != subj] or entity_list)
-            predictions.append(
-                Prediction(
-                    rule=hypothesis.rule,
-                    relation=relation,
-                    statement=f"{subj} {relation} {obj}",
-                )
-            )
+            subj_candidates = [e for e in entity_list if concept_types.get_type(e) == parts[0] or parts[0] == "unknown"]
+            obj_candidates = [e for e in entity_list if concept_types.get_type(e) == parts[2] or parts[2] == "unknown"]
+            if not subj_candidates:
+                subj_candidates = entity_list
+            if not obj_candidates:
+                obj_candidates = entity_list
+            subj = self.random.choice(subj_candidates)
+            obj_pool = [e for e in obj_candidates if e != subj] or obj_candidates
+            obj = self.random.choice(obj_pool)
+
+            valid = concept_types.is_relation_valid(subj, relation, obj)
+            predictions.append(Prediction(rule=hypothesis.rule, relation=relation, statement=f"{subj} {relation} {obj}", valid=valid))
         return predictions
 
     def evaluate(self, prediction: Prediction, observed_triplets: Sequence[Tuple[str, str, str]]) -> bool:
