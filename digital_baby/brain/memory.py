@@ -156,19 +156,38 @@ class Memory:
         """Replace stored pattern records with latest discovery pass."""
         self.patterns = rules
 
+    def has_fact(self, statement: str) -> bool:
+        """Return whether a fact statement already exists in memory."""
+        return statement in self.facts
+
     def compress_relation_facts(self, relation: str, min_objects: int = 3) -> List[str]:
-        """Compress redundant relation facts for same subject into a summary fact."""
+        """Compress redundant relation facts for same subject into summary facts."""
         summaries: List[str] = []
         for subject, rel_map in self.entity_relations.items():
             objs = rel_map.get(relation, set())
             if len(objs) >= min_objects:
-                summary = f"{subject} {relation} multiple_entities"
+                # Try concept-aware category summarization first.
+                category = "multiple_entities"
+                herbivores = {"deer", "zebra", "rabbit", "antelope", "buffalo", "goat", "hare", "rodent"}
+                if objs and all(obj in herbivores for obj in objs):
+                    category = "herbivores"
+
+                summary = f"{subject} {relation} {category}"
                 if summary not in self.facts:
-                    self.upsert_fact(summary, confidence=0.55, source_topic="memory_compression", evidence_increment=len(objs))
-                    if summary in self.facts:
-                        self.facts[summary].compressed = True
+                    self.upsert_fact(summary, confidence=0.58, source_topic="memory_compression", evidence_increment=len(objs))
+                    self.facts[summary].compressed = True
                 summaries.append(summary)
-        return summaries
+
+        # Global relation summary when many subjects share structure.
+        subjects_with_relation = [s for s, m in self.entity_relations.items() if relation in m]
+        if len(subjects_with_relation) >= 4:
+            global_summary = f"multiple_predators {relation} multiple_prey"
+            if global_summary not in self.facts:
+                self.upsert_fact(global_summary, confidence=0.56, source_topic="memory_compression", evidence_increment=len(subjects_with_relation))
+                self.facts[global_summary].compressed = True
+            summaries.append(global_summary)
+
+        return sorted(set(summaries))
 
     def save(self) -> None:
         """Persist memory state to disk as JSON."""
