@@ -8,7 +8,7 @@ import json
 import logging
 import time
 
-from digital_baby.brain.concepts import ConceptHierarchy
+from digital_baby.brain.concepts import ConceptHierarchy, ConceptTypeSystem
 from digital_baby.brain.curiosity import CuriosityModel
 from digital_baby.brain.hypothesis import Hypothesis, HypothesisEngine
 from digital_baby.brain.learner import Learner
@@ -39,6 +39,7 @@ class BabyEventLoop:
         self.hypothesis_engine = HypothesisEngine()
         self.predictor = Predictor()
         self.concepts = ConceptHierarchy()
+        self.type_system = ConceptTypeSystem()
         self.generator = KnowledgeGenerator(self.world_path)
         self.tick_sleep_seconds = tick_sleep_seconds
         self.logger = logging.getLogger(self.__class__.__name__)
@@ -54,7 +55,6 @@ class BabyEventLoop:
         page = next((p for p in pages if p["topic"] == topic), None)
         if page is None:
             self.logger.warning(f"topic_missing: {topic}")
-            # regenerate inside same domain if possible, else fallback generator domain.
             domain = topic.split("_")[0]
             page = self.generator.generate_topic(persist=True, domain=domain)
             pages.append(page)
@@ -110,15 +110,11 @@ class BabyEventLoop:
             return page
         return None
 
-    def _update_hypotheses(self, discovered_rules: List[PatternRecord]) -> List[Hypothesis]:
-        # Convert to PatternRule-like simple objects via template parsing through hypothesis engine input type.
+    def _update_hypotheses(self, discovered_rules: List[PatternRecord], triplets: List[Tuple[str, str, str]]) -> List[Hypothesis]:
         from digital_baby.brain.patterns import PatternRule
 
-        pattern_rules = [
-            PatternRule(relation=r.relation, count=r.support, label=r.label, template=r.template)
-            for r in discovered_rules
-        ]
-        hypotheses = self.hypothesis_engine.from_patterns(pattern_rules)
+        pattern_rules = [PatternRule(relation=r.relation, count=r.support, label=r.label, template=r.template) for r in discovered_rules]
+        hypotheses = self.hypothesis_engine.from_patterns(pattern_rules, self.type_system, triplets)
         self.memory.set_world_model_rules(
             [
                 HypothesisRecord(
@@ -185,17 +181,18 @@ class BabyEventLoop:
             self.curiosity.register_unknowns(result.topic, [q.target_concept for q in generated_questions])
 
             triplets = self.memory.relation_triplets()
+            self.type_system.infer_from_triplets(triplets)
             discovered = self.patterns.discover(triplets, min_support=2)
             self.memory.update_patterns(
                 [PatternRecord(template=r.template, relation=r.relation, support=r.count, label=r.label, timestamp=time.time()) for r in discovered]
             )
             self.concepts.ingest_triplets(triplets)
 
-            hypotheses = self._update_hypotheses(self.memory.patterns)
+            hypotheses = self._update_hypotheses(self.memory.patterns, triplets)
             uncertainty = self.memory.hypothesis_uncertainty()
             self.curiosity.register_structural_novelty(result.topic, uncertainty * 0.4)
+            self.curiosity.register_hypothesis_uncertainty(result.topic, uncertainty)
 
-            # Active hypothesis testing: generate domain matching uncertain hypotheses.
             test_domain = None
             if hypotheses:
                 most_uncertain = sorted(hypotheses, key=lambda h: h.confidence)[0]
@@ -207,17 +204,23 @@ class BabyEventLoop:
             if maybe_generated is not None and tick % 5 == 0 and hypotheses:
                 self.logger.info("[tick=%s] hypothesis_test_domain=%s", tick, maybe_generated.get("domain"))
 
-            predictions = self.predictor.predict(hypotheses, self.memory.all_entities())
+            predictions = self.predictor.predict(hypotheses, self.memory.all_entities(), self.type_system)
             observed_set = set(self.memory.relation_triplets())
             failed = 0
-            for prediction in predictions[:3]:
+            invalid = 0
+            for prediction in predictions[:4]:
+                if not prediction.valid:
+                    invalid += 1
+                    self.logger.info("[tick=%s] prediction_invalid=%s rule=%s", tick, prediction.statement, prediction.rule)
+                    continue
                 success = self.predictor.evaluate(prediction, list(observed_set))
                 if not success:
                     failed += 1
                     self.logger.info("[tick=%s] prediction_failed=%s rule=%s", tick, prediction.statement, prediction.rule)
                 self.memory.add_prediction(PredictionRecord(rule=prediction.rule, statement=prediction.statement, success=success, timestamp=time.time()))
+
             if predictions:
-                self.curiosity.register_prediction_error(result.topic, failed / max(1, len(predictions)))
+                self.curiosity.register_prediction_error(result.topic, (failed + invalid) / max(1, len(predictions)))
 
             compressed = self.memory.compress_relation_facts("hunts", min_objects=2)
 
@@ -228,13 +231,14 @@ class BabyEventLoop:
             self.memory.save()
 
             self.logger.info(
-                "[tick=%s] learned=%s new_facts=%s unknown=%s patterns=%s hypotheses=%s compressed=%s memory=%s unique_facts=%s reward=%.2f",
+                "[tick=%s] learned=%s new_facts=%s unknown=%s patterns=%s hypotheses=%s invalid_predictions=%s compressed=%s memory=%s unique_facts=%s reward=%.2f",
                 tick,
                 result.learned_facts,
                 result.new_facts,
                 sorted(result.unknown_concepts),
                 len(self.memory.patterns),
                 len(self.memory.world_model.get('rules', [])),
+                invalid,
                 len(compressed),
                 len(self.memory.facts),
                 len(self.memory.fact_index),

@@ -10,6 +10,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from digital_baby.brain.concepts import ConceptTypeSystem
 from digital_baby.brain.memory import Memory
 
 
@@ -27,10 +28,14 @@ def main() -> None:
     facts = sorted(memory.facts.values(), key=lambda f: f.confidence, reverse=True)
     conflicts = memory.conflicting_relations_with_evidence()
 
+    type_system = ConceptTypeSystem()
+    type_system.infer_from_triplets(memory.relation_triplets())
+
     print("=== DIGITAL BABY BRAIN INSPECTION ===")
     print(f"Facts: {len(memory.facts)}")
     print(f"Unique fact index: {len(memory.fact_index)}")
     print(f"Concepts: {len(memory.all_entities())}")
+    print(f"Typed entities: {len(type_system.entity_types)}")
     print(f"Patterns: {len(memory.patterns)}")
     print(f"Rules: {len(memory.world_model.get('rules', []))}")
     print(f"Predictions logged: {len(memory.world_model.get('predictions', []))}")
@@ -41,6 +46,11 @@ def main() -> None:
     for fact in facts[: args.max_facts]:
         marker = " [compressed]" if fact.compressed else ""
         print(f"[{fact.confidence:.3f}] ev={fact.evidence} {fact.statement}{marker}")
+    print()
+
+    print("-- Sample Entity Types --")
+    for entity, t in sorted(type_system.entity_types.items())[:20]:
+        print(f"{entity}: {t} ({type_system.get_type_confidence(entity):.2f})")
     print()
 
     print("-- Belief States (conflicts resolved) --")
