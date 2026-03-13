@@ -66,6 +66,17 @@ class PredictionRecord:
     timestamp: float
 
 
+@dataclass
+class ExperimentRecord:
+    """Experiment result log entry."""
+
+    rule: str
+    name: str
+    supported: int
+    contradicted: int
+    timestamp: float
+
+
 class Memory:
     """Persistent memory containing factual beliefs, graph, and world model."""
 
@@ -76,7 +87,7 @@ class Memory:
         self.relation_evidence: Dict[Tuple[str, str, str], int] = {}
         self.fact_index: Dict[Tuple[str, str, str], str] = {}
         self.patterns: List[PatternRecord] = []
-        self.world_model: Dict[str, List[dict]] = {"rules": [], "predictions": []}
+        self.world_model: Dict[str, List[dict]] = {"rules": [], "predictions": [], "experiments": []}
         self._load()
 
     def upsert_fact(self, statement: str, confidence: float, source_topic: str, evidence_increment: int = 1) -> None:
@@ -195,6 +206,25 @@ class Memory:
         # keep bounded history
         self.world_model["predictions"] = self.world_model["predictions"][-300:]
 
+
+    def add_experiment(self, experiment: ExperimentRecord) -> None:
+        self.world_model.setdefault("experiments", []).append(asdict(experiment))
+        self.world_model["experiments"] = self.world_model["experiments"][-300:]
+
+    def update_hypothesis_evidence(self, rule: str, supported: int, contradicted: int) -> Optional[dict]:
+        """Update stored rule evidence/confidence from experiment outcomes."""
+        rules = self.world_model.get("rules", [])
+        for record in rules:
+            if record.get("rule") != rule:
+                continue
+            record["supporting_evidence"] = int(record.get("supporting_evidence", 0)) + int(supported)
+            record["contradicting_evidence"] = int(record.get("contradicting_evidence", 0)) + int(contradicted)
+            sup = record["supporting_evidence"]
+            con = record["contradicting_evidence"]
+            record["confidence"] = sup / max(1, sup + con)
+            return record
+        return None
+
     def hypothesis_uncertainty(self) -> float:
         rules = self.world_model.get("rules", [])
         if not rules:
@@ -269,4 +299,4 @@ class Memory:
         for entry in payload.get("patterns", []):
             self.patterns.append(PatternRecord(**entry))
 
-        self.world_model = payload.get("world_model", {"rules": [], "predictions": []})
+        self.world_model = payload.get("world_model", {"rules": [], "predictions": [], "experiments": []})

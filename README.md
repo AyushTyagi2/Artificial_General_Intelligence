@@ -11,6 +11,7 @@ stability and proto-scientific behavior.
 - Belief resolution for conflicts (`best` + alternatives + confidence).
 - Pattern discovery and concept hierarchy extraction.
 - Hypothesis formation and prediction generation/testing.
+- Self-generated experiments for active hypothesis testing.
 - Concept type system with typed hypotheses and relation constraints.
 - Memory compression and persistent world model storage.
 
@@ -46,6 +47,10 @@ tools/
 - Belief resolution summarizes conflicts by strongest evidence.
 - Topic selection uses safe lookup and regeneration fallback.
 - Generator updates existing domains (topic registry) instead of drifting to random IDs.
+
+## Active Learning Loop
+
+observe -> hypothesize -> experiment -> update belief
 
 ## Run
 
