@@ -1,15 +1,18 @@
-# Digital Baby: Curiosity-Driven Learning Agent (V2)
+# Digital Baby: Open-Ended Curiosity Engine (V3)
 
-This repository contains a minimal but extensible prototype of a curiosity-driven
-"digital baby" agent.
+`digital_baby` is an extensible developmental learning prototype.
 
-In V2, the agent is now both curiosity-driven and goal-directed:
+The agent continuously:
 
-- It discovers all world pages automatically from `digital_baby/world/knowledge_pages/`.
-- It detects unknown concepts and turns them into exploration goals.
-- It generates questions from unknowns/conflicts to drive future exploration.
-- It persists memory and maintains a simple knowledge graph with conflict lookup.
-- It includes a terminal brain inspection tool.
+1. explores world topics,
+2. learns facts into persistent graph memory,
+3. tracks evidence and contradictions,
+4. discovers recurring relational patterns,
+5. forms concept hierarchies,
+6. compresses redundant memories,
+7. procedurally generates new topics when learning stalls.
+
+This enables open-ended behavior instead of stopping after static pages are exhausted.
 
 ## Project Structure
 
@@ -21,9 +24,12 @@ digital_baby/
     reasoning.py
     learner.py
     questions.py
+    patterns.py
+    concepts.py
   world/
     knowledge_pages/
       *.json
+    generator.py
     memory_store.json   # generated at runtime
   engine/
     event_loop.py
@@ -33,22 +39,19 @@ tools/
   inspect_brain.py
 ```
 
-## V2 Features
+## Key V3 Features
 
-- **Scalable world discovery**: no code changes needed when adding new JSON pages.
-- **Persistent memory** of facts with confidence scores in `[0, 1]`.
-- **Confidence decay** over time to model uncertainty drift.
-- **Knowledge graph representation**: `entity -> relation -> value`.
-- **Graph utilities**: relation retrieval, entity querying, conflict extraction.
-- **Topic exploration penalty** to reduce repeated topic looping.
-- **Goal-directed exploration** via unknown concept queue and topic matching.
-- **Question generation** from unknown concepts and contradictions.
-- **Conflict investigation behavior** that boosts concept exploration pressure.
-- **Readable per-tick logs** including topic, reason, unknowns, and reward.
+- **Procedural world generation** (`world/generator.py`) for unbounded new topics.
+- **Evidence-aware memory** (`evidence` counts per fact/relation).
+- **Conflict comparison with evidence** (competing values ranked by support).
+- **Pattern discovery** (`brain/patterns.py`) from recurring relation types.
+- **Concept hierarchies** (`brain/concepts.py`) inferred from `is` relations.
+- **Memory compression** for repeated structures (e.g. summarized `hunts` facts).
+- **Prediction-error curiosity** (contradictions raise exploration pressure).
+- **Improved logging** with topic reason, new facts, patterns, compression, memory size.
+- **Brain inspection tool** including concepts/relations/pattern/conflict summaries.
 
 ## Knowledge Page Format
-
-Each page is a JSON object:
 
 ```json
 {
@@ -60,11 +63,10 @@ Each page is a JSON object:
 }
 ```
 
-Add as many pages as needed under `digital_baby/world/knowledge_pages/`.
+You can keep adding static pages under `digital_baby/world/knowledge_pages/`, and the
+agent can also generate procedural pages automatically.
 
 ## Run the Agent
-
-From repository root:
 
 ```bash
 python -m digital_baby.main
@@ -79,33 +81,32 @@ python -m digital_baby.main --world digital_baby/world/knowledge_pages --memory 
 
 ## Inspect the Brain
 
-After running the agent:
-
 ```bash
 python tools/inspect_brain.py --memory digital_baby/world/memory_store.json
 ```
 
-Optional graph export:
+Optional export:
 
 ```bash
 python tools/inspect_brain.py --export-triplets artifacts/brain_triplets.tsv
 ```
 
-## Tick Lifecycle
+Example metrics printed:
 
-1. Observe all discovered world pages.
-2. Select topic:
-   - first by concept goals (direct/fuzzy match),
-   - otherwise by curiosity scoring.
-3. Read facts and update memory.
-4. Update unknown concepts/relations.
-5. Investigate conflicts and generate questions.
-6. Decay confidence and persist memory.
-7. Log tick summary and sleep.
+- Facts
+- Concepts
+- Relations
+- Patterns
+- Conflicts
+- Top concepts by connectivity
 
-## Extending Further
+## Tick Lifecycle (V3)
 
-- Improve parser beyond `<subject> <relation> <object>`.
-- Add richer confidence updates (Bayesian or evidence-based).
-- Add topic embeddings for stronger concept-to-topic matching.
-- Add long-horizon planning over generated question queues.
+1. Discover pages.
+2. Select by concept-goal or curiosity score.
+3. If low novelty/stalled, generate a new topic procedurally.
+4. Learn facts + update evidence.
+5. Detect contradiction evidence and raise prediction error.
+6. Discover patterns and concept hierarchy.
+7. Compress redundant memory structures.
+8. Persist memory and continue.
