@@ -64,3 +64,25 @@ python -m digital_baby.main --ticks 30 --sleep 0.0
 ```bash
 python tools/inspect_brain.py --memory digital_baby/world/memory_store.json
 ```
+
+
+## Visualization Dashboard
+
+A read-only dashboard is available under `digital_baby/dashboard/`:
+
+- `log_parser.py` parses conflicts, prediction failures, and reward history from runtime logs.
+- `graph_builder.py` builds an interactive NetworkX/PyVis graph.
+- `server.py` serves Flask routes:
+  - `/` dashboard page
+  - `/graph` interactive knowledge graph
+
+Run (with your log path):
+
+```bash
+DIGITAL_BABY_LOG=/path/to/agent.log python -m digital_baby.dashboard.server
+```
+
+Then open:
+
+- `http://localhost:5055/`
+- `http://localhost:5055/graph`
