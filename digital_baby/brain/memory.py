@@ -77,6 +77,17 @@ class ExperimentRecord:
     timestamp: float
 
 
+@dataclass
+class CausalRuleRecord:
+    """Persistent directional causal rule discovered from transitions."""
+
+    cause: str
+    effect: str
+    direction: str
+    confidence: float
+    observations: int
+
+
 class Memory:
     """Persistent memory containing factual beliefs, graph, and world model."""
 
@@ -87,6 +98,7 @@ class Memory:
         self.relation_evidence: Dict[Tuple[str, str, str], int] = {}
         self.fact_index: Dict[Tuple[str, str, str], str] = {}
         self.patterns: List[PatternRecord] = []
+        self.causal_rules: List[CausalRuleRecord] = []
         self.world_model: Dict[str, List[dict]] = {"rules": [], "predictions": [], "experiments": []}
         self._load()
 
@@ -195,6 +207,41 @@ class Memory:
         confidence = (best_ev / total) if total else 0.0
         return BeliefState(best=best, alternatives=alternatives, confidence=confidence)
 
+
+    def upsert_causal_rule(self, cause: str, effect: str, direction: str, observations_increment: int = 1) -> Tuple[CausalRuleRecord, bool]:
+        """Insert or update a causal rule with confidence tracking.
+
+        Confidence is normalized by total observations for the same cause.
+        Returns (rule, created_new).
+        """
+        cause = cause.strip().lower()
+        effect = effect.strip().lower()
+        direction = direction.strip().lower()
+        existing = next((r for r in self.causal_rules if r.cause == cause and r.effect == effect), None)
+
+        if existing is None:
+            existing = CausalRuleRecord(
+                cause=cause,
+                effect=effect,
+                direction=direction,
+                confidence=0.0,
+                observations=max(1, observations_increment),
+            )
+            self.causal_rules.append(existing)
+            created_new = True
+        else:
+            created_new = False
+            existing.observations += max(1, observations_increment)
+            if existing.direction != direction:
+                existing.direction = "mixed"
+
+        total_cause_observations = sum(r.observations for r in self.causal_rules if r.cause == cause)
+        existing.confidence = existing.observations / max(1, total_cause_observations)
+        return existing, created_new
+
+    def get_causal_rules(self) -> List[CausalRuleRecord]:
+        return list(self.causal_rules)
+
     def update_patterns(self, rules: List[PatternRecord]) -> None:
         self.patterns = rules
 
@@ -262,6 +309,7 @@ class Memory:
                 for (s, r, o), st in self.fact_index.items()
             ],
             "patterns": [asdict(pattern) for pattern in self.patterns],
+            "causal_rules": [asdict(rule) for rule in self.causal_rules],
             "world_model": self.world_model,
         }
         self.storage_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
@@ -298,5 +346,8 @@ class Memory:
 
         for entry in payload.get("patterns", []):
             self.patterns.append(PatternRecord(**entry))
+
+        for entry in payload.get("causal_rules", []):
+            self.causal_rules.append(CausalRuleRecord(**entry))
 
         self.world_model = payload.get("world_model", {"rules": [], "predictions": [], "experiments": []})

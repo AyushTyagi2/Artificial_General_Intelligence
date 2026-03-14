@@ -21,6 +21,15 @@ class LearningResult:
     weak_fact_ratio: float
 
 
+@dataclass
+class CausalRuleCandidate:
+    cause: str
+    effect: str
+    direction: str
+    observations: int
+    total_cause_observations: int
+
+
 class Learner:
     def __init__(self, memory: Memory, reasoner: Reasoner) -> None:
         self.memory = memory
@@ -87,22 +96,58 @@ class Learner:
             return ["predator eats prey"]
         return []
 
-    def discover_causal_rules(self, transitions: Sequence[Dict[str, float]]) -> List[str]:
-        """Infer causal rules from repeated state transitions."""
+    def discover_causal_candidates(self, transitions: Sequence[Dict[str, float]]) -> List[CausalRuleCandidate]:
+        """Infer directional causal candidates from repeated transition pairs.
+
+        Direction rules:
+        - positive: cause increase aligns with effect increase
+        - negative: cause increase aligns with effect decrease
+        - mixed: both signs appear often
+        """
         if len(transitions) < 3:
             return []
 
-        wolf_down_deer_up = 0
+        cause_totals: Dict[str, int] = {}
+        pair_sign_counts: Dict[Tuple[str, str], Dict[str, int]] = {}
+
         for delta in transitions:
-            if delta.get("wolves", 0.0) < 0 and delta.get("deer", 0.0) > 0:
-                wolf_down_deer_up += 1
+            numeric = {k: float(v) for k, v in delta.items() if abs(float(v)) > 1e-9}
+            for cause, cause_delta in numeric.items():
+                if cause_delta <= 0:
+                    continue
+                cause_totals[cause] = cause_totals.get(cause, 0) + 1
+                for effect, effect_delta in numeric.items():
+                    if effect == cause or abs(effect_delta) <= 1e-9:
+                        continue
+                    key = (cause, effect)
+                    counts = pair_sign_counts.setdefault(key, {"positive": 0, "negative": 0})
+                    if effect_delta > 0:
+                        counts["positive"] += 1
+                    else:
+                        counts["negative"] += 1
 
-        rules: List[str] = []
-        if wolf_down_deer_up >= 3:
-            rules.append("predator controls herbivore population")
+        candidates: List[CausalRuleCandidate] = []
+        for (cause, effect), counts in pair_sign_counts.items():
+            pos = counts["positive"]
+            neg = counts["negative"]
+            observations = pos + neg
+            if observations < 3:
+                continue
+            if pos > neg * 1.5:
+                direction = "positive"
+            elif neg > pos * 1.5:
+                direction = "negative"
+            else:
+                direction = "mixed"
 
-        temp_up_energy_up = sum(1 for delta in transitions if delta.get("temperature", 0.0) > 0 and delta.get("reaction_energy", 0.0) > 0)
-        if temp_up_energy_up >= 3:
-            rules.append("temperature affects reaction_energy")
+            candidates.append(
+                CausalRuleCandidate(
+                    cause=cause,
+                    effect=effect,
+                    direction=direction,
+                    observations=observations,
+                    total_cause_observations=max(1, cause_totals.get(cause, observations)),
+                )
+            )
 
-        return rules
+        return candidates

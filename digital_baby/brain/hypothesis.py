@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from typing import Iterable, List, Sequence, Tuple
 
 from .concepts import ConceptTypeSystem
+from .memory import CausalRuleRecord
 from .patterns import PatternRule
 
 
@@ -68,6 +69,28 @@ class HypothesisEngine:
         hypotheses.extend(self.generate_causal_hypotheses(triplets))
         return self._deduplicate(hypotheses)
 
+    def from_causal_rules(self, rules: Sequence[CausalRuleRecord]) -> List[Hypothesis]:
+        """Generate testable causal hypotheses from stored causal rules."""
+        hypotheses: List[Hypothesis] = []
+        for rule in rules:
+            if rule.direction == "positive":
+                statement = f"if {rule.cause} increases then {rule.effect} will increase"
+            elif rule.direction == "negative":
+                statement = f"if {rule.cause} increases then {rule.effect} will decrease"
+            else:
+                statement = f"if {rule.cause} changes then {rule.effect} may change"
+
+            hypotheses.append(
+                Hypothesis(
+                    rule=statement,
+                    concepts=[rule.cause, rule.effect],
+                    confidence=max(0.2, min(0.99, rule.confidence)),
+                    supporting_evidence=max(1, rule.observations),
+                    contradicting_evidence=max(1, int((1.0 - rule.confidence) * max(1, rule.observations))),
+                )
+            )
+        return hypotheses
+
     def generate_semantic_hypotheses(
         self,
         concept_types: ConceptTypeSystem,
@@ -96,8 +119,7 @@ class HypothesisEngine:
         return hypotheses[:max_hypotheses]
 
     def generate_causal_hypotheses(self, triplets: Sequence[Tuple[str, str, str]]) -> List[Hypothesis]:
-        """Generate causal hypotheses from state keys and relations."""
-        concepts = sorted({s for s, _, _ in triplets if s in {"wolves", "deer", "grass", "temperature", "reactants", "solar_energy"}})
+        concepts = sorted({s for s, _, _ in triplets if s in {"wolves", "deer", "grass", "temperature", "reactants", "solar_energy", "reaction_energy"}})
         if len(concepts) < 2:
             return []
 
