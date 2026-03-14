@@ -1,10 +1,7 @@
 """Procedural world generator for open-ended topic creation.
 
-This generator supports continuous novelty injection by mixing:
-- template-based domain facts,
-- external concept discovery from Wikidata,
-- synthetic concept mutation,
-- random relation discovery.
+This generator supports continuous novelty injection and a lightweight
+stateful world simulator used for causal learning.
 """
 
 from __future__ import annotations
@@ -28,7 +25,7 @@ class DomainTemplate:
 
 
 class KnowledgeGenerator:
-    """Generates new knowledge inside stable domains using a topic registry."""
+    """Generates open-world facts and simulates stateful domains."""
 
     def __init__(self, world_path: str | Path, seed: int | None = None) -> None:
         self.world_path = Path(world_path)
@@ -40,6 +37,19 @@ class KnowledgeGenerator:
         self.discovery_queries = ["animal", "species", "planet", "ecosystem", "technology", "fungus", "robot"]
         self.mutation_prefixes = ["bio", "nano", "quantum", "alien", "eco", "neuro"]
         self.mutation_roots = ["robot", "plant", "ecosystem", "species", "habitat", "sensor"]
+        self.domain_states: Dict[str, Dict[str, float]] = {
+            "ecosystem": {"wolves": 5, "deer": 20, "grass": 100},
+            "astronomy": {"planets": 8, "asteroids": 200, "solar_energy": 1000},
+            "chemistry": {"temperature": 25, "reactants": 2, "reaction_energy": 0},
+            "technology": {"robots": 4, "sensors": 10, "battery_charge": 80},
+        }
+
+        self.actions_by_domain: Dict[str, List[str]] = {
+            "ecosystem": ["remove_predator", "add_predator", "introduce_species", "remove_species"],
+            "astronomy": ["introduce_species", "remove_species"],
+            "chemistry": ["increase_temperature", "add_chemical"],
+            "technology": ["introduce_species", "remove_species"],
+        }
 
         self.domains = {
             "ecosystem": DomainTemplate(
@@ -87,6 +97,15 @@ class KnowledgeGenerator:
             ),
         }
 
+    def state_for_domain(self, domain: str) -> Dict[str, float]:
+        return dict(self.domain_states.setdefault(domain, {}))
+
+    def update_domain_state(self, domain: str, new_state: Dict[str, float]) -> None:
+        self.domain_states[domain] = dict(new_state)
+
+    def choose_action(self, domain: str) -> str:
+        return self.random.choice(self.actions_by_domain.get(domain, ["introduce_species"]))
+
     def _materialize_facts(self, template: DomainTemplate) -> List[str]:
         bindings = {k: self.random.choice(list(v)) for k, v in template.entity_pools.items()}
         return [f"{bindings.get(s, s)} {r} {bindings.get(o, o)}" for s, r, o in template.schema]
@@ -99,7 +118,6 @@ class KnowledgeGenerator:
             return json.loads(response.read().decode("utf-8"))
 
     def _wikidata_random_entity(self) -> str | None:
-        """Fetch a random concept from a broad query bucket."""
         query = self.random.choice(self.discovery_queries)
         url = (
             "https://www.wikidata.org/w/api.php?action=wbsearchentities&format=json&language=en&type=item"
@@ -127,22 +145,19 @@ class KnowledgeGenerator:
         relation = self.random.choice(self.relation_pool)
         return f"{subject} {relation} {obj}"
 
-    def inject_open_world_novelty(self, max_entities: int = 3) -> Tuple[List[str], List[str]]:
-        """Inject 1..N novel entities and optional random relations.
+    def state_snapshot_facts(self, domain: str) -> List[str]:
+        state = self.state_for_domain(domain)
+        return [f"{key} is {int(value) if isinstance(value, (int, float)) else value}" for key, value in sorted(state.items())]
 
-        Returns (new_facts, new_concepts).
-        """
+    def inject_open_world_novelty(self, max_entities: int = 3) -> Tuple[List[str], List[str]]:
         new_facts: List[str] = []
         new_concepts: List[str] = []
         entity_count = self.random.randint(1, max(1, max_entities))
 
         for _ in range(entity_count):
-            concept = None
-            if self.random.random() < 0.65:
-                concept = self._wikidata_random_entity()
+            concept = self._wikidata_random_entity() if self.random.random() < 0.65 else None
             if not concept:
                 concept = self._mutated_concept()
-
             if self.expander.is_cached_concept(concept):
                 continue
 
@@ -160,39 +175,35 @@ class KnowledgeGenerator:
         return sorted(set(new_facts)), sorted(set(new_concepts))
 
     def generate_topic(self, persist: bool = True, domain: str | None = None) -> Dict:
-        """Generate/update a domain topic with combinatorial and open-world facts."""
         if domain is None:
             domain = self.random.choice(sorted(self.domains.keys()))
-        template = self.domains.get(domain)
-        if template is None:
-            domain = self.random.choice(sorted(self.domains.keys()))
-            template = self.domains[domain]
+        template = self.domains.get(domain) or self.domains[self.random.choice(sorted(self.domains.keys()))]
 
         for _ in range(25):
             facts = self._materialize_facts(template)
-            # occasional concept discovery and mutation.
+            facts.extend(self.state_snapshot_facts(template.name))
             if self.random.random() < 0.15:
-                novelty_facts, _new_concepts = self.inject_open_world_novelty(max_entities=2)
+                novelty_facts, _ = self.inject_open_world_novelty(max_entities=2)
                 facts.extend(novelty_facts)
-            signature = self._signature(domain, facts)
+            signature = self._signature(template.name, facts)
             if signature not in self.generated_signatures:
                 self.generated_signatures.add(signature)
                 break
 
-        info = self.topic_registry.setdefault(domain, {"generations": 0, "last_signature": ""})
+        info = self.topic_registry.setdefault(template.name, {"generations": 0, "last_signature": ""})
         info["generations"] += 1
         info["last_signature"] = signature
 
         page = {
-            "topic": domain,
+            "topic": template.name,
             "facts": sorted(set(facts)),
             "generated": True,
-            "domain": domain,
+            "domain": template.name,
             "generation": info["generations"],
         }
 
         if persist:
             self.world_path.mkdir(parents=True, exist_ok=True)
-            (self.world_path / f"generated_{domain}.json").write_text(json.dumps(page, indent=2), encoding="utf-8")
+            (self.world_path / f"generated_{template.name}.json").write_text(json.dumps(page, indent=2), encoding="utf-8")
 
         return page

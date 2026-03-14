@@ -28,6 +28,13 @@ class HypothesisEngine:
         ("plant", "needs", "sunlight"),
     ]
 
+    causal_templates: List[str] = [
+        "if {x} decreases then {y} increases",
+        "if {x} increases then {y} decreases",
+        "{x} affects {y}",
+        "{x} controls {y} population",
+    ]
+
     def from_patterns(
         self,
         patterns: Iterable[PatternRule],
@@ -58,6 +65,7 @@ class HypothesisEngine:
             )
 
         hypotheses.extend(self.generate_semantic_hypotheses(concept_types, triplets))
+        hypotheses.extend(self.generate_causal_hypotheses(triplets))
         return self._deduplicate(hypotheses)
 
     def generate_semantic_hypotheses(
@@ -66,7 +74,6 @@ class HypothesisEngine:
         triplets: Sequence[Tuple[str, str, str]],
         max_hypotheses: int = 8,
     ) -> List[Hypothesis]:
-        """Generate meaningful developmental hypotheses from semantic templates."""
         relation_set = {r for _, r, _ in triplets}
         hypotheses: List[Hypothesis] = []
 
@@ -87,6 +94,27 @@ class HypothesisEngine:
                 hypotheses[-1].confidence *= 0.6
 
         return hypotheses[:max_hypotheses]
+
+    def generate_causal_hypotheses(self, triplets: Sequence[Tuple[str, str, str]]) -> List[Hypothesis]:
+        """Generate causal hypotheses from state keys and relations."""
+        concepts = sorted({s for s, _, _ in triplets if s in {"wolves", "deer", "grass", "temperature", "reactants", "solar_energy"}})
+        if len(concepts) < 2:
+            return []
+
+        hypotheses: List[Hypothesis] = []
+        for i in range(min(3, len(concepts) - 1)):
+            x, y = concepts[i], concepts[i + 1]
+            for template in self.causal_templates:
+                hypotheses.append(
+                    Hypothesis(
+                        rule=template.format(x=x, y=y),
+                        concepts=[x, y],
+                        confidence=0.45,
+                        supporting_evidence=1,
+                        contradicting_evidence=1,
+                    )
+                )
+        return hypotheses[:10]
 
     @staticmethod
     def _deduplicate(hypotheses: Sequence[Hypothesis]) -> List[Hypothesis]:
@@ -115,5 +143,7 @@ class HypothesisEngine:
             "lives_in": ["animal", "ecosystem"],
             "needs": ["living_thing", "resource"],
             "eats": ["consumer", "food"],
+            "affects": ["cause", "effect"],
+            "controls": ["controller", "controlled_population"],
         }
         return mapping.get(relation, ["entity_a", "entity_b"])

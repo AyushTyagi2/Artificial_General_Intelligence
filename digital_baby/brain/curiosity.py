@@ -15,11 +15,13 @@ class CuriositySignal:
 
 
 class CuriosityModel:
-    """Tracks unknowns, prediction error, structural novelty, and hypothesis uncertainty."""
+    """Tracks unknowns, prediction error, novelty, and discovered patterns."""
 
     UNKNOWN_CONCEPT_BONUS = 5.0
     PREDICTION_ERROR_BONUS = 10.0
     NEW_RELATION_BONUS = 3.0
+    NEW_PATTERN_BONUS = 7.0
+    ERROR_THRESHOLD = 0.3
 
     def __init__(self) -> None:
         self.topic_visits: Dict[str, int] = defaultdict(int)
@@ -29,6 +31,7 @@ class CuriosityModel:
         self.structural_novelty_by_topic: Dict[str, float] = defaultdict(float)
         self.hypothesis_uncertainty_by_topic: Dict[str, float] = defaultdict(float)
         self.experiment_signal_by_topic: Dict[str, float] = defaultdict(float)
+        self.new_patterns_by_topic: Dict[str, int] = defaultdict(int)
 
     def curiosity_score(
         self,
@@ -36,18 +39,21 @@ class CuriosityModel:
         prediction_error: float,
         unexplored_concepts: Iterable[str],
         new_relation: bool,
+        new_pattern: bool = False,
     ) -> float:
-        """Compute curiosity score used for hypothesis prioritization."""
         unknown_count = len([c for c in unknown_concepts if c])
         unexplored_count = len([c for c in unexplored_concepts if c])
         score = 0.0
         if unknown_count > 0:
             score += self.UNKNOWN_CONCEPT_BONUS
-        score += max(0.0, prediction_error) * self.PREDICTION_ERROR_BONUS
+        if prediction_error > self.ERROR_THRESHOLD:
+            score += prediction_error * self.PREDICTION_ERROR_BONUS
         if unexplored_count > 0:
             score += self.UNKNOWN_CONCEPT_BONUS + (unexplored_count - 1)
         if new_relation:
             score += self.NEW_RELATION_BONUS
+        if new_pattern:
+            score += self.NEW_PATTERN_BONUS
         return score
 
     def register_unknowns(self, topic: str, unknown_concepts: Iterable[str]) -> None:
@@ -59,6 +65,9 @@ class CuriosityModel:
 
     def register_prediction_error(self, topic: str, error: float) -> None:
         self.prediction_error_by_topic[topic] += max(0.0, error)
+
+    def register_new_pattern(self, topic: str) -> None:
+        self.new_patterns_by_topic[topic] += 1
 
     def register_structural_novelty(self, topic: str, novelty: float) -> None:
         self.structural_novelty_by_topic[topic] += max(0.0, novelty)
@@ -89,15 +98,13 @@ class CuriosityModel:
             structural = self.structural_novelty_by_topic.get(topic, 0.0)
             hypothesis_uncertainty = self.hypothesis_uncertainty_by_topic.get(topic, 0.0)
             experiment_signal = self.experiment_signal_by_topic.get(topic, 0.0)
+            pattern_bonus = self.new_patterns_by_topic.get(topic, 0) * 0.5
 
-            score = max(
-                0.0,
-                novelty + unknown_weight + weak_bonus + prediction_error + structural + hypothesis_uncertainty + experiment_signal - visit_penalty,
-            )
+            score = max(0.0, novelty + unknown_weight + weak_bonus + prediction_error + structural + hypothesis_uncertainty + experiment_signal + pattern_bonus - visit_penalty)
             reason = (
                 f"novelty={novelty:.2f}, unknown={unknown_weight:.2f}, weak={weak_bonus:.2f}, "
-                f"pred_err={prediction_error:.2f}, structural={structural:.2f}, "
-                f"hyp_unc={hypothesis_uncertainty:.2f}, exp={experiment_signal:.2f}, visits={visits}"
+                f"pred_err={prediction_error:.2f}, structural={structural:.2f}, hyp_unc={hypothesis_uncertainty:.2f}, "
+                f"exp={experiment_signal:.2f}, pattern={pattern_bonus:.2f}, visits={visits}"
             )
             signals.append(CuriositySignal(topic=topic, score=score, reason=reason))
 
@@ -111,3 +118,4 @@ class CuriosityModel:
         self.structural_novelty_by_topic[topic] *= 0.6
         self.hypothesis_uncertainty_by_topic[topic] *= 0.7
         self.experiment_signal_by_topic[topic] *= 0.7
+        self.new_patterns_by_topic[topic] = max(0, self.new_patterns_by_topic[topic] - 1)

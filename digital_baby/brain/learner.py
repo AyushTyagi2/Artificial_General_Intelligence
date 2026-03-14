@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List, Sequence, Set, Tuple
 
 from .memory import Memory
 from .reasoning import Reasoner
@@ -80,13 +80,29 @@ class Learner:
         )
 
     def infer_general_rules(self, triplets: List[Tuple[str, str, str]]) -> List[str]:
-        """Infer compact developmental rules from repeated evidence.
-
-        Example: lion/tiger/wolf eats deer => predator eats prey.
-        """
         predators = {s for s, r, _ in triplets if r == "hunts"}
         prey = {o for _, r, o in triplets if r == "hunts"}
         repeated = {(s, o) for s, r, o in triplets if r == "eats" and s in predators and o in prey}
         if len(repeated) >= 2:
             return ["predator eats prey"]
         return []
+
+    def discover_causal_rules(self, transitions: Sequence[Dict[str, float]]) -> List[str]:
+        """Infer causal rules from repeated state transitions."""
+        if len(transitions) < 3:
+            return []
+
+        wolf_down_deer_up = 0
+        for delta in transitions:
+            if delta.get("wolves", 0.0) < 0 and delta.get("deer", 0.0) > 0:
+                wolf_down_deer_up += 1
+
+        rules: List[str] = []
+        if wolf_down_deer_up >= 3:
+            rules.append("predator controls herbivore population")
+
+        temp_up_energy_up = sum(1 for delta in transitions if delta.get("temperature", 0.0) > 0 and delta.get("reaction_energy", 0.0) > 0)
+        if temp_up_energy_up >= 3:
+            rules.append("temperature affects reaction_energy")
+
+        return rules

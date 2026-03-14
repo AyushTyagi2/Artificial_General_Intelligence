@@ -50,6 +50,7 @@ class BabyEventLoop:
         self.novelty_interval = max(1, novelty_interval)
         self.logger = logging.getLogger(self.__class__.__name__)
         self.stall_ticks = 0
+        self.state_transition_history: List[Dict[str, float]] = []
 
     def _load_pages(self) -> List[Dict]:
         pages = []
@@ -140,20 +141,23 @@ class BabyEventLoop:
                 continue
             edges = self.expander.expand_concept_graph(concept, depth=2)
             if edges:
-                path = " -> ".join([edge[0] for edge in edges[:1]] + [edge[2] for edge in edges[:2]])
+                path = " -> ".join([edges[0][0]] + [edge[2] for edge in edges[:2]])
                 self.logger.info("[world] expanded=%s", path)
 
     def _curiosity_rank_hypotheses(self, topic: str, hypotheses: List[Hypothesis]) -> List[Tuple[Hypothesis, float]]:
         ranked: List[Tuple[Hypothesis, float]] = []
         prediction_error = self.curiosity.prediction_error_by_topic.get(topic, 0.0)
         for hypothesis in hypotheses:
-            rel = hypothesis.rule.split()[1] if len(hypothesis.rule.split()) >= 3 else "unknown"
+            tokens = hypothesis.rule.split()
+            rel = tokens[1] if len(tokens) >= 3 else "unknown"
+            is_causal = "if" in hypothesis.rule or "affects" in hypothesis.rule or "controls" in hypothesis.rule
             unexplored = [c for c in hypothesis.concepts if not self.type_system.is_known(c)]
             score = self.curiosity.curiosity_score(
                 unknown_concepts=unexplored,
                 prediction_error=prediction_error,
                 unexplored_concepts=unexplored,
                 new_relation=rel not in {"is", "eats", "hunts", "orbits", "reacts_with", "contains"},
+                new_pattern=is_causal,
             )
             ranked.append((hypothesis, score + (1.0 - hypothesis.confidence)))
         return sorted(ranked, key=lambda item: item[1], reverse=True)
@@ -169,15 +173,35 @@ class BabyEventLoop:
             self.logger.info("[world] relation_added=%s", fact)
 
         if novelty_facts:
-            novelty_page = {
-                "topic": "open_world_novelty",
-                "domain": "open_world",
-                "facts": novelty_facts,
-                "generated": True,
-            }
+            novelty_page = {"topic": "open_world_novelty", "domain": "open_world", "facts": novelty_facts, "generated": True}
             result = self.learner.learn_from_page(novelty_page)
             self.curiosity.register_unknowns(result.topic, result.unknown_concepts)
             self.curiosity.register_unknowns(result.topic, result.unknown_relations)
+
+    def _run_stateful_world_step(self, domain: str) -> Dict[str, float]:
+        state = self.generator.state_for_domain(domain)
+        action = self.generator.choose_action(domain)
+        self.logger.info("[world] action=%s domain=%s", action, domain)
+        self.logger.info("[world] state_before=%s", state)
+
+        prediction = self.predictor.predict_state_transition(domain, action, state)
+        new_state, deltas = self.experimenter.apply_environment_dynamics(domain, state, action)
+        self.generator.update_domain_state(domain, new_state)
+        self.logger.info("[world] state_after=%s", new_state)
+        for key, delta in sorted(deltas.items()):
+            if abs(delta) > 0:
+                self.logger.info("[world] state_change %s=%+.2f", key, delta)
+
+        eval_result = self.predictor.evaluate_state_prediction(prediction, deltas)
+        self.logger.info("[curiosity] prediction_error=%.3f", eval_result.prediction_error)
+
+        transition_facts = [f"{k}_delta is {int(v) if abs(v-int(v)) < 1e-8 else round(v,2)}" for k, v in deltas.items() if abs(v) > 0]
+        if transition_facts:
+            self.learner.learn_from_page({"topic": f"{domain}_state", "facts": transition_facts})
+
+        self.state_transition_history.append(deltas)
+        self.state_transition_history = self.state_transition_history[-120:]
+        return {"prediction_error": eval_result.prediction_error}
 
     def run(self, max_ticks: Optional[int] = None) -> None:
         tick = 0
@@ -205,6 +229,11 @@ class BabyEventLoop:
             self._expand_unknown_concepts(sorted(result.unknown_concepts))
             self.type_system.registry.refresh()
 
+            domain = selected_page.get("domain") or selected_topic
+            if domain in {"ecosystem", "astronomy", "chemistry", "technology"}:
+                transition = self._run_stateful_world_step(domain)
+                self.curiosity.register_prediction_error(result.topic, transition["prediction_error"])
+
             self.stall_ticks = self.stall_ticks + 1 if result.new_facts == 0 else 0
             structural_novelty = (len(result.new_entities) * 0.12) + (len(result.new_relation_types) * 0.2) + (result.new_facts * 0.08)
             self.curiosity.register_structural_novelty(result.topic, structural_novelty)
@@ -220,8 +249,12 @@ class BabyEventLoop:
             self.type_system.infer_from_triplets(triplets)
             discovered = self.patterns.discover(triplets, min_support=2)
             learned_rules = self.learner.infer_general_rules(triplets)
-            for rule in learned_rules:
-                discovered.append(PatternRecord(template=rule, relation="eats", support=2, label="learner_inferred", timestamp=time.time()))
+            causal_rules = self.learner.discover_causal_rules(self.state_transition_history)
+            for rule in causal_rules:
+                self.logger.info("[learner] causal_rule_discovered %s", rule)
+                self.curiosity.register_new_pattern(result.topic)
+            for rule in learned_rules + causal_rules:
+                discovered.append(PatternRecord(template=rule, relation="eats" if "predator" in rule else "affects", support=2, label="learner_inferred", timestamp=time.time()))
 
             normalized_patterns: List[PatternRecord] = []
             for item in discovered:
@@ -236,7 +269,7 @@ class BabyEventLoop:
             uncertainty = self.memory.hypothesis_uncertainty()
             self.curiosity.register_hypothesis_uncertainty(result.topic, uncertainty)
 
-            ranked_hypotheses = self._curiosity_rank_hypotheses(result.topic, hypotheses[:10])
+            ranked_hypotheses = self._curiosity_rank_hypotheses(result.topic, hypotheses[:12])
             if ranked_hypotheses:
                 candidate, candidate_score = ranked_hypotheses[0]
                 predictions = self.predictor.predict([candidate], self.memory.all_entities(), self.type_system)
@@ -251,28 +284,13 @@ class BabyEventLoop:
                     self.curiosity.register_prediction_error(result.topic, float(evaluation.prediction_error))
                     self.curiosity.register_experiment_signal(result.topic, candidate_score / 10.0)
 
-                    self.memory.add_experiment(
-                        ExperimentRecord(
-                            rule=outcome.rule,
-                            name=experiment.name,
-                            supported=outcome.supported,
-                            contradicted=outcome.contradicted,
-                            timestamp=time.time(),
-                        )
-                    )
+                    self.memory.add_experiment(ExperimentRecord(rule=outcome.rule, name=experiment.name, supported=outcome.supported, contradicted=outcome.contradicted, timestamp=time.time()))
                     self.memory.update_hypothesis_evidence(outcome.rule, outcome.supported, outcome.contradicted)
                     if prediction:
-                        self.memory.add_prediction(
-                            PredictionRecord(
-                                rule=prediction.rule,
-                                statement=prediction.statement,
-                                success=evaluation.success,
-                                timestamp=time.time(),
-                            )
-                        )
+                        self.memory.add_prediction(PredictionRecord(rule=prediction.rule, statement=prediction.statement, success=evaluation.success, timestamp=time.time()))
 
             test_domain = None
-            if hypotheses:
+            if hypotheses and len(hypotheses[0].rule.split()) >= 3:
                 rel = hypotheses[0].rule.split()[1]
                 rel_to_domain = {"hunts": "ecosystem", "orbits": "astronomy", "reacts_with": "chemistry"}
                 test_domain = rel_to_domain.get(rel)
