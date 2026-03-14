@@ -14,6 +14,7 @@ from digital_baby.brain.curiosity import CuriosityModel
 from digital_baby.brain.experimenter import Experimenter
 from digital_baby.brain.hypothesis import Hypothesis, HypothesisEngine
 from digital_baby.brain.knowledge_expander import KnowledgeExpander
+from digital_baby.brain.knowledge_graph import KnowledgeGraph
 from digital_baby.brain.learner import Learner
 from digital_baby.brain.memory import ExperimentRecord, HypothesisRecord, Memory, PatternRecord, PredictionRecord
 from digital_baby.brain.patterns import PatternDiscoverer
@@ -46,6 +47,7 @@ class BabyEventLoop:
         self.concepts = ConceptHierarchy()
         self.type_system = ConceptTypeSystem()
         self.expander = KnowledgeExpander(self.world_path)
+        self.knowledge_graph = KnowledgeGraph(self.world_path.parent / "knowledge_graph.json")
         self.generator = KnowledgeGenerator(self.world_path)
         self.tick_sleep_seconds = tick_sleep_seconds
         self.novelty_interval = max(1, novelty_interval)
@@ -261,6 +263,18 @@ class BabyEventLoop:
             return "remove_predator"
         return None
 
+    def _sync_knowledge_graph(self) -> None:
+        """Sync observed relations and causal rules into persistent graph."""
+        self.knowledge_graph.ingest_triplets(self.memory.relation_triplets(), default_confidence=0.58)
+        for rule in self.memory.get_causal_rules():
+            self.knowledge_graph.ingest_causal_rule(
+                cause=rule.cause,
+                effect=rule.effect,
+                direction=rule.direction,
+                confidence=rule.confidence,
+                evidence=rule.observations,
+            )
+
     def _run_stateful_world_step(self, domain: str, preferred_action: Optional[str] = None, target: Optional[str] = None) -> Dict[str, float]:
         state = self.generator.state_for_domain(domain)
         action = self.generator.choose_action(domain, preferred_action=preferred_action)
@@ -330,6 +344,7 @@ class BabyEventLoop:
             self.curiosity.register_unknowns(result.topic, [q.target_concept for q in generated_questions])
 
             triplets = self.memory.relation_triplets()
+            self.knowledge_graph.ingest_triplets(triplets, default_confidence=0.58)
             self.type_system.infer_from_triplets(triplets)
             discovered = self.patterns.discover(triplets, min_support=2)
             learned_rules = self.learner.infer_general_rules(triplets)
@@ -347,6 +362,7 @@ class BabyEventLoop:
                 else:
                     self.logger.info("[causal_rule_updated] %s confidence=%.2f", relation_label, record.confidence)
                 self.curiosity.register_new_pattern(result.topic)
+                self.knowledge_graph.ingest_causal_rule(record.cause, record.effect, record.direction, record.confidence, record.observations)
                 discovered.append(PatternRecord(template=relation_label, relation="affects", support=max(1, record.observations), label="causal_rule", timestamp=time.time()))
 
             for rule in learned_rules:
@@ -413,7 +429,9 @@ class BabyEventLoop:
             curiosity_reward = self.curiosity.reward(novelty=novelty_score)
 
             self.memory.decay_confidence(decay_rate=0.005)
+            self._sync_knowledge_graph()
             self.memory.save()
+            self.knowledge_graph.save()
 
             self.logger.info(
                 "[tick=%s] learned=%s new_facts=%s unknown=%s patterns=%s hypotheses=%s memory=%s unique_facts=%s reward=%.2f",
