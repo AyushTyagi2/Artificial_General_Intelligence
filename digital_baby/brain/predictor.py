@@ -18,6 +18,15 @@ class Prediction:
     valid: bool
 
 
+@dataclass
+class PredictionEvaluation:
+    """Outcome of predicted-vs-observed comparison."""
+
+    success: bool
+    prediction_error: int
+    curiosity_score: float
+
+
 class Predictor:
     """Generates predicted facts and evaluates outcomes."""
 
@@ -39,7 +48,6 @@ class Predictor:
             parts = hypothesis.rule.split()
             if len(parts) < 3:
                 continue
-            # typed rules like "predator hunts prey"
             relation = parts[1]
             subj_candidates = [e for e in entity_list if concept_types.get_type(e) == parts[0] or parts[0] == "unknown"]
             obj_candidates = [e for e in entity_list if concept_types.get_type(e) == parts[2] or parts[2] == "unknown"]
@@ -58,3 +66,11 @@ class Predictor:
     def evaluate(self, prediction: Prediction, observed_triplets: Sequence[Tuple[str, str, str]]) -> bool:
         expected = tuple(prediction.statement.split(maxsplit=2))
         return expected in observed_triplets
+
+    @staticmethod
+    def evaluate_outcome(predicted_success: bool, actual_success: bool) -> PredictionEvaluation:
+        """Compute binary prediction error and curiosity reward from surprise."""
+        success = predicted_success == actual_success
+        prediction_error = 0 if success else 1
+        curiosity_score = prediction_error * 10.0
+        return PredictionEvaluation(success=success, prediction_error=prediction_error, curiosity_score=curiosity_score)

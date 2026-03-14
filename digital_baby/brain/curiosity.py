@@ -17,6 +17,10 @@ class CuriositySignal:
 class CuriosityModel:
     """Tracks unknowns, prediction error, structural novelty, and hypothesis uncertainty."""
 
+    UNKNOWN_CONCEPT_BONUS = 5.0
+    PREDICTION_ERROR_BONUS = 10.0
+    NEW_RELATION_BONUS = 3.0
+
     def __init__(self) -> None:
         self.topic_visits: Dict[str, int] = defaultdict(int)
         self.unknown_concepts_by_topic: Dict[str, Set[str]] = defaultdict(set)
@@ -25,6 +29,26 @@ class CuriosityModel:
         self.structural_novelty_by_topic: Dict[str, float] = defaultdict(float)
         self.hypothesis_uncertainty_by_topic: Dict[str, float] = defaultdict(float)
         self.experiment_signal_by_topic: Dict[str, float] = defaultdict(float)
+
+    def curiosity_score(
+        self,
+        unknown_concepts: Iterable[str],
+        prediction_error: float,
+        unexplored_concepts: Iterable[str],
+        new_relation: bool,
+    ) -> float:
+        """Compute curiosity score used for hypothesis prioritization."""
+        unknown_count = len([c for c in unknown_concepts if c])
+        unexplored_count = len([c for c in unexplored_concepts if c])
+        score = 0.0
+        if unknown_count > 0:
+            score += self.UNKNOWN_CONCEPT_BONUS
+        score += max(0.0, prediction_error) * self.PREDICTION_ERROR_BONUS
+        if unexplored_count > 0:
+            score += self.UNKNOWN_CONCEPT_BONUS + (unexplored_count - 1)
+        if new_relation:
+            score += self.NEW_RELATION_BONUS
+        return score
 
     def register_unknowns(self, topic: str, unknown_concepts: Iterable[str]) -> None:
         clean = [c.strip().lower() for c in unknown_concepts if c.strip()]

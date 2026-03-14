@@ -21,6 +21,13 @@ class Hypothesis:
 class HypothesisEngine:
     """Converts pattern observations into structured typed hypotheses."""
 
+    semantic_templates: List[Tuple[str, str, str]] = [
+        ("animal", "eats", "plant"),
+        ("predator", "hunts", "prey"),
+        ("animal", "lives_in", "ecosystem"),
+        ("plant", "needs", "sunlight"),
+    ]
+
     def from_patterns(
         self,
         patterns: Iterable[PatternRule],
@@ -49,7 +56,46 @@ class HypothesisEngine:
                     contradicting_evidence=contradict,
                 )
             )
-        return hypotheses
+
+        hypotheses.extend(self.generate_semantic_hypotheses(concept_types, triplets))
+        return self._deduplicate(hypotheses)
+
+    def generate_semantic_hypotheses(
+        self,
+        concept_types: ConceptTypeSystem,
+        triplets: Sequence[Tuple[str, str, str]],
+        max_hypotheses: int = 8,
+    ) -> List[Hypothesis]:
+        """Generate meaningful developmental hypotheses from semantic templates."""
+        relation_set = {r for _, r, _ in triplets}
+        hypotheses: List[Hypothesis] = []
+
+        for subj_type, relation, obj_type in self.semantic_templates:
+            support = sum(1 for s, r, o in triplets if r == relation and concept_types.get_type(s) == subj_type and concept_types.get_type(o) == obj_type)
+            contradict = sum(1 for _s, r, _o in triplets if r == relation) - support
+            confidence = (support + 1) / max(1, support + contradict + 2)
+            hypotheses.append(
+                Hypothesis(
+                    rule=f"{subj_type} {relation} {obj_type}",
+                    concepts=[subj_type, obj_type],
+                    confidence=confidence,
+                    supporting_evidence=max(1, support),
+                    contradicting_evidence=max(1, contradict),
+                )
+            )
+            if relation not in relation_set:
+                hypotheses[-1].confidence *= 0.6
+
+        return hypotheses[:max_hypotheses]
+
+    @staticmethod
+    def _deduplicate(hypotheses: Sequence[Hypothesis]) -> List[Hypothesis]:
+        best: dict[str, Hypothesis] = {}
+        for hypothesis in hypotheses:
+            existing = best.get(hypothesis.rule)
+            if existing is None or hypothesis.confidence > existing.confidence:
+                best[hypothesis.rule] = hypothesis
+        return list(best.values())
 
     @staticmethod
     def _majority_rule(rules: Sequence[str]) -> str:
@@ -66,5 +112,8 @@ class HypothesisEngine:
             "is": ["child", "parent"],
             "reacts_with": ["reactant_a", "reactant_b"],
             "food_chain": ["predator", "prey", "producer"],
+            "lives_in": ["animal", "ecosystem"],
+            "needs": ["living_thing", "resource"],
+            "eats": ["consumer", "food"],
         }
         return mapping.get(relation, ["entity_a", "entity_b"])
