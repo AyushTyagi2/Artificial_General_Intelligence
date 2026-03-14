@@ -33,6 +33,14 @@ class Experimenter:
 
     def __init__(self, seed: int | None = None) -> None:
         self.random = random.Random(seed)
+        self.success_probability_by_relation = {
+            "hunts": 0.8,
+            "eats": 0.9,
+            "orbits": 0.97,
+            "reacts_with": 0.7,
+            "part_of": 0.95,
+            "located_in": 0.92,
+        }
 
     def should_schedule(self, hypothesis: Hypothesis, prediction_error: float) -> bool:
         """Schedule experiments for uncertain/conflicted/high-error hypotheses."""
@@ -41,6 +49,9 @@ class Experimenter:
     def generate(self, hypothesis: Hypothesis, entities: Iterable[str], type_system: ConceptTypeSystem, n: int = 3) -> Experiment:
         """Generate synthetic typed facts to test a hypothesis rule."""
         parts = hypothesis.rule.split()
+        if len(parts) < 3:
+            return Experiment(name="invalid_rule_test", rule=hypothesis.rule, facts=[])
+
         subject_type, relation, object_type = parts[0], parts[1], parts[2]
 
         entity_list = sorted(set(entities))
@@ -61,6 +72,10 @@ class Experimenter:
         return Experiment(name=f"{relation}_test", rule=hypothesis.rule, facts=facts)
 
     def evaluate(self, experiment: Experiment, observed: Sequence[Tuple[str, str, str]], type_system: ConceptTypeSystem) -> ExperimentOutcome:
+        """Evaluate experiment with environmental noise.
+
+        This introduces probabilistic outcomes so prediction error can remain non-zero.
+        """
         observed_set = set(observed)
         supported = 0
         contradicted = 0
@@ -68,7 +83,11 @@ class Experimenter:
             if not type_system.is_relation_valid(s, r, o):
                 contradicted += 1
                 continue
-            if (s, r, o) in observed_set:
+
+            probability = self.success_probability_by_relation.get(r, 0.75)
+            stochastic_success = self.random.random() <= probability
+            observed_success = (s, r, o) in observed_set
+            if stochastic_success and (observed_success or self.random.random() < 0.5):
                 supported += 1
             else:
                 contradicted += 1
