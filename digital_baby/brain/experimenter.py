@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Iterable, List, Sequence, Tuple
+from typing import Dict, Iterable, List, Sequence, Tuple
 import random
 
 from .concepts import ConceptTypeSystem
@@ -29,7 +29,7 @@ class ExperimentOutcome:
 
 
 class Experimenter:
-    """Builds hypothesis-driven synthetic tests and evaluates them."""
+    """Builds hypothesis-driven tests and evaluates them with noise + dynamics."""
 
     def __init__(self, seed: int | None = None) -> None:
         self.random = random.Random(seed)
@@ -43,25 +43,17 @@ class Experimenter:
         }
 
     def should_schedule(self, hypothesis: Hypothesis, prediction_error: float) -> bool:
-        """Schedule experiments for uncertain/conflicted/high-error hypotheses."""
         return hypothesis.confidence < 0.6 or hypothesis.contradicting_evidence > hypothesis.supporting_evidence // 2 or prediction_error > 0.4
 
     def generate(self, hypothesis: Hypothesis, entities: Iterable[str], type_system: ConceptTypeSystem, n: int = 3) -> Experiment:
-        """Generate synthetic typed facts to test a hypothesis rule."""
         parts = hypothesis.rule.split()
         if len(parts) < 3:
             return Experiment(name="invalid_rule_test", rule=hypothesis.rule, facts=[])
 
         subject_type, relation, object_type = parts[0], parts[1], parts[2]
-
         entity_list = sorted(set(entities))
-        subj_candidates = [e for e in entity_list if type_system.get_type(e) == subject_type]
-        obj_candidates = [e for e in entity_list if type_system.get_type(e) == object_type]
-
-        if not subj_candidates:
-            subj_candidates = self._fallback_entities_for_type(subject_type)
-        if not obj_candidates:
-            obj_candidates = self._fallback_entities_for_type(object_type)
+        subj_candidates = [e for e in entity_list if type_system.get_type(e) == subject_type] or self._fallback_entities_for_type(subject_type)
+        obj_candidates = [e for e in entity_list if type_system.get_type(e) == object_type] or self._fallback_entities_for_type(object_type)
 
         facts: List[Tuple[str, str, str]] = []
         for _ in range(n):
@@ -72,10 +64,6 @@ class Experimenter:
         return Experiment(name=f"{relation}_test", rule=hypothesis.rule, facts=facts)
 
     def evaluate(self, experiment: Experiment, observed: Sequence[Tuple[str, str, str]], type_system: ConceptTypeSystem) -> ExperimentOutcome:
-        """Evaluate experiment with environmental noise.
-
-        This introduces probabilistic outcomes so prediction error can remain non-zero.
-        """
         observed_set = set(observed)
         supported = 0
         contradicted = 0
@@ -92,6 +80,46 @@ class Experimenter:
             else:
                 contradicted += 1
         return ExperimentOutcome(rule=experiment.rule, supported=supported, contradicted=contradicted)
+
+    def apply_environment_dynamics(self, domain: str, state: Dict[str, float], action: str) -> Tuple[Dict[str, float], Dict[str, float]]:
+        """Apply action + probabilistic domain dynamics to produce next state."""
+        new_state = dict(state)
+        before = dict(state)
+
+        if domain == "ecosystem":
+            if action == "remove_predator":
+                new_state["wolves"] = max(0, new_state.get("wolves", 0) - 1)
+            elif action == "add_predator":
+                new_state["wolves"] = new_state.get("wolves", 0) + 1
+            elif action == "introduce_species":
+                new_state["deer"] = new_state.get("deer", 0) + 2
+            elif action == "remove_species":
+                new_state["deer"] = max(0, new_state.get("deer", 0) - 2)
+
+            if self.random.random() < 0.8 and new_state.get("wolves", 0) > 0:
+                new_state["deer"] = max(0, new_state.get("deer", 0) - 1)
+            if new_state.get("deer", 0) < 10:
+                new_state["grass"] = new_state.get("grass", 0) + 5
+            else:
+                new_state["grass"] = max(0, new_state.get("grass", 0) - self.random.randint(1, 3))
+
+        elif domain == "chemistry":
+            if action == "increase_temperature":
+                new_state["temperature"] = new_state.get("temperature", 25) + self.random.randint(2, 8)
+            elif action == "add_chemical":
+                new_state["reactants"] = new_state.get("reactants", 1) + 1
+            if self.random.random() < 0.65:
+                new_state["reaction_energy"] = new_state.get("reaction_energy", 0) + (new_state.get("temperature", 25) / 20.0)
+
+        elif domain == "astronomy":
+            if action == "introduce_species":
+                new_state["asteroids"] = new_state.get("asteroids", 200) + self.random.randint(1, 6)
+            elif action == "remove_species":
+                new_state["asteroids"] = max(0, new_state.get("asteroids", 200) - self.random.randint(1, 4))
+            new_state["solar_energy"] = max(0, new_state.get("solar_energy", 1000) + self.random.randint(-25, 25))
+
+        deltas = {k: new_state.get(k, 0) - before.get(k, 0) for k in set(new_state) | set(before)}
+        return new_state, deltas
 
     @staticmethod
     def _fallback_entities_for_type(entity_type: str) -> List[str]:
