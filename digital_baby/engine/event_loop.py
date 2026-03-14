@@ -30,6 +30,7 @@ class BabyEventLoop:
         world_path: str | Path,
         memory_path: str | Path,
         tick_sleep_seconds: float = 1.0,
+        novelty_interval: int = 20,
     ) -> None:
         self.world_path = Path(world_path)
         self.memory = Memory(memory_path)
@@ -46,6 +47,7 @@ class BabyEventLoop:
         self.expander = KnowledgeExpander(self.world_path)
         self.generator = KnowledgeGenerator(self.world_path)
         self.tick_sleep_seconds = tick_sleep_seconds
+        self.novelty_interval = max(1, novelty_interval)
         self.logger = logging.getLogger(self.__class__.__name__)
         self.stall_ticks = 0
 
@@ -136,10 +138,10 @@ class BabyEventLoop:
         for concept in concepts:
             if self.type_system.is_known(concept):
                 continue
-            relation = self.expander.expand_concept(concept)
-            if relation:
-                child, parent = relation
-                self.logger.info("knowledge_expanded %s -> %s", child, parent)
+            edges = self.expander.expand_concept_graph(concept, depth=2)
+            if edges:
+                path = " -> ".join([edge[0] for edge in edges[:1]] + [edge[2] for edge in edges[:2]])
+                self.logger.info("[world] expanded=%s", path)
 
     def _curiosity_rank_hypotheses(self, topic: str, hypotheses: List[Hypothesis]) -> List[Tuple[Hypothesis, float]]:
         ranked: List[Tuple[Hypothesis, float]] = []
@@ -156,6 +158,27 @@ class BabyEventLoop:
             ranked.append((hypothesis, score + (1.0 - hypothesis.confidence)))
         return sorted(ranked, key=lambda item: item[1], reverse=True)
 
+    def _inject_novelty(self, tick: int) -> None:
+        if tick % self.novelty_interval != 0:
+            return
+        novelty_facts, new_concepts = self.generator.inject_open_world_novelty(max_entities=3)
+        self.logger.info("[world] novelty_injection=true tick=%s count=%s", tick, len(new_concepts))
+        for concept in new_concepts:
+            self.logger.info("[world] new_concept=%s", concept)
+        for fact in novelty_facts:
+            self.logger.info("[world] relation_added=%s", fact)
+
+        if novelty_facts:
+            novelty_page = {
+                "topic": "open_world_novelty",
+                "domain": "open_world",
+                "facts": novelty_facts,
+                "generated": True,
+            }
+            result = self.learner.learn_from_page(novelty_page)
+            self.curiosity.register_unknowns(result.topic, result.unknown_concepts)
+            self.curiosity.register_unknowns(result.topic, result.unknown_relations)
+
     def run(self, max_ticks: Optional[int] = None) -> None:
         tick = 0
         while True:
@@ -164,6 +187,8 @@ class BabyEventLoop:
             if not pages:
                 self.logger.warning("No knowledge pages found in %s; generating one.", self.world_path)
                 pages = [self.generator.generate_topic(persist=True)]
+
+            self._inject_novelty(tick)
 
             topics = [page["topic"] for page in pages]
             weak_by_topic = {
@@ -211,7 +236,6 @@ class BabyEventLoop:
             uncertainty = self.memory.hypothesis_uncertainty()
             self.curiosity.register_hypothesis_uncertainty(result.topic, uncertainty)
 
-            # curiosity-guided developmental loop: prediction -> experiment -> surprise -> learning
             ranked_hypotheses = self._curiosity_rank_hypotheses(result.topic, hypotheses[:10])
             if ranked_hypotheses:
                 candidate, candidate_score = ranked_hypotheses[0]
