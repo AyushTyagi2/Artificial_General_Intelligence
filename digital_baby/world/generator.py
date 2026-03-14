@@ -103,8 +103,11 @@ class KnowledgeGenerator:
     def update_domain_state(self, domain: str, new_state: Dict[str, float]) -> None:
         self.domain_states[domain] = dict(new_state)
 
-    def choose_action(self, domain: str) -> str:
-        return self.random.choice(self.actions_by_domain.get(domain, ["introduce_species"]))
+    def choose_action(self, domain: str, preferred_action: str | None = None) -> str:
+        actions = self.actions_by_domain.get(domain, ["introduce_species"])
+        if preferred_action and preferred_action in actions:
+            return preferred_action
+        return self.random.choice(actions)
 
     def _materialize_facts(self, template: DomainTemplate) -> List[str]:
         bindings = {k: self.random.choice(list(v)) for k, v in template.entity_pools.items()}

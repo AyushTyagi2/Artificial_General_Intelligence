@@ -246,9 +246,26 @@ class BabyEventLoop:
             self.curiosity.register_unknowns(result.topic, result.unknown_concepts)
             self.curiosity.register_unknowns(result.topic, result.unknown_relations)
 
-    def _run_stateful_world_step(self, domain: str) -> Dict[str, float]:
+    @staticmethod
+    def _preferred_action_for_hypothesis(hypothesis: Hypothesis, domain: str) -> Optional[str]:
+        rule = hypothesis.rule.lower()
+        if domain == "chemistry" and "temperature" in rule:
+            return "increase_temperature"
+        if domain == "chemistry" and "reactants" in rule:
+            return "add_chemical"
+        if domain == "ecosystem" and "wolves" in rule and ("decrease" in rule or "will decrease" in rule):
+            return "remove_predator"
+        if domain == "ecosystem" and "wolves" in rule and ("increase" in rule or "will increase" in rule):
+            return "add_predator"
+        if domain == "ecosystem" and "deer" in rule and "increase" in rule:
+            return "remove_predator"
+        return None
+
+    def _run_stateful_world_step(self, domain: str, preferred_action: Optional[str] = None, target: Optional[str] = None) -> Dict[str, float]:
         state = self.generator.state_for_domain(domain)
-        action = self.generator.choose_action(domain)
+        action = self.generator.choose_action(domain, preferred_action=preferred_action)
+        if target:
+            self.logger.info("[hypothesis_test] action=%s target=%s", action, target)
         self.logger.info("[world] action=%s domain=%s", action, domain)
         self.logger.info("[world] state_before=%s", state)
 
@@ -269,7 +286,7 @@ class BabyEventLoop:
 
         self.state_transition_history.append(deltas)
         self.state_transition_history = self.state_transition_history[-120:]
-        return {"prediction_error": eval_result.prediction_error}
+        return {"prediction_error": eval_result.prediction_error, "deltas": deltas, "action": action}
 
     def run(self, max_ticks: Optional[int] = None) -> None:
         tick = 0
@@ -299,9 +316,7 @@ class BabyEventLoop:
             self.type_system.registry.refresh()
 
             domain = selected_page.get("domain") or selected_topic
-            if domain in {"ecosystem", "astronomy", "chemistry", "technology"}:
-                transition = self._run_stateful_world_step(domain)
-                self.curiosity.register_prediction_error(result.topic, transition["prediction_error"])
+            transition: Optional[Dict[str, float]] = None
 
             self.stall_ticks = self.stall_ticks + 1 if result.new_facts == 0 else 0
             structural_novelty = (len(result.new_entities) * 0.12) + (len(result.new_relation_types) * 0.2) + (result.new_facts * 0.08)
@@ -318,12 +333,24 @@ class BabyEventLoop:
             self.type_system.infer_from_triplets(triplets)
             discovered = self.patterns.discover(triplets, min_support=2)
             learned_rules = self.learner.infer_general_rules(triplets)
-            causal_rules = self.learner.discover_causal_rules(self.state_transition_history)
-            for rule in causal_rules:
-                self.logger.info("[learner] causal_rule_discovered %s", rule)
+            causal_candidates = self.learner.discover_causal_candidates(self.state_transition_history)
+            for candidate in causal_candidates:
+                record, created = self.memory.upsert_causal_rule(
+                    cause=candidate.cause,
+                    effect=candidate.effect,
+                    direction=candidate.direction,
+                    observations_increment=1,
+                )
+                relation_label = f"{record.cause} {record.direction}_affects {record.effect}"
+                if created:
+                    self.logger.info("[causal_rule_discovered] %s confidence=%.2f", relation_label, record.confidence)
+                else:
+                    self.logger.info("[causal_rule_updated] %s confidence=%.2f", relation_label, record.confidence)
                 self.curiosity.register_new_pattern(result.topic)
-            for rule in learned_rules + causal_rules:
-                discovered.append(PatternRecord(template=rule, relation="eats" if "predator" in rule else "affects", support=2, label="learner_inferred", timestamp=time.time()))
+                discovered.append(PatternRecord(template=relation_label, relation="affects", support=max(1, record.observations), label="causal_rule", timestamp=time.time()))
+
+            for rule in learned_rules:
+                discovered.append(PatternRecord(template=rule, relation="eats", support=2, label="learner_inferred", timestamp=time.time()))
 
             normalized_patterns: List[PatternRecord] = []
             for item in discovered:
@@ -335,12 +362,22 @@ class BabyEventLoop:
             self.concepts.ingest_triplets(triplets)
 
             hypotheses = self._update_hypotheses(self.memory.patterns, triplets)
+            causal_hypotheses = self.hypothesis_engine.from_causal_rules(self.memory.get_causal_rules())
+            for hypothesis in causal_hypotheses:
+                self.logger.info("[hypothesis_generated] %s", hypothesis.rule)
+            hypotheses = hypotheses + causal_hypotheses
             uncertainty = self.memory.hypothesis_uncertainty()
             self.curiosity.register_hypothesis_uncertainty(result.topic, uncertainty)
 
             ranked_hypotheses = self._curiosity_rank_hypotheses(result.topic, hypotheses[:12])
             if ranked_hypotheses:
                 candidate, candidate_score = ranked_hypotheses[0]
+                preferred_action = self._preferred_action_for_hypothesis(candidate, domain)
+                target_concept = candidate.concepts[0] if candidate.concepts else None
+                if domain in {"ecosystem", "astronomy", "chemistry", "technology"}:
+                    transition = self._run_stateful_world_step(domain, preferred_action=preferred_action, target=target_concept)
+                    self.curiosity.register_prediction_error(result.topic, transition["prediction_error"])
+
                 predictions = self.predictor.predict([candidate], self.memory.all_entities(), self.type_system)
                 prediction = predictions[0] if predictions else None
                 if self.experimenter.should_schedule(candidate, self.curiosity.prediction_error_by_topic.get(result.topic, 0.0)):
@@ -357,6 +394,10 @@ class BabyEventLoop:
                     self.memory.update_hypothesis_evidence(outcome.rule, outcome.supported, outcome.contradicted)
                     if prediction:
                         self.memory.add_prediction(PredictionRecord(rule=prediction.rule, statement=prediction.statement, success=evaluation.success, timestamp=time.time()))
+
+            if transition is None and domain in {"ecosystem", "astronomy", "chemistry", "technology"}:
+                transition = self._run_stateful_world_step(domain)
+                self.curiosity.register_prediction_error(result.topic, transition["prediction_error"])
 
             test_domain = None
             if hypotheses and len(hypotheses[0].rule.split()) >= 3:
