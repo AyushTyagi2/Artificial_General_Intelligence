@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 import json
 import logging
+import math
 import time
 
 from digital_baby.brain.concepts import ConceptHierarchy, ConceptTypeSystem
@@ -51,6 +52,9 @@ class BabyEventLoop:
         self.logger = logging.getLogger(self.__class__.__name__)
         self.stall_ticks = 0
         self.state_transition_history: List[Dict[str, float]] = []
+        self.last_selected_topic: Optional[str] = None
+        self.consecutive_topic_count = 0
+        self.last_forced_diversity_tick = 0
 
     def _load_pages(self) -> List[Dict]:
         pages = []
@@ -88,7 +92,32 @@ class BabyEventLoop:
             return memory_topics[0], f"goal_memory_match:{lowered}"
         return None
 
-    def _select_topic(self, pages: List[Dict], weak_by_topic: Dict[str, float]) -> Tuple[Dict, str, float]:
+    def _balanced_topic_scores(self, topics: List[str], weak_by_topic: Dict[str, float]) -> List[Tuple[str, float, str]]:
+        curiosity_signals = {s.topic: s for s in self.curiosity.score_topics(topics, weak_by_topic)}
+        scored: List[Tuple[str, float, str]] = []
+        for topic in topics:
+            base_signal = curiosity_signals.get(topic)
+            base_score = base_signal.score if base_signal else 0.0
+            visits = self.curiosity.topic_visits[topic]
+            visit_penalty = math.log(visits + 1)
+            exploration_bonus = 1.0 / math.sqrt(visits + 1)
+            score = base_score + exploration_bonus - visit_penalty
+            reason = (
+                f"base={base_score:.2f}, exploration_bonus={exploration_bonus:.2f}, "
+                f"visit_penalty={visit_penalty:.2f}, visits={visits}"
+            )
+            self.logger.info("[exploration] domain=%s visits=%s score=%.2f", topic, visits, score)
+            scored.append((topic, score, reason))
+        return sorted(scored, key=lambda item: item[1], reverse=True)
+
+    def _record_topic_selection(self, topic: str) -> None:
+        if topic == self.last_selected_topic:
+            self.consecutive_topic_count += 1
+        else:
+            self.last_selected_topic = topic
+            self.consecutive_topic_count = 1
+
+    def _select_topic(self, pages: List[Dict], weak_by_topic: Dict[str, float], tick: int) -> Tuple[Dict, str, float]:
         topics = [page["topic"] for page in pages]
         goal = self.curiosity.pop_goal_concept()
         while goal is not None:
@@ -97,15 +126,54 @@ class BabyEventLoop:
                 topic, reason = matched
                 min_visits = min(self.curiosity.topic_visits[t] for t in topics) if topics else 0
                 if self.curiosity.topic_visits[topic] <= min_visits + 1:
-                    page = self._safe_topic_lookup(topic, pages)
-                    score = self.curiosity.score_topics([page["topic"]], weak_by_topic)[0].score
-                    return page, reason, score
+                    balanced = self._balanced_topic_scores(topics, weak_by_topic)
+                    selected_topic = topic
+                    selected_reason = reason
+                    selected_score = next((s for t, s, _r in balanced if t == topic), 0.0)
+
+                    if self.consecutive_topic_count > 10 and self.last_selected_topic == selected_topic:
+                        alternatives = [item for item in balanced if item[0] != selected_topic]
+                        if alternatives:
+                            selected_topic, selected_score, alt_reason = alternatives[0]
+                            self.last_forced_diversity_tick = tick
+                            selected_reason = f"forced_after_streak:{alt_reason}"
+
+                    if tick - self.last_forced_diversity_tick >= 20 and self.last_selected_topic is not None:
+                        alternatives = [item for item in balanced if item[0] != self.last_selected_topic]
+                        if alternatives:
+                            selected_topic, selected_score, alt_reason = alternatives[0]
+                            self.last_forced_diversity_tick = tick
+                            selected_reason = f"forced_every_20_ticks:{alt_reason}"
+
+                    page = self._safe_topic_lookup(selected_topic, pages)
+                    return page, selected_reason, selected_score
             goal = self.curiosity.pop_goal_concept()
 
-        topic_scores = self.curiosity.score_topics(topics, weak_by_topic)
-        selected = topic_scores[0]
-        page = self._safe_topic_lookup(selected.topic, pages)
-        return page, f"curiosity:{selected.reason}", selected.score
+        balanced = self._balanced_topic_scores(topics, weak_by_topic)
+        if not balanced:
+            page = self._safe_topic_lookup(topics[0], pages)
+            return page, "fallback:first_topic", 0.0
+
+        selected_topic, selected_score, selected_reason = balanced[0]
+
+        # Hard lock-in prevention: if same domain chosen >10 times, force a different one.
+        if self.consecutive_topic_count > 10 and self.last_selected_topic == selected_topic:
+            alternatives = [item for item in balanced if item[0] != selected_topic]
+            if alternatives:
+                selected_topic, selected_score, selected_reason = alternatives[0]
+                self.last_forced_diversity_tick = tick
+                selected_reason = f"forced_after_streak:{selected_reason}"
+
+        # Diversity guarantee: force a different topic at least every 20 ticks.
+        if tick - self.last_forced_diversity_tick >= 20 and self.last_selected_topic is not None:
+            alternatives = [item for item in balanced if item[0] != self.last_selected_topic]
+            if alternatives:
+                selected_topic, selected_score, selected_reason = alternatives[0]
+                self.last_forced_diversity_tick = tick
+                selected_reason = f"forced_every_20_ticks:{selected_reason}"
+
+        page = self._safe_topic_lookup(selected_topic, pages)
+        return page, f"balanced:{selected_reason}", selected_score
 
     def _maybe_generate_topic(self, pages: List[Dict], best_score: float, test_domain: str | None = None) -> Optional[Dict]:
         if self.stall_ticks >= 2 or best_score < 0.2 or test_domain is not None:
@@ -221,8 +289,9 @@ class BabyEventLoop:
                 for topic in topics
             }
 
-            selected_page, selection_reason, selection_score = self._select_topic(pages, weak_by_topic)
+            selected_page, selection_reason, selection_score = self._select_topic(pages, weak_by_topic, tick)
             selected_topic = selected_page["topic"]
+            self._record_topic_selection(selected_topic)
             self.logger.info("[tick=%s] selected_topic=%s reason=%s", tick, selected_topic, selection_reason)
 
             result = self.learner.learn_from_page(selected_page)
