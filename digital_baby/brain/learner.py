@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, List, Set
+from typing import Dict, List, Set, Tuple
 
 from .memory import Memory
 from .reasoning import Reasoner
@@ -58,7 +58,6 @@ class Learner:
                 if is_new:
                     new_facts += 1
             else:
-                # fallback for unparsable text facts
                 existing = self.memory.get_fact(fact)
                 if existing is None:
                     new_facts += 1
@@ -79,3 +78,15 @@ class Learner:
             new_relation_types=new_relation_types,
             weak_fact_ratio=weak_ratio,
         )
+
+    def infer_general_rules(self, triplets: List[Tuple[str, str, str]]) -> List[str]:
+        """Infer compact developmental rules from repeated evidence.
+
+        Example: lion/tiger/wolf eats deer => predator eats prey.
+        """
+        predators = {s for s, r, _ in triplets if r == "hunts"}
+        prey = {o for _, r, o in triplets if r == "hunts"}
+        repeated = {(s, o) for s, r, o in triplets if r == "eats" and s in predators and o in prey}
+        if len(repeated) >= 2:
+            return ["predator eats prey"]
+        return []

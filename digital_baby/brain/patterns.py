@@ -38,7 +38,17 @@ class PatternDiscoverer:
                     )
                 )
 
-        # Multi-hop generalized structures (e.g., predator-prey food chain).
+        predator_rule_support = self._count_predator_eats_prey_patterns(triplet_list)
+        if predator_rule_support >= min_support:
+            rules.append(
+                PatternRule(
+                    relation="eats",
+                    count=predator_rule_support,
+                    label="predator-eats-prey rule",
+                    template="predator eats prey",
+                )
+            )
+
         chain_count = self._count_food_chain_motifs(triplet_list)
         if chain_count >= min_support:
             rules.append(
@@ -51,6 +61,21 @@ class PatternDiscoverer:
             )
 
         return sorted(rules, key=lambda r: r.count, reverse=True)
+
+    @staticmethod
+    def _count_predator_eats_prey_patterns(triplets: List[Tuple[str, str, str]]) -> int:
+        predators: Set[str] = set()
+        prey: Set[str] = set()
+        for s, r, o in triplets:
+            if r == "hunts":
+                predators.add(s)
+                prey.add(o)
+
+        matched = 0
+        for s, r, o in triplets:
+            if r == "eats" and s in predators and o in prey:
+                matched += 1
+        return matched
 
     def _count_food_chain_motifs(self, triplets: List[Tuple[str, str, str]]) -> int:
         hunts: Dict[str, Set[str]] = {}
@@ -66,9 +91,9 @@ class PatternDiscoverer:
                 grows_in.setdefault(s, set()).add(o)
 
         motifs = 0
-        for predator, prey_set in hunts.items():
-            for prey in prey_set:
-                plants = eats.get(prey, set())
+        for _predator, prey_set in hunts.items():
+            for prey_item in prey_set:
+                plants = eats.get(prey_item, set())
                 for plant in plants:
                     if plant in grows_in:
                         motifs += 1
@@ -82,5 +107,8 @@ class PatternDiscoverer:
             "reacts_with": "chemical interaction",
             "is": "taxonomy relationship",
             "uses": "component-usage relationship",
+            "eats": "feeding relationship",
+            "lives_in": "habitat relationship",
+            "needs": "resource dependency",
         }
         return mapping.get(relation, "repeated relational pattern")
