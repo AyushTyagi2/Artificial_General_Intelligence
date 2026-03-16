@@ -220,3 +220,7 @@ Provide:
 5. dashboard metrics additions
 
 Explain all changes clearly.
+# Logs
+*.log
+logs/
+agent.log
