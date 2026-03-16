@@ -1,0 +1,22 @@
+{
+  "topic": "chemistry",
+  "facts": [
+    "acetic_acid reacts_with sodium_hydroxide",
+    "activation_energy is 27",
+    "bio_species is unknown",
+    "catalyst is 2",
+    "neuro_plant interacts_with bio_species",
+    "neuro_plant is unknown",
+    "pH is 7",
+    "product_concentration is 17",
+    "reactants is 3",
+    "reaction produces sodium_chloride",
+    "reaction_energy is 59",
+    "reaction_rate is 5",
+    "temperature is 44",
+    "water contains oxygen"
+  ],
+  "generated": true,
+  "domain": "chemistry",
+  "generation": 1
+}

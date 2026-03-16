@@ -1,0 +1,222 @@
+You are working on a cognitive architecture called **digital_baby**.
+It is an experimental AGI-style system with the following components already implemented and running:
+
+Core architecture
+
+* Event loop running experiments across domains (biology, physics, climate, economics, etc.)
+* Knowledge graph (~1300 nodes, ~2000 edges)
+* Intervention-based causal discovery
+* Hypothesis generation
+* Scientific law discovery (linear / exponential / arrhenius etc.)
+* Theory abstraction engine
+* Cross-domain analogy engine
+* Perception modules (screen tracker + Wikipedia reader)
+* Dashboard for live visualization
+
+The system logs confirm that all major subsystems are operational.
+Example runtime statistics:
+
+* nodes ≈ 1380
+* edges ≈ 2012
+* hypotheses ≈ 563
+* memory ≈ 6030
+* theories ≈ 8
+
+However, the logs reveal several structural problems that now need architectural fixes.
+
+Your task is to implement the **next stage improvements** to stabilize learning and improve scientific reasoning.
+
+---
+
+### Problem Analysis
+
+From runtime logs we observe:
+
+1. **Edge update explosion**
+   Edges are updated thousands of times per tick but no new edges are created.
+
+Example:
+
+graph nodes=1380 edges=2012 new=0 updated=2798
+
+This suggests reinforcement loops repeatedly updating the same edges.
+
+---
+
+2. **Cross-domain contamination**
+
+The system runs experiments across many domains in a single global graph:
+
+biology
+physics
+economics
+climate
+materials
+neuroscience
+
+This produces nonsensical cross-domain edges like:
+
+asteroid_drift → gdp_growth
+protein → network_latency
+reaction_rate → interest_rate
+
+These occur because the knowledge graph has **no domain separation**.
+
+---
+
+3. **Weak edge noise**
+
+Many edges have extremely low confidence:
+
+conf=0.04
+conf=0.05
+conf=0.14
+
+These accumulate and degrade reasoning quality.
+
+---
+
+4. **Law discovery mixing domains**
+
+The law discovery module attempts to fit equations across unrelated variables.
+
+Example log:
+
+law_eval MISS energy → proteins pred=4.95 obs=-1.13
+
+This happens because regression is performed on variables from different domains.
+
+---
+
+### Required Improvements
+
+Implement the following architectural upgrades.
+
+---
+
+## Priority 1 — Edge Noise Pruning
+
+Add a **confidence decay and pruning system**.
+
+Rules:
+
+* edges with confidence < 0.1 should decay over time
+* if an edge remains below threshold for N ticks, delete it
+* prevent repeated reinforcement loops from artificially boosting noise edges
+
+Suggested approach:
+
+edge.confidence *= decay_factor
+
+If:
+
+confidence < 0.05 and age > threshold
+
+delete edge.
+
+This keeps the graph clean.
+
+---
+
+## Priority 2 — Domain Tagging
+
+Introduce **domain isolation in the knowledge graph**.
+
+Every node and edge should carry a domain label.
+
+Example:
+
+temperature → reaction_rate   domain=physics
+protein → immune_response     domain=biology
+interest_rate → investment    domain=economics
+
+Experiments and causal discovery should operate primarily within the same domain.
+
+Cross-domain reasoning should only occur through the **CrossDomainTheoryEngine**.
+
+This prevents random domain mixing.
+
+---
+
+## Priority 3 — Law Discovery Domain Filter
+
+Modify the law discovery module so that regression is only attempted when:
+
+node_A.domain == node_B.domain
+
+This avoids fitting equations between unrelated concepts.
+
+---
+
+## Priority 4 — Experiment Targeting
+
+Improve experiment selection.
+
+Instead of random interventions, prioritize:
+
+* edges with high uncertainty
+* hypotheses with low validation count
+* causal chains that need mediator validation
+
+This will increase learning efficiency.
+
+---
+
+## Priority 5 — Curiosity Driven Research
+
+The Wikipedia reader is already integrated but should be driven by curiosity.
+
+Instead of random topics, prioritize:
+
+* nodes with high prediction error
+* nodes with many low-confidence edges
+* unexplained causal chains
+
+Example:
+
+topic = node_with_highest_prediction_error()
+
+This will turn the system into a **self-directed research agent**.
+
+---
+
+## Priority 6 — Dashboard Improvements
+
+Add monitoring tools so the researcher can observe graph quality.
+
+Add metrics to the dashboard:
+
+* edge_noise_ratio
+* pruned_edges
+* domain_distribution
+* cross_domain_edges
+
+Also visualize:
+
+top unstable edges
+most uncertain causal pairs
+
+This will help diagnose learning problems.
+
+---
+
+### Implementation Requirements
+
+* maintain backward compatibility with the existing event loop
+* do not break the knowledge graph API
+* avoid heavy recomputation each tick
+* ensure pruning and domain checks are lightweight
+
+---
+
+### Deliverables
+
+Provide:
+
+1. code patches for knowledge_graph
+2. updates to causal discovery
+3. updates to law discovery
+4. updated experiment selection logic
+5. dashboard metrics additions
+
+Explain all changes clearly.

@@ -1,0 +1,19 @@
+{
+  "topic": "neuroscience",
+  "facts": [
+    "acetylcholine activates hippocampus",
+    "adrenaline modulates neurogenesis",
+    "cortisol is 1",
+    "dopamine_level is 4",
+    "hippocampus enables neurogenesis",
+    "learning_rate is 1",
+    "memory_consolidation is 5",
+    "neural_activity is 6",
+    "serotonin_level is 4",
+    "stress_level is 3",
+    "synaptic_strength is 5"
+  ],
+  "generated": true,
+  "domain": "neuroscience",
+  "generation": 2
+}

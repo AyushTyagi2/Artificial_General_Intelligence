@@ -2,6 +2,37 @@
 
 Stores unique facts with evidence, a knowledge graph, world-model rules/predictions,
 and persistence for long-term runs.
+
+Confidence model (Upgrade 1)
+-----------------------------
+Fact confidence is derived purely from accumulated evidence using the formula:
+
+    confidence = evidence / (evidence + CONFIDENCE_PRIOR_K)
+
+where CONFIDENCE_PRIOR_K = 10 acts as a Bayesian prior strength (equivalent to
+starting with 10 pseudo-observations of uncertainty).  This gives:
+
+    evidence =   1  ->  conf ≈ 0.09   (very uncertain – only seen once)
+    evidence =  10  ->  conf = 0.50   (prior balanced by observation)
+    evidence = 100  ->  conf ≈ 0.91   (well-supported belief)
+    evidence = 990  ->  conf ≈ 0.99   (near-certain)
+
+The computed value is always monotonically increasing with evidence and is
+recomputed on every update, so no numeric drift accumulates over time.
+
+Stale decay (optional, separate concern)
+-----------------------------------------
+Facts that have NOT been re-observed for more than STALE_TICKS ticks receive a
+small linear penalty applied to the *stored* confidence float.  The underlying
+evidence count is NEVER modified by decay.  On any re-observation the confidence
+is immediately recomputed from evidence, erasing the stale penalty.  This lets
+the agent treat genuinely forgotten knowledge as less reliable without discarding
+it entirely.
+
+Backward compatibility
+-----------------------
+The JSON schema is unchanged.  On load, stored confidence values are replaced
+with the evidence-based formula so that old stores are automatically migrated.
 """
 
 from __future__ import annotations
@@ -13,9 +44,78 @@ import json
 import time
 
 
+def _atomic_write_fd(path, write_fn) -> None:
+    """Write via callback to path atomically using a sibling temp file."""
+    import tempfile, os, shutil
+    from pathlib import Path
+    p = Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(dir=str(p.parent), suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            write_fn(fh)
+        try:
+            os.replace(tmp, str(p))
+        except PermissionError:
+            shutil.copy2(tmp, str(p))
+            os.unlink(tmp)
+    except Exception:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
+
+
+# ── Confidence model constants ──────────────────────────────────────────────
+# Prior strength: equivalent to k pseudo-observations of uncertainty.
+# Increase k to make the agent more sceptical of sparse evidence.
+CONFIDENCE_PRIOR_K: int = 10
+
+# Facts not re-observed for this many ticks begin to receive stale decay.
+STALE_TICKS: int = 10
+
+# Linear confidence penalty per tick while a fact is stale.
+# At this rate a fact with evidence=100 (base conf≈0.909) remains above 0.5
+# for ~409 ticks of total non-observation before degrading further.
+STALE_DECAY_RATE: float = 0.001
+
+# Hard caps to keep memory_store.json from growing without bound.
+MAX_FACTS: int = 10_000          # raised: delta facts no longer flood this
+MAX_RELATION_TRIPLES: int = 10_000
+MIN_CONFIDENCE_TO_KEEP: float = 0.05
+
+# Ring-buffer caps for world_model lists (raised from 300 / 200)
+MAX_PREDICTIONS: int = 2_000
+MAX_EXPERIMENTS: int = 2_000
+MAX_WM_RULES: int = 500
+
+
+def evidence_to_confidence(evidence: int, k: int = CONFIDENCE_PRIOR_K) -> float:
+    """Compute confidence from evidence count using a Beta-distribution mean.
+
+    confidence = evidence / (evidence + k)
+
+    This is monotonically increasing, bounded in (0, 1), and converges to 1
+    asymptotically.  k sets how many observations are needed to reach 0.5.
+    """
+    return evidence / (evidence + k)
+
+
 @dataclass
 class FactRecord:
-    """Represents one learned unique fact and metadata."""
+    """Represents one learned unique fact and metadata.
+
+    Fields
+    ------
+    evidence       : cumulative observation count (never decremented)
+    confidence     : derived from evidence via evidence_to_confidence(); also
+                     receives a small linear stale penalty when the fact has
+                     not been re-observed for STALE_TICKS ticks
+    last_tick      : agent tick at which this fact was most recently observed
+                     (0 = loaded from a pre-Upgrade-1 store, treated as fresh)
+    compressed     : True when this record is a memory-compression summary
+    """
 
     statement: str
     confidence: float
@@ -23,6 +123,7 @@ class FactRecord:
     timestamp: float
     evidence: int = 1
     compressed: bool = False
+    last_tick: int = 0
 
 
 @dataclass
@@ -100,29 +201,62 @@ class Memory:
         self.patterns: List[PatternRecord] = []
         self.causal_rules: List[CausalRuleRecord] = []
         self.world_model: Dict[str, List[dict]] = {"rules": [], "predictions": [], "experiments": []}
+        # Cumulative counters -- never reset, grow monotonically.
+        # Dashboard reads these to show total activity, not just the ring-buffer size.
+        self.total_predictions: int = 0
+        self.total_experiments: int = 0
+        # Current agent tick, set externally by the event loop each tick.
+        # Used to compute stale penalties without coupling Memory to wall-clock time.
+        self.current_tick: int = 0
         self._load()
 
+    # ── Fact ingestion ────────────────────────────────────────────────────────
+
     def upsert_fact(self, statement: str, confidence: float, source_topic: str, evidence_increment: int = 1) -> None:
-        """Insert or update a fact with confidence clamped to [0, 1]."""
-        bounded_confidence = max(0.0, min(1.0, confidence))
+        # Drop transient numeric delta facts -- they are unique every tick
+        # (e.g. "temperature_delta is 5.2" vs "5.3"), never accumulate evidence,
+        # and churn through the facts store crowding out structural knowledge.
+        # law_discovery reads state deltas directly from the world step, so
+        # dropping them here has no impact on causal inference.
+        if "_delta" in statement:
+            return
+        """Insert or update a fact using the evidence-based confidence model.
+
+        The ``confidence`` parameter is intentionally ignored for *existing*
+        facts – confidence is always recomputed from the accumulated evidence
+        count so that no caller can accidentally corrupt the signal by passing
+        a stale or hard-coded value.
+
+        Evidence is the single source of truth.  The stored ``confidence``
+        float is a derived, display-ready value.  Any stale penalty is applied
+        separately via ``apply_stale_decay``.
+        """
         now = time.time()
         if statement in self.facts:
             existing = self.facts[statement]
             existing.evidence += max(1, evidence_increment)
-            existing.confidence = min(1.0, (existing.confidence * 0.85) + (bounded_confidence * 0.15) + 0.01)
+            # Recompute confidence purely from evidence – no weighted blend,
+            # no additive drift.
+            existing.confidence = evidence_to_confidence(existing.evidence)
             existing.source_topic = source_topic
             existing.timestamp = now
+            existing.last_tick = self.current_tick
         else:
+            initial_evidence = max(1, evidence_increment)
             self.facts[statement] = FactRecord(
                 statement=statement,
-                confidence=bounded_confidence,
+                confidence=evidence_to_confidence(initial_evidence),
                 source_topic=source_topic,
                 timestamp=now,
-                evidence=max(1, evidence_increment),
+                evidence=initial_evidence,
+                last_tick=self.current_tick,
             )
 
     def add_relation_fact(self, subject: str, relation: str, obj: str, source_topic: str, base_confidence: float = 0.6) -> bool:
         """Deduplicated fact ingestion using (subject, relation, object) index.
+
+        ``base_confidence`` is kept in the signature for call-site compatibility
+        but is no longer used to compute confidence – evidence drives everything.
 
         Returns True if this was a new unique fact, False if it already existed.
         """
@@ -138,13 +272,54 @@ class Memory:
             self.upsert_fact(statement, base_confidence, source_topic=source_topic, evidence_increment=1)
         else:
             canonical = self.fact_index[key]
-            self.upsert_fact(canonical, self.facts[canonical].confidence, source_topic=source_topic, evidence_increment=1)
+            # base_confidence arg kept for compat; upsert ignores it for
+            # existing facts and recomputes from evidence instead.
+            self.upsert_fact(canonical, base_confidence, source_topic=source_topic, evidence_increment=1)
 
         return is_new
 
-    def decay_confidence(self, decay_rate: float = 0.01) -> None:
+    # ── Confidence / decay ────────────────────────────────────────────────────
+
+    def apply_stale_decay(self) -> int:
+        """Apply a gentle confidence penalty to facts not seen recently.
+
+        Only facts whose ``last_tick`` is more than STALE_TICKS ticks behind
+        the current tick are penalised.  The penalty is linear at
+        STALE_DECAY_RATE per tick of staleness beyond the threshold.
+
+        Crucially, the underlying ``evidence`` count is NEVER modified.  The
+        stale penalty is applied to the stored ``confidence`` float only, which
+        means a single re-observation instantly restores full evidence-based
+        confidence.
+
+        Returns the number of facts that received a stale penalty this call.
+        """
+        penalised = 0
         for fact in self.facts.values():
-            fact.confidence = max(0.0, fact.confidence - decay_rate)
+            ticks_since_seen = self.current_tick - fact.last_tick
+            if ticks_since_seen <= STALE_TICKS:
+                continue
+            stale_ticks = ticks_since_seen - STALE_TICKS
+            base = evidence_to_confidence(fact.evidence)
+            # Clamp to 0.01 — a fact can become very uncertain but should
+            # never reach zero or negative confidence, which would corrupt
+            # belief resolution and downstream hypothesis scoring.
+            fact.confidence = max(0.01, base - STALE_DECAY_RATE * stale_ticks)
+            penalised += 1
+        return penalised
+
+    def decay_confidence(self, decay_rate: float = 0.01) -> None:
+        """Deprecated – replaced by apply_stale_decay().
+
+        Kept for call-site compatibility.  Calling this is now a no-op so that
+        any existing call in the event loop does not silently corrupt the new
+        confidence model.  The event loop should be updated to call
+        ``apply_stale_decay()`` instead, but even if it still calls this method
+        the model remains correct.
+        """
+        # Intentionally empty – see apply_stale_decay() for the replacement.
+
+    # ── Queries ───────────────────────────────────────────────────────────────
 
     def get_fact(self, statement: str) -> Optional[FactRecord]:
         return self.facts.get(statement)
@@ -207,6 +382,7 @@ class Memory:
         confidence = (best_ev / total) if total else 0.0
         return BeliefState(best=best, alternatives=alternatives, confidence=confidence)
 
+    # ── Causal rules ──────────────────────────────────────────────────────────
 
     def upsert_causal_rule(self, cause: str, effect: str, direction: str, observations_increment: int = 1) -> Tuple[CausalRuleRecord, bool]:
         """Insert or update a causal rule with confidence tracking.
@@ -242,21 +418,39 @@ class Memory:
     def get_causal_rules(self) -> List[CausalRuleRecord]:
         return list(self.causal_rules)
 
+    # ── Patterns / world model ────────────────────────────────────────────────
+
     def update_patterns(self, rules: List[PatternRecord]) -> None:
         self.patterns = rules
 
     def set_world_model_rules(self, rules: List[HypothesisRecord]) -> None:
-        self.world_model["rules"] = [asdict(r) for r in rules]
+        """Merge new rules into world_model without wiping existing evidence.
+
+        Existing rules keep their accumulated supported/contradicted counts.
+        New rules are appended. The list is capped at 200 entries (highest
+        confidence first) so it doesn't grow unboundedly.
+        """
+        existing = {r["rule"]: r for r in self.world_model.get("rules", [])}
+        for r in rules:
+            d = asdict(r)
+            if d["rule"] in existing:
+                # Preserve accumulated evidence — only update confidence
+                existing[d["rule"]]["confidence"] = d["confidence"]
+            else:
+                existing[d["rule"]] = d
+        # Keep the 200 highest-confidence rules
+        merged = sorted(existing.values(), key=lambda x: x.get("confidence", 0), reverse=True)
+        self.world_model["rules"] = merged[:MAX_WM_RULES]
 
     def add_prediction(self, prediction: PredictionRecord) -> None:
         self.world_model.setdefault("predictions", []).append(asdict(prediction))
-        # keep bounded history
-        self.world_model["predictions"] = self.world_model["predictions"][-300:]
-
+        self.world_model["predictions"] = self.world_model["predictions"][-MAX_PREDICTIONS:]
+        self.total_predictions += 1  # cumulative counter
 
     def add_experiment(self, experiment: ExperimentRecord) -> None:
         self.world_model.setdefault("experiments", []).append(asdict(experiment))
-        self.world_model["experiments"] = self.world_model["experiments"][-300:]
+        self.world_model["experiments"] = self.world_model["experiments"][-MAX_EXPERIMENTS:]
+        self.total_experiments += 1  # cumulative counter
 
     def update_hypothesis_evidence(self, rule: str, supported: int, contradicted: int) -> Optional[dict]:
         """Update stored rule evidence/confidence from experiment outcomes."""
@@ -279,6 +473,11 @@ class Memory:
         return sum(1.0 - float(rule.get("confidence", 0.0)) for rule in rules) / len(rules)
 
     def compress_relation_facts(self, relation: str, min_objects: int = 2) -> List[str]:
+        """Summarise subjects with many objects for a relation into a single fact.
+
+        The summary fact is given evidence equal to the number of objects it
+        covers, so its confidence reflects how many observations back it up.
+        """
         summaries: List[str] = []
         herbivores = {"deer", "zebra", "rabbit", "antelope", "buffalo", "goat", "hare", "rodent", "seal"}
         for subject, rel_map in self.entity_relations.items():
@@ -287,12 +486,48 @@ class Memory:
                 category = "herbivores" if all(o in herbivores for o in objs) else "multiple_entities"
                 summary = f"{subject} {relation} {category}"
                 if summary not in self.facts:
-                    self.upsert_fact(summary, confidence=0.58, source_topic="memory_compression", evidence_increment=len(objs))
+                    # evidence_increment = number of individual facts being
+                    # compressed; confidence is then derived automatically.
+                    self.upsert_fact(
+                        summary,
+                        confidence=0.0,  # ignored for new facts; evidence drives conf
+                        source_topic="memory_compression",
+                        evidence_increment=len(objs),
+                    )
                     self.facts[summary].compressed = True
                 summaries.append(summary)
         return sorted(set(summaries))
 
+    # ── Persistence ───────────────────────────────────────────────────────────
+
+    # ── Size management ──────────────────────────────────────────────────────
+
+    def _prune(self) -> None:
+        """Evict weakest facts/relation triples when hard caps are exceeded."""
+        # --- facts cap ---
+        if len(self.facts) > MAX_FACTS:
+            sorted_stmts = sorted(self.facts, key=lambda s: self.facts[s].confidence)
+            for stmt in sorted_stmts[:len(self.facts) - MAX_FACTS]:
+                del self.facts[stmt]
+
+        # --- relation triples cap ---
+        if len(self.relation_evidence) > MAX_RELATION_TRIPLES:
+            sorted_triples = sorted(self.relation_evidence, key=lambda k: self.relation_evidence[k])
+            for triple in sorted_triples[:len(self.relation_evidence) - MAX_RELATION_TRIPLES]:
+                self.relation_evidence.pop(triple, None)
+                self.fact_index.pop(triple, None)
+                s, r, o = triple
+                rel_map = self.entity_relations.get(s, {})
+                objs = rel_map.get(r)
+                if objs:
+                    objs.discard(o)
+                    if not objs:
+                        del rel_map[r]
+                    if not rel_map:
+                        del self.entity_relations[s]
+
     def save(self) -> None:
+        self._prune()
         self.storage_path.parent.mkdir(parents=True, exist_ok=True)
         payload = {
             "facts": [asdict(record) for record in self.facts.values()],
@@ -311,18 +546,41 @@ class Memory:
             "patterns": [asdict(pattern) for pattern in self.patterns],
             "causal_rules": [asdict(rule) for rule in self.causal_rules],
             "world_model": self.world_model,
+            "total_predictions": self.total_predictions,
+            "total_experiments": self.total_experiments,
         }
-        self.storage_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        # Atomic write: write to a temp file, then replace.
+        # Prevents a corrupt/null-byte file if the process crashes mid-write.
+        _atomic_write_fd(self.storage_path, lambda fh: json.dump(payload, fh, indent=2))
 
     def _load(self) -> None:
         if not self.storage_path.exists():
             return
-        payload = json.loads(self.storage_path.read_text(encoding="utf-8"))
+        raw = self.storage_path.read_text(encoding="utf-8").strip().lstrip("\x00")
+        if not raw:
+            return
+        try:
+            payload = json.loads(raw)
+        except json.JSONDecodeError:
+            import logging, shutil, time
+            backup = self.storage_path.with_suffix(f".corrupted.{int(time.time())}.json")
+            shutil.move(str(self.storage_path), str(backup))
+            logging.getLogger(__name__).warning(
+                "Memory file was corrupt and could not be parsed. "
+                "Backed up to %s — starting with fresh memory.", backup
+            )
+            return
 
         for item in payload.get("facts", []):
             item.setdefault("evidence", 1)
             item.setdefault("compressed", False)
+            # Upgrade-1 migration: last_tick may be absent in older stores.
+            # Default to 0 (treated as "seen at tick 0", i.e. not yet stale).
+            item.setdefault("last_tick", 0)
             record = FactRecord(**item)
+            # Always recompute confidence from evidence on load so that stores
+            # written by the old decay-based model are automatically corrected.
+            record.confidence = evidence_to_confidence(record.evidence)
             self.facts[record.statement] = record
 
         for subject, rel_map in payload.get("entity_relations", {}).items():
@@ -351,3 +609,13 @@ class Memory:
             self.causal_rules.append(CausalRuleRecord(**entry))
 
         self.world_model = payload.get("world_model", {"rules": [], "predictions": [], "experiments": []})
+
+        # Restore cumulative counters (backwards-compatible: default to buffer size)
+        self.total_predictions = payload.get(
+            "total_predictions",
+            len(self.world_model.get("predictions", [])),
+        )
+        self.total_experiments = payload.get(
+            "total_experiments",
+            len(self.world_model.get("experiments", [])),
+        )

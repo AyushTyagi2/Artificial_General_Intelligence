@@ -1,0 +1,29 @@
+{
+    "topic": "neuroscience",
+    "domain": "neuroscience",
+    "facts": [
+        "neuron transmits signal",
+        "synapse connects neurons",
+        "dopamine is neurotransmitter",
+        "cortisol is stress_hormone",
+        "glutamate is excitatory",
+        "gaba is inhibitory",
+        "myelin insulates axon",
+        "acetylcholine triggers muscle",
+        "serotonin regulates mood",
+        "hippocampus stores memory",
+        "amygdala processes emotion",
+        "prefrontal_cortex controls decision",
+        "neural_plasticity enables learning",
+        "action_potential is electrical_signal",
+        "dendrite receives signal",
+        "axon transmits signal",
+        "blood_brain_barrier protects brain",
+        "neurogenesis creates neurons",
+        "cortisol inhibits hippocampus",
+        "stress_level modulates cortisol",
+        "sleep_quality affects memory_consolidation",
+        "dopamine drives reward_seeking",
+        "serotonin_level affects mood_stability"
+    ]
+}

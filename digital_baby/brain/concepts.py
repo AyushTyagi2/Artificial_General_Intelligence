@@ -7,6 +7,33 @@ from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Set, Tuple
 import json
 
+def _safe_json_load(path, default=None):
+    """Read a JSON file tolerantly — returns default on missing, empty, or corrupt file."""
+    import json, shutil, time, logging
+    from pathlib import Path
+    p = Path(path)
+    if not p.exists():
+        return default
+    try:
+        raw = p.read_text(encoding="utf-8").strip().lstrip("\x00")
+    except OSError:
+        return default
+    if not raw:
+        return default
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        backup = p.with_suffix(f".corrupted.{int(time.time())}.json")
+        try:
+            shutil.move(str(p), str(backup))
+        except OSError:
+            pass
+        logging.getLogger(__name__).warning(
+            "Corrupt JSON file %s — backed up to %s, using default.", p, backup
+        )
+        return default
+
+
 
 @dataclass
 class HierarchyEdge:
@@ -72,7 +99,9 @@ class ConceptRegistry:
         self.type_by_concept.clear()
         self.parent_by_concept.clear()
         for file_path in sorted(self.knowledge_dir.glob("*.json")):
-            payload = json.loads(file_path.read_text(encoding="utf-8"))
+            payload = _safe_json_load(file_path)
+            if payload is None:
+                continue
             for fact in payload.get("facts", []):
                 parts = fact.lower().split()
                 if len(parts) >= 3 and parts[1] == "is":

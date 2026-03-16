@@ -11,6 +11,33 @@ from typing import Dict, List, Optional, Set, Tuple
 from urllib.parse import quote
 from urllib.request import urlopen
 import json
+
+def _safe_json_load(path, default=None):
+    """Read a JSON file tolerantly — returns default on missing, empty, or corrupt file."""
+    import json, shutil, time, logging
+    from pathlib import Path
+    p = Path(path)
+    if not p.exists():
+        return default
+    try:
+        raw = p.read_text(encoding="utf-8").strip().lstrip("\x00")
+    except OSError:
+        return default
+    if not raw:
+        return default
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        backup = p.with_suffix(f".corrupted.{int(time.time())}.json")
+        try:
+            shutil.move(str(p), str(backup))
+        except OSError:
+            pass
+        logging.getLogger(__name__).warning(
+            "Corrupt JSON file %s — backed up to %s, using default.", p, backup
+        )
+        return default
+
 import logging
 
 LOGGER = logging.getLogger(__name__)
@@ -89,7 +116,7 @@ class KnowledgeExpander:
 
     def _load_expanded_page(self) -> dict:
         if self.expanded_path.exists():
-            return json.loads(self.expanded_path.read_text(encoding="utf-8"))
+            return _safe_json_load(self.expanded_path)
         return {"topic": "expanded_concepts", "domain": "taxonomy", "facts": []}
 
     def _known_facts(self) -> Set[str]:
@@ -196,7 +223,21 @@ class KnowledgeExpander:
         if fact not in facts:
             facts.add(fact)
             page["facts"] = sorted(facts)
-            self.expanded_path.write_text(json.dumps(page, indent=2), encoding="utf-8")
+            import tempfile as _tf, os as _os, shutil as _sh
+            _dir = self.expanded_path.parent
+            _fd, _tmp = _tf.mkstemp(dir=str(_dir), suffix=".tmp")
+            try:
+                with _os.fdopen(_fd, "w", encoding="utf-8") as _fh:
+                    json.dump(page, _fh, indent=2)
+                try:
+                    _os.replace(_tmp, str(self.expanded_path))
+                except PermissionError:
+                    _sh.copy2(_tmp, str(self.expanded_path))
+                    _os.unlink(_tmp)
+            except Exception:
+                try: _os.unlink(_tmp)
+                except OSError: pass
+                raise
 
 
 def expand_concept(concept: str, knowledge_path: str | Path) -> Optional[Tuple[str, str]]:

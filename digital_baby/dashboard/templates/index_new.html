@@ -1,0 +1,1985 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Digital Brain — Cognitive Monitor</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Charts: lightweight -->
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <!-- D3 — only loaded when graph tab is active -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js" defer></script>
+
+  <style>
+    :root{
+      --bg:#080b12;--bg1:#0d1120;--bg2:#111827;--bg3:#1a2235;
+      --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.12);
+      --text:#c8d4f0;--muted:#4a5680;--dim:#232a3e;
+      --cyan:#00d4b8;--blue:#4f94ff;--violet:#9b72ff;
+      --amber:#f5a623;--green:#22c97b;--red:#f05050;
+      --orange:#ff6b35;--pink:#e055c8;
+      --mono:'Space Mono',monospace;--sans:'DM Sans',sans-serif;
+      --radius:5px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;overflow-x:hidden}
+    body{
+      font-family:var(--mono);background:var(--bg);color:var(--text);
+      font-size:11.5px;line-height:1.55;
+    }
+
+    /* ── Scanline overlay ── */
+    body::after{
+      content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
+      background:repeating-linear-gradient(180deg,transparent 0,transparent 3px,rgba(0,0,0,.03) 3px,rgba(0,0,0,.03) 4px);
+    }
+
+    .shell{max-width:1640px;margin:0 auto;padding:14px 18px 32px}
+
+    /* ── Header ── */
+    header{
+      display:flex;align-items:center;gap:10px;
+      padding:10px 0 12px;border-bottom:1px solid var(--border);margin-bottom:14px;
+    }
+    .logo{
+      font-family:var(--sans);font-weight:600;font-size:17px;
+      letter-spacing:-.01em;color:#fff;white-space:nowrap;
+    }
+    .logo em{color:var(--cyan);font-style:normal}
+    .badge{
+      font-size:9px;padding:2px 7px;border-radius:2px;
+      font-family:var(--mono);letter-spacing:.07em;text-transform:uppercase;
+    }
+    .badge-live{background:rgba(34,201,123,.1);color:var(--green);border:1px solid rgba(34,201,123,.22)}
+    .badge-sys{background:rgba(79,148,255,.1);color:var(--blue);border:1px solid rgba(79,148,255,.2)}
+    #hdr-tick{font-size:10.5px;color:var(--muted);margin-left:4px}
+    #hdr-time{font-size:10.5px;color:var(--muted);margin-left:auto}
+    #conn-status{
+      font-size:9px;padding:2px 8px;border-radius:2px;
+      border:1px solid var(--border2);color:var(--muted);
+    }
+    #conn-status.live{color:var(--green);border-color:rgba(34,201,123,.3);background:rgba(34,201,123,.08)}
+    #conn-status.stale{color:var(--amber);border-color:rgba(245,166,35,.3)}
+    #conn-status.err{color:var(--red);border-color:rgba(240,80,80,.3)}
+
+    /* ── Nav tabs ── */
+    .tabs{
+      display:flex;gap:2px;border-bottom:1px solid var(--border);
+      margin-bottom:14px;
+    }
+    .tab{
+      padding:7px 16px;font-size:11px;font-family:var(--mono);
+      cursor:pointer;border-radius:var(--radius) var(--radius) 0 0;
+      color:var(--muted);border:1px solid transparent;border-bottom:none;
+      transition:all .15s;user-select:none;
+    }
+    .tab:hover{color:var(--text)}
+    .tab.active{
+      color:var(--cyan);border-color:var(--border);
+      background:var(--bg1);border-bottom-color:var(--bg1);
+      margin-bottom:-1px;
+    }
+    .tab-panel{display:none}
+    .tab-panel.active{display:block}
+
+    /* ── Learning banner ── */
+    .lbanner{
+      display:flex;align-items:center;gap:10px;
+      padding:8px 14px;border-radius:var(--radius);
+      margin-bottom:12px;border:1px solid;font-size:11px;
+    }
+    .lb-learning{background:rgba(34,201,123,.07);border-color:rgba(34,201,123,.25);color:var(--green)}
+    .lb-plateauing{background:rgba(245,166,35,.07);border-color:rgba(245,166,35,.25);color:var(--amber)}
+    .lb-stagnant{background:rgba(240,80,80,.07);border-color:rgba(240,80,80,.25);color:var(--red)}
+    .lb-no_data{background:rgba(74,86,128,.07);border-color:rgba(74,86,128,.25);color:var(--muted)}
+    .lb-dot{width:7px;height:7px;border-radius:50%;animation:pulse 2s infinite;flex-shrink:0}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+    .lb-label{font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+    .lb-inds{display:flex;gap:16px;flex-wrap:wrap;margin-left:4px}
+    .lb-ind{font-size:10px;color:var(--muted)}
+    .lb-ind b{color:var(--text)}
+    .lb-score{margin-left:auto;font-family:var(--sans);font-size:20px;font-weight:600}
+
+    /* ── Metric tiles ── */
+    .metrics{
+      display:grid;grid-template-columns:repeat(10,1fr);
+      gap:8px;margin-bottom:14px;
+    }
+    @media(max-width:1200px){.metrics{grid-template-columns:repeat(4,1fr)}}
+    .met{
+      background:var(--bg1);border:1px solid var(--border);
+      border-radius:var(--radius);padding:10px 13px;
+      position:relative;overflow:hidden;transition:border-color .2s;
+    }
+    .met::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:2px;
+      background:var(--accent,var(--dim));
+    }
+    .met:hover{border-color:var(--border2)}
+    .met .lbl{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+    .met .val{
+      font-family:var(--sans);font-size:24px;font-weight:600;
+      color:#fff;line-height:1.15;margin-top:4px;
+      transition:color .3s;
+    }
+    .met .d{font-size:10px;margin-top:2px;color:var(--muted)}
+    .met .val.flash{color:var(--cyan)}
+    .m-facts{--accent:var(--cyan)} .m-hyp{--accent:var(--violet)}
+    .m-causal{--accent:var(--green)} .m-inf{--accent:var(--blue)}
+    .m-pat{--accent:var(--amber)} .m-pred{--accent:var(--orange)}
+    .m-exp{--accent:var(--red)} .m-nodes{--accent:var(--dim)}
+    .m-perc{--accent:var(--pink)} .m-pedges{--accent:var(--pink)}
+    .m-wiki{--accent:var(--amber)} .m-wikiedges{--accent:var(--amber)}
+
+    /* ── Grid layouts ── */
+    .grid{display:grid;gap:10px;margin-bottom:10px}
+    .g2{grid-template-columns:1.8fr 1fr}
+    .g3{grid-template-columns:1fr 1fr 1fr}
+    .g4{grid-template-columns:1fr 1fr 1fr 1fr}
+    @media(max-width:1100px){.g3,.g4{grid-template-columns:1fr 1fr}}
+    @media(max-width:780px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+    /* ── Panels ── */
+    .panel{
+      background:var(--bg1);border:1px solid var(--border);
+      border-radius:var(--radius);overflow:hidden;
+    }
+    .ph{
+      display:flex;align-items:center;gap:8px;
+      padding:8px 13px;border-bottom:1px solid var(--border);background:var(--bg2);
+    }
+    .pt{font-family:var(--sans);font-size:11.5px;font-weight:500;color:#c0c9e8;letter-spacing:.015em}
+    .pc{font-size:10px;color:var(--muted);margin-left:auto}
+    .pb{padding:10px 12px}
+
+    .scrolly{max-height:260px;overflow-y:auto}
+    .scrolly::-webkit-scrollbar{width:3px}
+    .scrolly::-webkit-scrollbar-thumb{background:var(--dim);border-radius:2px}
+
+    .empty{
+      color:var(--muted);padding:14px 0;text-align:center;font-size:11px;
+    }
+
+    /* ── Buttons & controls ── */
+    .btn{
+      background:var(--bg3);color:var(--text);
+      border:1px solid var(--border2);border-radius:3px;
+      padding:3px 10px;font-size:11px;font-family:var(--mono);
+      cursor:pointer;transition:all .15s;white-space:nowrap;
+    }
+    .btn:hover{background:var(--bg2);border-color:var(--cyan);color:var(--cyan)}
+    .btn-p{background:rgba(0,212,184,.08);border-color:rgba(0,212,184,.25);color:var(--cyan)}
+    .btn-p:hover{background:rgba(0,212,184,.15)}
+
+    /* ── Larry Tool Activity feed ── */
+    .tool-row{
+      display:flex;align-items:center;gap:0;
+      border-bottom:1px solid var(--border);
+      padding:5px 12px;transition:background .1s;
+    }
+    .tool-row:hover{background:var(--bg3)}
+    .tool-row:last-child{border-bottom:none}
+    .tool-ts{color:var(--dim);min-width:62px;font-size:10.5px}
+    .tool-name{
+      color:var(--cyan);font-weight:600;min-width:90px;
+      font-size:11.5px;
+    }
+    .tool-input{color:var(--muted);flex:1;overflow:hidden;
+      text-overflow:ellipsis;white-space:nowrap;font-size:11px}
+    .tool-caller{color:var(--dim);font-size:10px;min-width:72px;text-align:right}
+    .tool-ok{color:#4caf82;font-size:10px;min-width:14px;text-align:right;margin-left:6px}
+    .tool-err{color:#e05252;font-size:10px;min-width:14px;text-align:right;margin-left:6px}
+    .tool-bar-wrap{background:var(--bg3);border-radius:2px;height:6px;flex:1;margin:0 8px}
+    .tool-bar{background:var(--cyan);height:6px;border-radius:2px;transition:width .4s}
+    .csel,.cnum{
+      background:var(--bg);color:var(--text);
+      border:1px solid var(--border);border-radius:3px;
+      padding:3px 7px;font-size:11px;font-family:var(--mono);
+    }
+
+    /* ── Causal rule row ── */
+    .ci{
+      display:flex;align-items:center;gap:7px;
+      padding:5px 0;border-bottom:1px solid var(--border);font-size:11px;
+    }
+    .ci:last-child{border:none}
+    .cid{
+      width:20px;height:20px;border-radius:2px;
+      display:flex;align-items:center;justify-content:center;
+      font-weight:700;font-size:10px;flex-shrink:0;
+    }
+    .d-pos{background:rgba(34,201,123,.12);color:var(--green)}
+    .d-neg{background:rgba(240,80,80,.12);color:var(--red)}
+    .d-mix{background:rgba(245,166,35,.12);color:var(--amber)}
+    .ci-lbl{flex:1}
+    .ci-stat{text-align:right;font-size:10px;color:var(--muted);white-space:nowrap}
+    .ct{width:40px;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;display:inline-block;vertical-align:middle}
+    .cf{height:100%;border-radius:2px;background:var(--cyan)}
+
+    /* ── Live feed ── */
+    .fi{padding:4px 0;border-bottom:1px solid var(--border);font-size:10.5px;line-height:1.4}
+    .fi:last-child{border:none}
+    .ftick{color:var(--dim)}
+
+    /* ── Discoveries ── */
+    .disc-item{
+      display:flex;align-items:flex-start;gap:8px;
+      padding:6px 0;border-bottom:1px solid var(--border);font-size:11px;
+    }
+    .disc-item:last-child{border:none}
+    .disc-tick{font-size:9px;color:var(--dim);white-space:nowrap;margin-top:1px;min-width:44px}
+    .disc-eq{flex:1;color:var(--amber);font-size:11px;line-height:1.4}
+    .disc-r2{font-size:10px;color:var(--green);font-weight:700}
+
+    /* ── Graph panel ── */
+    #kgwrap{position:relative;height:500px;background:var(--bg)}
+    #kgwrap.full{position:fixed;inset:0;height:100vh;width:100vw;z-index:9000;background:var(--bg)}
+    #kg-svg{width:100%;height:100%;cursor:grab}
+    #kg-svg:active{cursor:grabbing}
+    #kg-ov{
+      position:absolute;inset:0;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;gap:6px;
+      background:rgba(8,11,18,.8);color:var(--dim);font-size:12px;pointer-events:none;
+    }
+    #kg-ov.hidden{display:none}
+    #kg-info{
+      position:absolute;bottom:12px;left:12px;right:12px;
+      font-size:10px;color:var(--muted);
+      display:flex;gap:16px;flex-wrap:wrap;pointer-events:none;
+    }
+    .kg-counter{color:var(--dim)}
+    .kg-counter b{color:var(--text)}
+
+    /* Legend dots */
+    .pleg{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted)}
+    .pd{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+    /* Node tooltip */
+    #tooltip{
+      position:fixed;background:var(--bg2);border:1px solid var(--border2);
+      border-radius:var(--radius);padding:8px 12px;font-size:11px;
+      pointer-events:none;opacity:0;transition:opacity .1s;z-index:10000;max-width:260px;
+    }
+    #tooltip.show{opacity:1}
+    #tooltip .tt-title{font-family:var(--sans);font-weight:600;color:#fff;margin-bottom:4px}
+    #tooltip .tt-row{color:var(--muted);margin-top:2px}
+    #tooltip .tt-row span{color:var(--text)}
+
+    /* ── Hypothesis table ── */
+    .ht{width:100%;border-collapse:collapse;font-size:11px}
+    .ht th{
+      padding:5px 10px;text-align:left;font-size:9px;
+      text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
+      border-bottom:1px solid var(--border);white-space:nowrap;
+    }
+    .ht td{padding:5px 10px;border-bottom:1px solid var(--border);line-height:1.35}
+    .ht tr:last-child td{border:none}
+    .ht tr:hover td{background:rgba(255,255,255,.02)}
+    .conf-bar{
+      display:inline-block;width:40px;height:4px;
+      background:var(--bg3);border-radius:2px;vertical-align:middle;overflow:hidden;
+    }
+    .conf-fill{height:100%;border-radius:2px;background:var(--cyan)}
+
+    /* ── Consolidation ── */
+    .consol-item{
+      display:flex;align-items:center;gap:6px;
+      padding:4px 0;border-bottom:1px solid var(--border);font-size:10.5px;
+    }
+    .consol-item:last-child{border:none}
+    .consol-dot{width:5px;height:5px;border-radius:50%;background:var(--violet);flex-shrink:0}
+
+    /* ── Uncertainty rows ── */
+    .unc-item{
+      display:flex;align-items:center;gap:6px;
+      padding:4px 0;border-bottom:1px solid var(--border);font-size:11px;
+    }
+    .unc-item:last-child{border:none}
+    .unc-edge{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .unc-bar-wrap{width:50px;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;flex-shrink:0}
+    .unc-bar{height:100%;border-radius:2px}
+    .unc-h{font-size:10px;color:var(--amber);min-width:36px;text-align:right}
+
+    /* ── Validation rows ── */
+    .vi{
+      display:flex;align-items:flex-start;gap:6px;
+      padding:5px 0;border-bottom:1px solid var(--border);font-size:11px;
+    }
+    .vi:last-child{border:none}
+    .verdict{
+      font-size:9px;padding:2px 6px;border-radius:2px;
+      text-transform:uppercase;letter-spacing:.05em;font-weight:600;white-space:nowrap;
+    }
+    .v-sup{background:rgba(34,201,123,.15);color:var(--green)}
+    .v-con{background:rgba(240,80,80,.15);color:var(--red)}
+    .v-inc{background:rgba(74,86,128,.15);color:var(--muted)}
+    .vr{flex:1;color:var(--text);font-size:10px;line-height:1.4}
+
+    /* ── Reward sparkline placeholder ── */
+    #sparkline{height:50px}
+
+    /* ── Responsive table scroll ── */
+    .tscroll{overflow-x:auto}
+
+    /* Update flash animation */
+    @keyframes fadeFlash{0%{background:rgba(0,212,184,.12)}100%{background:transparent}}
+    .new-item{animation:fadeFlash .8s ease-out}
+  </style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ── Header ─────────────────────────────────────────────────── -->
+  <header>
+    <div class="logo">digital<em>_</em>brain</div>
+    <span class="badge badge-sys">monitor v3</span>
+    <span class="badge badge-live" id="liveBadge">● live</span>
+    <span id="hdr-tick"></span>
+    <span id="conn-status" class="stale">connecting…</span>
+    <span id="hdr-time"></span>
+  </header>
+
+  <!-- ── Learning banner ─────────────────────────────────────────── -->
+  <div class="lbanner lb-no_data" id="lbanner">
+    <div class="lb-dot" id="lb-dot" style="background:var(--muted)"></div>
+    <span class="lb-label" id="lb-label">Initialising</span>
+    <div class="lb-inds" id="lb-inds"></div>
+    <span class="lb-score" id="lb-score">—</span>
+  </div>
+
+  <!-- ── Metric tiles ─────────────────────────────────────────────── -->
+  <div class="metrics">
+    <div class="met m-facts"><div class="lbl">Facts</div><div class="val" id="m-facts">—</div><div class="d" id="d-facts">memory store</div></div>
+    <div class="met m-hyp"><div class="lbl">Hypotheses</div><div class="val" id="m-rules">—</div><div class="d" id="d-rules">world model</div></div>
+    <div class="met m-causal"><div class="lbl">Causal Rules</div><div class="val" id="m-causal">—</div><div class="d">confirmed</div></div>
+    <div class="met m-pat"><div class="lbl">Patterns</div><div class="val" id="m-patterns">—</div><div class="d">detected</div></div>
+    <div class="met m-pred"><div class="lbl">Predictions</div><div class="val" id="m-predictions">—</div><div class="d">world model</div></div>
+    <div class="met m-exp"><div class="lbl">Experiments</div><div class="val" id="m-experiments">—</div><div class="d">conducted</div></div>
+    <div class="met m-nodes"><div class="lbl">KG Nodes</div><div class="val" id="m-nodes">—</div><div class="d" id="d-edges">— edges</div></div>
+    <div class="met m-inf"><div class="lbl">Tick</div><div class="val" id="m-tick">—</div><div class="d" id="d-reward">reward —</div></div>
+    <div class="met m-perc"><div class="lbl">Perception</div><div class="val" id="m-perc">—</div><div class="d">screen events</div></div>
+    <div class="met m-pedges"><div class="lbl">Perc. Edges</div><div class="val" id="m-pedges">—</div><div class="d">injected into KG</div></div>
+    <div class="met m-wiki"><div class="lbl">Wiki Events</div><div class="val" id="m-wiki">—</div><div class="d">articles read</div></div>
+    <div class="met m-wikiedges"><div class="lbl">Wiki Edges</div><div class="val" id="m-wikiedges">—</div><div class="d">from Wikipedia</div></div>
+  </div>
+
+  <!-- ── Tabs ──────────────────────────────────────────────────────── -->
+  <div class="tabs">
+    <div class="tab active" data-tab="overview">Overview</div>
+    <div class="tab" data-tab="causal">Causal</div>
+    <div class="tab" data-tab="hypotheses">Hypotheses</div>
+    <div class="tab" data-tab="discoveries">Discoveries</div>
+    <div class="tab" data-tab="graph">Graph</div>
+    <div class="tab" data-tab="memory">Memory</div>
+    <div class="tab" data-tab="perception">👁 Perception</div>
+    <div class="tab" data-tab="tools">🔧 Tools</div>
+    <div class="tab" data-tab="debug">Debug</div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       TAB: Overview
+  ═══════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel active" id="tab-overview">
+    <div class="grid g2">
+
+      <!-- Left: reward sparkline + live feed -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="panel">
+          <div class="ph">
+            <div class="pt">Reward History</div>
+            <span class="pc" id="sparkline-desc">last 200 ticks</span>
+          </div>
+          <div class="pb" style="padding:6px 10px">
+            <div id="sparkline"></div>
+          </div>
+        </div>
+
+        <div class="panel" style="flex:1">
+          <div class="ph">
+            <div class="pt">Live Event Stream</div>
+            <span class="pc" id="live-cnt"></span>
+          </div>
+          <div class="pb scrolly" id="live-feed" style="max-height:200px;padding:8px 12px">
+            <div class="empty">Waiting for events…</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="ph">
+            <div class="pt">Memory Consolidation</div>
+            <span class="pc" id="consol-cnt"></span>
+          </div>
+          <div class="pb scrolly" id="consol-list" style="max-height:160px;padding:8px 12px">
+            <div class="empty">No consolidation events yet.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: causal rules + abstraction counts -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="panel" style="flex:1">
+          <div class="ph">
+            <div class="pt">Top Causal Rules</div>
+            <span class="pc" id="causal-cnt"></span>
+          </div>
+          <div class="pb scrolly" id="causal-list-ov" style="padding:8px 12px;max-height:240px">
+            <div class="empty">No causal rules yet.</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="ph">
+            <div class="pt">Epistemic Uncertainty</div>
+            <span class="pc" id="unc-mean"></span>
+          </div>
+          <div class="pb scrolly" id="unc-list" style="padding:8px 12px;max-height:140px">
+            <div class="empty">Loading…</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="ph"><div class="pt">Validation Results</div><span class="pc" id="val-cnt"></span></div>
+          <div class="pb scrolly" id="val-list" style="padding:8px 12px;max-height:140px">
+            <div class="empty">Runs every 75 ticks.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       TAB: Causal
+  ═══════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-causal">
+    <div class="grid g2">
+      <div class="panel">
+        <div class="ph">
+          <div class="pt">Direct Causal Rules</div>
+          <span class="pc" id="direct-cnt"></span>
+        </div>
+        <div class="pb scrolly tscroll" id="direct-causal-list" style="padding:0;max-height:420px">
+          <div class="empty" style="padding:16px">No direct causal rules yet.</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph">
+          <div class="pt">Inferred Causal Chains</div>
+          <span class="pc" id="inferred-cnt"></span>
+        </div>
+        <div class="pb scrolly" id="inferred-chain-list" style="padding:8px 12px;max-height:420px">
+          <div class="empty">No inferred chains yet.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g2">
+      <div class="panel">
+        <div class="ph"><div class="pt">Pattern Support by Relation</div></div>
+        <div id="patternChart" style="height:160px;margin:0 8px"></div>
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="pt">Evidence Distribution</div></div>
+        <div id="evidenceChart" style="height:160px;margin:0 8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       TAB: Hypotheses
+  ═══════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-hypotheses">
+    <div class="panel" style="margin-bottom:10px">
+      <div class="ph">
+        <div class="pt">Hypothesis Confidence Distribution</div>
+      </div>
+      <div id="hypDistChart" style="height:130px;margin:0 8px"></div>
+    </div>
+
+    <div class="panel">
+      <div class="ph">
+        <div class="pt">World Model Rules</div>
+        <span class="pc" id="hyp-cnt"></span>
+        <input class="csel" id="hyp-filter" placeholder="filter…" style="width:140px;margin-left:8px">
+      </div>
+      <div class="tscroll" style="max-height:380px;overflow-y:auto">
+        <table class="ht" id="hyp-table">
+          <thead>
+            <tr>
+              <th>Rule</th>
+              <th>Confidence</th>
+              <th>Type</th>
+            </tr>
+          </thead>
+          <tbody id="hyp-tbody">
+            <tr><td colspan="3" class="empty" style="padding:14px">No hypotheses yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       TAB: Discoveries
+  ═══════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-discoveries">
+    <div class="grid g2">
+      <div class="panel">
+        <div class="ph">
+          <div class="pt">Scientific Law Discoveries</div>
+          <span class="pc" id="disc-cnt"></span>
+        </div>
+        <div class="pb scrolly" id="disc-list" style="padding:8px 12px;max-height:400px">
+          <div class="empty">No laws discovered yet.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="panel">
+          <div class="ph"><div class="pt">Discovery Rate / 25 ticks</div></div>
+          <div id="discRateChart" style="height:160px;margin:0 8px"></div>
+        </div>
+        <div class="panel">
+          <div class="ph">
+            <div class="pt">Cross-Domain Theories</div>
+            <span class="pc" id="theory-cnt"></span>
+          </div>
+          <div class="pb scrolly" id="theory-list" style="padding:8px 12px;max-height:180px">
+            <div class="empty">Theories emerge from repeated patterns across domains.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       TAB: Graph
+  ═══════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-graph">
+    <div class="panel">
+      <div class="ph">
+        <div class="pt">Knowledge Graph</div>
+        <span class="pc" id="kg-badge"></span>
+        <div style="display:flex;gap:6px;margin-left:8px;flex-wrap:wrap">
+          <select class="csel" id="rel-filter"><option value="">All relations</option></select>
+          <select class="csel" id="prov-filter">
+            <option value="">All provenance</option>
+            <option value="internal">Internal</option>
+            <option value="ingestion">Ingestion</option>
+            <option value="causal">Causal</option>
+            <option value="causal_chain">Inferred</option>
+            <option value="abstraction">Abstraction</option>
+          </select>
+          <input class="cnum" id="min-ev" type="number" value="1" min="1" style="width:52px" placeholder="ev"/>
+          <input class="cnum" id="min-conf" type="number" value="0" min="0" max="1" step="0.05" style="width:52px" placeholder="conf"/>
+          <button class="btn btn-p" onclick="loadGraph()">apply</button>
+          <button class="btn" onclick="toggleGraphFull()">⛶</button>
+        </div>
+      </div>
+      <div style="padding:6px 12px;border-bottom:1px solid var(--border);display:flex;gap:12px;flex-wrap:wrap">
+        <span class="pleg"><span class="pd" style="background:#2a3650"></span>internal</span>
+        <span class="pleg"><span class="pd" style="background:var(--blue)"></span>ingestion</span>
+        <span class="pleg"><span class="pd" style="background:var(--green)"></span>causal</span>
+        <span class="pleg"><span class="pd" style="background:var(--violet)"></span>inferred</span>
+        <span class="pleg"><span class="pd" style="background:var(--pink)"></span>abstraction</span>
+        <span id="kg-sample-warn" style="margin-left:auto;font-size:10px;color:var(--amber);display:none">
+          ⚠ Graph sampled — showing top edges by confidence
+        </span>
+      </div>
+      <div id="kgwrap">
+        <div id="kg-ov"><span id="kg-msg">Graph loads when you open this tab.</span></div>
+        <svg id="kg-svg">
+          <defs>
+            <marker id="m-def" markerWidth="6" markerHeight="6" refX="12" refY="3" orient="auto"><path d="M0,0L0,6L6,3z" fill="#2a3650"/></marker>
+            <marker id="m-pos" markerWidth="6" markerHeight="6" refX="12" refY="3" orient="auto"><path d="M0,0L0,6L6,3z" fill="#22c97b"/></marker>
+            <marker id="m-neg" markerWidth="6" markerHeight="6" refX="12" refY="3" orient="auto"><path d="M0,0L0,6L6,3z" fill="#f05050"/></marker>
+            <marker id="m-inf" markerWidth="6" markerHeight="6" refX="12" refY="3" orient="auto"><path d="M0,0L0,6L6,3z" fill="#9b72ff"/></marker>
+            <marker id="m-abs" markerWidth="6" markerHeight="6" refX="12" refY="3" orient="auto"><path d="M0,0L0,6L6,3z" fill="#e055c8"/></marker>
+            <marker id="m-ing" markerWidth="6" markerHeight="6" refX="12" refY="3" orient="auto"><path d="M0,0L0,6L6,3z" fill="#4f94ff"/></marker>
+          </defs>
+          <g id="kg-root"></g>
+        </svg>
+        <div id="kg-info"></div>
+      </div>
+    </div>
+    <div id="tooltip"></div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       TAB: Memory
+  ═══════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-memory">
+    <div class="grid g3">
+      <div class="panel">
+        <div class="ph"><div class="pt">Hypothesis Confidence</div></div>
+        <div id="memHypChart" style="height:160px;margin:0 8px"></div>
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="pt">Edge Provenance</div></div>
+        <div id="memProvChart" style="height:160px;margin:0 8px"></div>
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="pt">Evidence Distribution</div></div>
+        <div id="memEvChart" style="height:160px;margin:0 8px"></div>
+      </div>
+    </div>
+
+    <div class="grid g2">
+      <div class="panel">
+        <div class="ph"><div class="pt">Abstraction Concepts</div><span class="pc" id="abs-cnt"></span></div>
+        <div class="pb scrolly" id="abs-list" style="padding:8px 12px;max-height:260px">
+          <div class="empty">No abstractions yet.</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="pt">Intervention Diversity</div><span class="pc" id="div-score"></span></div>
+        <div class="pb scrolly" id="div-list" style="padding:8px 12px;max-height:260px">
+          <div class="empty">No interventions yet.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       TAB: Debug
+  ═══════════════════════════════════════════════════════════════════ -->
+  <!-- ════════════════════════════════════════════════════════════════
+       TAB: Larry Tools
+  ═══════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-tools">
+
+    <!-- header strip -->
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+      <div style="flex:1">
+        <div class="pt" style="font-size:14px">Larry Tool Activity</div>
+        <div style="color:var(--muted);font-size:11px;margin-top:2px">
+          Live feed of every tool the brain invokes via the ToolRouter
+        </div>
+      </div>
+      <div id="tool-status-badge" style="
+        padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600;
+        background:var(--bg2);color:var(--muted)">checking…</div>
+      <button class="btn" onclick="clearToolFeed()" style="font-size:11px">✕ clear</button>
+      <button class="btn" onclick="fetchToolEvents()" style="font-size:11px">↻ refresh</button>
+    </div>
+
+    <div class="grid g3" style="margin-bottom:10px">
+      <!-- stat cards -->
+      <div class="panel" style="text-align:center;padding:14px 0">
+        <div style="font-size:26px;font-weight:700;color:var(--accent)" id="tool-stat-total">0</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px">Total Calls</div>
+      </div>
+      <div class="panel" style="text-align:center;padding:14px 0">
+        <div style="font-size:26px;font-weight:700;color:#4caf82" id="tool-stat-success">0</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px">Successes</div>
+      </div>
+      <div class="panel" style="text-align:center;padding:14px 0">
+        <div style="font-size:26px;font-weight:700;color:#e05252" id="tool-stat-error">0</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px">Errors</div>
+      </div>
+    </div>
+
+    <div class="grid g2">
+
+      <!-- Live feed -->
+      <div class="panel" style="min-height:380px">
+        <div class="ph">
+          <div class="pt">Recent Invocations</div>
+          <span class="pc" id="tool-feed-cnt"></span>
+        </div>
+        <div id="tool-feed"
+             style="padding:0;overflow-y:auto;max-height:420px;font-family:var(--mono);font-size:11.5px">
+          <div class="empty" style="padding:16px 12px">Waiting for tool calls…</div>
+        </div>
+      </div>
+
+      <!-- Per-tool breakdown -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="panel">
+          <div class="ph"><div class="pt">Tool Call Counts</div></div>
+          <div id="tool-breakdown"
+               style="padding:10px 14px;font-size:12px;max-height:200px;overflow-y:auto">
+            <div class="empty">No data yet.</div>
+          </div>
+        </div>
+        <div class="panel" style="flex:1">
+          <div class="ph"><div class="pt">Calling Modules</div></div>
+          <div id="tool-callers"
+               style="padding:10px 14px;font-size:12px;max-height:200px;overflow-y:auto">
+            <div class="empty">No data yet.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       TAB: Perception
+  ═══════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-perception">
+
+    <!-- Screen capture toggle bar -->
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 14px;background:rgba(255,255,255,.03);border-radius:6px;margin-bottom:10px;border:1px solid rgba(255,255,255,.06)">
+      <span style="font-size:11px;color:var(--muted)">Screen OCR Capture</span>
+      <button id="screen-toggle-btn"
+        onclick="toggleScreenCapture()"
+        style="padding:4px 14px;border-radius:4px;border:1px solid;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s">
+        …
+      </button>
+      <span id="screen-toggle-status" style="font-size:10px;color:var(--dim)">checking…</span>
+      <span style="margin-left:auto;font-size:10px;color:var(--dim)">Wikipedia channel is always active ✓</span>
+    </div>
+
+    <div class="grid g2">
+
+      <div class="panel">
+        <div class="ph">
+          <div class="pt">Live Perception Feed</div>
+          <span class="ph-extra" id="perc-feed-cnt" style="color:var(--muted);font-size:10px"></span>
+          <button class="btn" onclick="refreshPerception()" style="margin-left:auto">↻ refresh</button>
+        </div>
+        <div class="pb scrolly" id="perc-feed" style="max-height:340px;padding:8px 12px">
+          <div class="empty">No perception events yet.</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="ph">
+          <div class="pt">Extracted Relations</div>
+          <span class="ph-extra" id="perc-triple-cnt" style="color:var(--muted);font-size:10px"></span>
+        </div>
+        <div class="pb scrolly" id="perc-triples" style="max-height:340px;padding:8px 12px">
+          <div class="empty">No relations extracted yet.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="panel" style="margin-top:10px">
+      <div class="ph"><div class="pt">Entities Detected</div></div>
+      <div class="pb" id="perc-entities" style="padding:10px 14px;display:flex;flex-wrap:wrap;gap:6px">
+        <div class="empty">No entities yet.</div>
+      </div>
+    </div>
+
+    <!-- Wikipedia Feed -->
+    <div class="grid g2" style="margin-top:10px">
+      <div class="panel">
+        <div class="ph">
+          <div class="pt">📖 Wikipedia Feed</div>
+          <span class="ph-extra" id="wiki-feed-cnt" style="color:var(--muted);font-size:10px"></span>
+          <button class="btn" onclick="refreshWiki()" style="margin-left:auto">↻ refresh</button>
+        </div>
+        <div class="pb scrolly" id="wiki-feed" style="max-height:280px;padding:8px 12px">
+          <div class="empty">No Wikipedia articles ingested yet.</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph">
+          <div class="pt">Wikipedia Relations</div>
+          <span class="ph-extra" id="wiki-triple-cnt" style="color:var(--muted);font-size:10px"></span>
+        </div>
+        <div class="pb scrolly" id="wiki-triples" style="max-height:280px;padding:8px 12px">
+          <div class="empty">No Wikipedia relations yet.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       TAB: Debug
+  ═══════════════════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-debug">
+    <div class="grid g2">
+      <div class="panel">
+        <div class="ph">
+          <div class="pt">System Health</div>
+          <button class="btn" onclick="refreshDebug()" style="margin-left:auto">↻ refresh</button>
+        </div>
+        <div class="pb" id="debug-health" style="padding:12px">
+          <div class="empty">Click refresh</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="pt">Delta Store State</div></div>
+        <div class="pb scrolly" id="debug-delta" style="padding:12px;max-height:320px;font-size:10.5px;font-family:var(--mono)">
+          <div class="empty">Click refresh</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:10px">
+      <div class="ph"><div class="pt">Raw /api/delta response</div></div>
+      <pre id="debug-raw" style="padding:12px;font-size:10px;max-height:300px;overflow:auto;color:var(--muted)">—</pre>
+    </div>
+  </div>
+
+</div><!-- /shell -->
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     JavaScript
+══════════════════════════════════════════════════════════════════════ -->
+<script>
+'use strict';
+
+// ── State ──────────────────────────────────────────────────────────────────
+const S = {
+  seq:        0,          // last-seen seq from server
+  tick:       0,
+  counters:   {},
+  rewards:    [],
+  causal:     [],
+  memCausal:  [],
+  wm_rules:   [],
+  live:       [],
+  laws:       [],
+  consol:     [],
+  valid:      [],
+  learning:   {},
+  epistemic:  {},
+  // Tab-specific (loaded lazily)
+  causalChains:   null,
+  abstractions:   null,
+  snapCharts:     null,
+  provenance:     null,
+  diversity:      null,
+  perception:     [],   // screen perception events
+  wiki:           [],   // wikipedia perception events
+  summaries:      [],
+};
+
+// ── Tab management ─────────────────────────────────────────────────────────
+let _activeTab = 'overview';
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    _activeTab = t.dataset.tab;
+    document.getElementById('tab-' + _activeTab).classList.add('active');
+    onTabActivated(_activeTab);
+  });
+});
+
+function onTabActivated(tab) {
+  if (tab === 'graph')       { loadGraph(); }
+  if (tab === 'causal')      { loadCausalChains(); loadSnapCharts(); }
+  if (tab === 'memory')      { loadAbstractions(); loadSnapCharts(); loadProvenance(); loadDiversity(); }
+  if (tab === 'discoveries') { renderDiscoveries(); loadSnapCharts(); }
+  if (tab === 'hypotheses')  { renderHypotheses(); }
+}
+
+// ── SSE + delta poll ────────────────────────────────────────────────────────
+let _sseRetry = 500;
+let _pollTimer = null;
+
+function startSSE() {
+  let es;
+  try { es = new EventSource('/stream'); } catch(e) { schedulePoll(3000); return; }
+
+  es.onopen = () => {
+    setConnStatus('live', '● live');
+    _sseRetry = 500;
+  };
+  es.onmessage = ev => {
+    try {
+      const msg = JSON.parse(ev.data);
+      if (msg.seq && msg.seq > S.seq) {
+        fetchDelta();
+      }
+      // Live tool usage events pushed from server
+      if (msg.tool_event) {
+        _ingestToolEvent(msg.tool_event);
+      }
+    } catch(e) {}
+  };
+  es.onerror = () => {
+    es.close();
+    setConnStatus('stale', '⚠ reconnecting');
+    _sseRetry = Math.min(_sseRetry * 2, 30000);
+    setTimeout(startSSE, _sseRetry);
+  };
+}
+
+function schedulePoll(ms) {
+  clearTimeout(_pollTimer);
+  _pollTimer = setTimeout(async () => {
+    await fetchDelta();
+    schedulePoll(4000);
+  }, ms);
+}
+
+async function fetchDelta() {
+  try {
+    const r = await fetch('/api/delta?seq=' + S.seq);
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    applyDelta(d);
+    setConnStatus('live', '● live');
+  } catch(e) {
+    setConnStatus('err', '✕ offline');
+  }
+}
+
+function applyDelta(d) {
+  if (d.seq) S.seq = d.seq;
+
+  // Merge list fields (delta sends only new items)
+  if (d.rewards)             S.rewards    = d.full_refresh ? d.rewards    : [...S.rewards,    ...d.rewards].slice(-200);
+  if (d.causal_discoveries)  S.causal     = d.full_refresh ? d.causal_discoveries  : [...S.causal,  ...d.causal_discoveries].slice(-60);
+  if (d.mem_causal_rules)    S.memCausal  = d.mem_causal_rules;
+  if (d.wm_rules)            S.wm_rules   = d.wm_rules;
+  if (d.live_events)         S.live       = d.full_refresh ? d.live_events  : [...S.live,  ...d.live_events].slice(-40);
+  if (d.law_events)          S.laws       = d.full_refresh ? d.law_events   : [...S.laws,  ...d.law_events].slice(-30);
+  if (d.consolidation_events)S.consol     = d.full_refresh ? d.consolidation_events : [...S.consol,...d.consolidation_events].slice(-20);
+  if (d.validation_events)   S.valid      = d.full_refresh ? d.validation_events   : [...S.valid, ...d.validation_events].slice(-20);
+  if (d.counters)            S.counters   = d.counters;
+  if (d.learning)            S.learning   = d.learning;
+  if (d.epistemic)           S.epistemic  = d.epistemic;
+  if (d.latest_tick)         S.tick       = d.latest_tick;
+  if (d.summaries_tail)      S.summaries  = d.summaries_tail;
+  if (d.perception_events)   S.perception = d.full_refresh ? d.perception_events : [...(S.perception||[]), ...d.perception_events].slice(-40);
+  if (d.wiki_events)         S.wiki = d.full_refresh ? d.wiki_events : [...(S.wiki||[]), ...d.wiki_events].slice(-40);
+
+  renderAll();
+}
+
+// ── Render all active panels ────────────────────────────────────────────────
+function renderAll() {
+  renderHeader();
+  renderMetrics();
+  renderBanner();
+  if (_activeTab === 'overview')    renderOverview();
+  if (_activeTab === 'hypotheses')  renderHypotheses();
+  if (_activeTab === 'discoveries') renderDiscoveries();
+  if (_activeTab === 'perception')  { renderPerception(); renderWiki(); checkScreenStatus(); }
+  // Other tabs are event-driven
+}
+
+// ── Header ──────────────────────────────────────────────────────────────────
+function renderHeader() {
+  document.getElementById('hdr-tick').textContent = S.tick ? `tick ${S.tick}` : '';
+  document.getElementById('hdr-time').textContent = new Date().toLocaleTimeString();
+}
+
+function setConnStatus(cls, label) {
+  const el = document.getElementById('conn-status');
+  el.className = cls;
+  el.textContent = label;
+}
+
+// ── Metric tiles ────────────────────────────────────────────────────────────
+let _prevCounters = {};
+function renderMetrics() {
+  const c = S.counters;
+  setMetric('m-facts',       c.facts,       _prevCounters.facts);
+  setMetric('m-rules',       c.rules,       _prevCounters.rules);
+  setMetric('m-causal',      c.causal_rules,_prevCounters.causal_rules);
+  setMetric('m-patterns',    c.patterns,    _prevCounters.patterns);
+  setMetric('m-predictions', c.predictions, _prevCounters.predictions);
+  setMetric('m-experiments', c.experiments, _prevCounters.experiments);
+  setMetric('m-nodes',       c.nodes,       _prevCounters.nodes);
+  if (c.edges !== undefined) document.getElementById('d-edges').textContent = `${c.edges} edges`;
+  setMetric('m-tick', S.tick, null);
+  setMetric('m-perc',   c.perception_events, _prevCounters.perception_events);
+  setMetric('m-pedges', c.perception_edges,  _prevCounters.perception_edges);
+  setMetric('m-wiki',   c.wiki_events,        _prevCounters.wiki_events);
+  _syncToggleFromCounters(c);
+  setMetric('m-wikiedges', c.wiki_edges,      _prevCounters.wiki_edges);
+  const latest = (S.summaries || []).slice(-1)[0];
+  if (latest) document.getElementById('d-reward').textContent = `reward ${parseFloat(latest.reward||0).toFixed(3)}`;
+  _prevCounters = {...c};
+}
+
+function setMetric(id, val, prev) {
+  if (val === undefined) return;
+  const el = document.getElementById(id);
+  if (!el) return;
+  const formatted = (val >= 1000) ? (val/1000).toFixed(1)+'k' : String(val);
+  if (el.textContent !== formatted) {
+    el.textContent = formatted;
+    el.classList.remove('flash');
+    void el.offsetWidth;
+    el.classList.add('flash');
+    setTimeout(() => el.classList.remove('flash'), 1200);
+  }
+}
+
+// ── Learning banner ─────────────────────────────────────────────────────────
+function renderBanner() {
+  const l = S.learning;
+  if (!l || !l.status) return;
+  const banner = document.getElementById('lbanner');
+  banner.className = `lbanner lb-${l.status}`;
+  const dotColors = {learning:'var(--green)',plateauing:'var(--amber)',stagnant:'var(--red)',no_data:'var(--muted)'};
+  document.getElementById('lb-dot').style.background = dotColors[l.status] || 'var(--muted)';
+  document.getElementById('lb-label').textContent = l.status.replace('_',' ').toUpperCase();
+  document.getElementById('lb-score').textContent = `${Math.round((l.score||0)*100)}%`;
+  const ind = l.indicators || {};
+  document.getElementById('lb-inds').innerHTML = `
+    <span class="lb-ind">edges/tick <b>${ind.avg_new_edges??0}</b></span>
+    <span class="lb-ind">hyp trend <b>${(ind.hyp_trend??0)>0?'+':''}${ind.hyp_trend??0}</b></span>
+    <span class="lb-ind">action diversity <b>${((ind.act_diversity??0)*100).toFixed(0)}%</b></span>
+    <span class="lb-ind">law rate <b>${((ind.law_rate??0)*1000).toFixed(1)}/1k</b></span>
+    <span class="lb-ind">reinf/tick <b>${ind.avg_reinf??0}</b></span>`;
+}
+
+// ── Overview tab ─────────────────────────────────────────────────────────────
+function renderOverview() {
+  renderSparkline();
+  renderLiveFeed();
+  renderConsolidation();
+  renderCausalList();
+  renderUncertainty();
+  renderValidation();
+}
+
+function renderSparkline() {
+  if (!S.rewards.length) return;
+  const cEl = document.getElementById('sparkline');
+  if (!cEl._chart) cEl._chart = echarts.init(cEl, null, {renderer:'svg'});
+  const c = cEl._chart;
+  const ts = {color:'#4a5680',fontSize:9,fontFamily:'Space Mono'};
+  c.setOption({
+    backgroundColor:'transparent',
+    grid:{top:4,bottom:18,left:36,right:8},
+    xAxis:{type:'category',data:S.rewards.map((_,i)=>i),
+           axisLabel:{...ts,interval:Math.floor(S.rewards.length/5)},
+           axisLine:{lineStyle:{color:'#232a3e'}},splitLine:{show:false}},
+    yAxis:{type:'value',axisLabel:ts,splitLine:{lineStyle:{color:'#111827'}}},
+    series:[{
+      type:'line',data:S.rewards,smooth:true,symbol:'none',
+      lineStyle:{color:'#00d4b8',width:1.5},
+      areaStyle:{color:{type:'linear',x:0,y:0,x2:0,y2:1,
+        colorStops:[{offset:0,color:'rgba(0,212,184,.25)'},{offset:1,color:'rgba(0,212,184,0)'}]}},
+    }],
+  });
+}
+
+function renderLiveFeed() {
+  const el = document.getElementById('live-feed');
+  if (!S.live.length) { el.innerHTML = '<div class="empty">Waiting for events…</div>'; return; }
+  document.getElementById('live-cnt').textContent = `${S.live.length} events`;
+  el.innerHTML = [...S.live].reverse().slice(0,25).map(ev => {
+    const tick = ev.tick ? `<span class="ftick">[t${ev.tick}]</span> ` : '';
+    let body = '';
+    if (ev.kind === 'causal')
+      body = `<span style="color:var(--green)">⇢ causal</span> <span style="color:var(--muted)">${ev.rule||''} <span style="color:var(--dim)">c=${(ev.confidence||0).toFixed(2)}</span></span>`;
+    else if (ev.kind === 'law')
+      body = `<span style="color:var(--amber)">⊛ law</span> <span style="color:var(--amber)">${(ev.equation||'').slice(0,55)}</span>`;
+    else if (ev.kind === 'validation')
+      body = `<span class="verdict ${ev.verdict==='supported'?'v-sup':ev.verdict==='contradicted'?'v-con':'v-inc'}">${ev.verdict}</span> <span style="color:var(--muted)">${(ev.rule||'').slice(0,45)}</span>`;
+    else if (ev.kind === 'wiki')
+      body = `<span style="color:var(--amber)">📖 wiki</span> <span style="color:var(--muted)">${ev.subject||''} -[${ev.relation||''}]-> ${ev.object||''} <span style="color:var(--dim)">c=${(ev.confidence||0).toFixed(2)} topic=${ev.topic||''}</span></span>`;
+    else if (ev.kind === 'perception')
+      body = `<span style="color:var(--pink)">👁 screen</span> <span style="color:var(--muted)">${ev.subject||''} -[${ev.relation||''}]-> ${ev.object||''} <span style="color:var(--dim)">c=${(ev.confidence||0).toFixed(2)}</span></span>`;
+    else
+      body = `<span style="color:var(--muted)">${JSON.stringify(ev).slice(0,60)}</span>`;
+    return `<div class="fi">${tick}${body}</div>`;
+  }).join('');
+}
+
+function refreshPerception() {
+  fetch('/api/perception?n=20').then(r=>r.json()).then(d => {
+    S.perception = d.events || [];
+    renderPerception();
+  }).catch(()=>{});
+}
+
+function renderPerception() {
+  const events = S.perception || [];
+
+  // Feed panel
+  const feed = document.getElementById('perc-feed');
+  if (!feed) return;
+  if (!events.length) {
+    feed.innerHTML = '<div class="empty">No perception events yet.</div>';
+    document.getElementById('perc-feed-cnt').textContent = '';
+    document.getElementById('perc-triple-cnt').textContent = '';
+    document.getElementById('perc-entities').innerHTML = '<div class="empty">No entities yet.</div>';
+    return;
+  }
+
+  document.getElementById('perc-feed-cnt').textContent = `${events.length} events`;
+
+  feed.innerHTML = [...events].reverse().slice(0, 20).map(e => {
+    const ts = e.ts ? new Date(e.ts * 1000).toLocaleTimeString() : '';
+    const src = `<span style="color:var(--pink);font-size:9px">[${e.source||'screen'}]</span>`;
+    const text = (e.text || '').replace(/</g,'&lt;').slice(0, 120);
+    return `<div class="fi">${src} <span style="color:var(--dim)">${ts}</span> <span style="color:var(--muted)">${text}${text.length>=120?'…':''}</span></div>`;
+  }).join('');
+
+  // Triples panel
+  const allTriples = events.flatMap(e =>
+    (e.triples || []).map(t => ({...t, src: e.source, ts: e.ts}))
+  );
+  const trPanel = document.getElementById('perc-triples');
+  document.getElementById('perc-triple-cnt').textContent = `${allTriples.length} relations`;
+  if (!allTriples.length) {
+    trPanel.innerHTML = '<div class="empty">No relations extracted yet.</div>';
+  } else {
+    const dirColor = d => d==='positive'?'var(--green)':d==='negative'?'var(--red)':'var(--amber)';
+    trPanel.innerHTML = [...allTriples].reverse().slice(0, 30).map(t =>
+      `<div class="fi"><span style="color:var(--cyan)">${t.subject||''}</span> <span style="color:var(--muted)">-[</span><span style="color:${dirColor(t.direction)}">${t.relation||''}</span><span style="color:var(--muted)">]-></span> <span style="color:var(--cyan)">${t.object||''}</span> <span style="color:var(--dim)">c=${(t.confidence||0).toFixed(2)}</span></div>`
+    ).join('');
+  }
+
+  // Entities panel
+  const allEntities = [...new Set(events.flatMap(e => e.entities || []))].slice(0, 60);
+  const entPanel = document.getElementById('perc-entities');
+  if (!allEntities.length) {
+    entPanel.innerHTML = '<div class="empty">No entities yet.</div>';
+  } else {
+    entPanel.innerHTML = allEntities.map(en =>
+      `<span style="background:rgba(79,148,255,.08);border:1px solid rgba(79,148,255,.2);color:var(--blue);padding:2px 8px;border-radius:3px;font-size:10px">${en}</span>`
+    ).join('');
+  }
+}
+
+// ── Screen capture toggle ─────────────────────────────────────────────────
+
+function _applyToggleUI(paused) {
+  const btn = document.getElementById('screen-toggle-btn');
+  const lbl = document.getElementById('screen-toggle-status');
+  if (!btn) return;
+  if (paused) {
+    btn.textContent  = '▶ Enable';
+    btn.style.background    = 'rgba(74,222,128,.12)';
+    btn.style.borderColor   = 'rgba(74,222,128,.4)';
+    btn.style.color         = 'var(--green)';
+    if (lbl) lbl.textContent = '🔴 paused — no screen reads';
+  } else {
+    btn.textContent  = '⏸ Pause';
+    btn.style.background    = 'rgba(251,191,36,.1)';
+    btn.style.borderColor   = 'rgba(251,191,36,.35)';
+    btn.style.color         = 'var(--amber)';
+    if (lbl) lbl.textContent = '🟢 active — reading screen';
+  }
+}
+
+function checkScreenStatus() {
+  fetch('/api/perception/status')
+    .then(r => r.json())
+    .then(d => {
+      _applyToggleUI(d.paused);
+    })
+    .catch(() => {
+      const lbl = document.getElementById('screen-toggle-status');
+      if (lbl) lbl.textContent = '⚠ agent not connected';
+    });
+}
+
+function toggleScreenCapture() {
+  fetch('/api/perception/toggle', { method: 'POST' })
+    .then(r => r.json())
+    .then(d => {
+      _applyToggleUI(d.paused);
+    })
+    .catch(() => {});
+}
+
+// Sync toggle state from counters whenever a delta arrives
+function _syncToggleFromCounters(c) {
+  if (typeof c.screen_paused !== 'undefined') {
+    _applyToggleUI(c.screen_paused);
+  }
+}
+
+function refreshWiki() {
+  fetch('/api/wiki?n=20').then(r=>r.json()).then(d => {
+    S.wiki = d.events || [];
+    renderWiki();
+  }).catch(()=>{});
+}
+
+function renderWiki() {
+  const events = S.wiki || [];
+  const feed = document.getElementById('wiki-feed');
+  if (!feed) return;
+  if (!events.length) {
+    feed.innerHTML = '<div class="empty">No Wikipedia articles ingested yet.</div>';
+    const cntEl = document.getElementById('wiki-feed-cnt');
+    const tEl   = document.getElementById('wiki-triple-cnt');
+    if (cntEl) cntEl.textContent = '';
+    if (tEl)   tEl.textContent   = '';
+    const wt = document.getElementById('wiki-triples');
+    if (wt) wt.innerHTML = '<div class="empty">No Wikipedia relations yet.</div>';
+    return;
+  }
+
+  const cntEl = document.getElementById('wiki-feed-cnt');
+  if (cntEl) cntEl.textContent = `${events.length} articles`;
+
+  feed.innerHTML = [...events].reverse().slice(0, 15).map(e => {
+    const ts  = e.ts ? new Date(e.ts * 1000).toLocaleTimeString() : '';
+    const ttl = `<span style="color:var(--amber);font-weight:600">${e.topic||'?'}</span>`;
+    const snip = `<span style="color:var(--dim);font-size:9px">${e.sentences||0} sentences · ${e.triples_count||e.triples?.length||0} triples</span>`;
+    return `<div class="fi">📖 ${ttl} <span style="color:var(--dim)">${ts}</span> ${snip}</div>`;
+  }).join('');
+
+  const allTriples = events.flatMap(e =>
+    (e.triples || []).map(t => ({...t, topic: e.topic}))
+  );
+  const tEl = document.getElementById('wiki-triple-cnt');
+  if (tEl) tEl.textContent = `${allTriples.length} relations`;
+
+  const trPanel = document.getElementById('wiki-triples');
+  if (!trPanel) return;
+  if (!allTriples.length) {
+    trPanel.innerHTML = '<div class="empty">No Wikipedia relations yet.</div>';
+    return;
+  }
+  const dirColor = d => d==='positive'?'var(--green)':d==='negative'?'var(--red)':'var(--amber)';
+  trPanel.innerHTML = [...allTriples].reverse().slice(0, 30).map(t =>
+    `<div class="fi">
+      <span style="color:var(--cyan)">${t.subject||''}</span>
+      <span style="color:var(--muted)"> -[</span><span style="color:${dirColor(t.direction)}">${t.relation||''}</span><span style="color:var(--muted)">]-></span>
+      <span style="color:var(--cyan)"> ${t.object||''}</span>
+      <span style="color:var(--dim)"> c=${(t.confidence||0).toFixed(2)}</span>
+      <span style="color:var(--amber);font-size:9px"> [${t.topic||''}]</span>
+      ${t.text ? `<div style="color:var(--dim);font-size:9px;margin-left:4px;margin-top:2px">"${(t.text||'').slice(0,90)}"</div>` : ''}
+    </div>`
+  ).join('');
+}
+
+function renderConsolidation() {
+  const el = document.getElementById('consol-list');
+  if (!S.consol.length) { el.innerHTML = '<div class="empty">No consolidation events yet.</div>'; return; }
+  document.getElementById('consol-cnt').textContent = `${S.consol.length}`;
+  el.innerHTML = [...S.consol].reverse().slice(0,20).map(e => {
+    const tick = e.tick ? `<span style="color:var(--dim);min-width:40px;display:inline-block">t${e.tick}</span>` : '';
+    const pC = e.promoted>0  ? 'var(--green)' : 'var(--muted)';
+    const fC = e.forgotten>0 ? 'var(--red)'   : 'var(--muted)';
+    const eC = e.evicted>0   ? 'var(--amber)' : 'var(--muted)';
+    return `<div class="consol-item"><span class="consol-dot"></span>${tick}
+      <span><span style="color:${pC}">+${e.promoted} promoted</span> · <span style="color:${fC}">${e.forgotten} forgotten</span> · <span style="color:${eC}">${e.evicted} evicted</span> · <span style="color:var(--dim)">graph=${e.graph_size}</span></span>
+    </div>`;
+  }).join('');
+}
+
+function renderCausalList() {
+  const rules = S.memCausal.slice(0,15);
+  document.getElementById('causal-cnt').textContent = `${S.memCausal.length} rules`;
+  const el = document.getElementById('causal-list-ov');
+  if (!rules.length) { el.innerHTML = '<div class="empty">No causal rules yet.</div>'; return; }
+  el.innerHTML = rules.map(r => {
+    const dir = r.direction === 'positive' ? 'pos' : r.direction === 'negative' ? 'neg' : 'mix';
+    const sym = dir === 'pos' ? '+' : dir === 'neg' ? '−' : '±';
+    const pct = Math.round((r.confidence||0)*100);
+    return `<div class="ci">
+      <div class="cid d-${dir}">${sym}</div>
+      <span class="ci-lbl">${r.cause} → ${r.effect}</span>
+      <span class="ci-stat">
+        <span class="ct"><span class="cf" style="width:${pct}%"></span></span>
+        ${pct}% · ${r.observations}obs
+      </span>
+    </div>`;
+  }).join('');
+}
+
+function renderUncertainty() {
+  const ep = S.epistemic;
+  document.getElementById('unc-mean').textContent = `H̄=${(ep.mean_entropy||0).toFixed(3)}`;
+  // Load from /api/v2/epistemic on first render
+  if (!S._epistemicLoaded) {
+    S._epistemicLoaded = true;
+    fetch('/api/v2/epistemic').then(r=>r.json()).then(d => {
+      const el = document.getElementById('unc-list');
+      const edges = d.top_uncertain||[];
+      if (!edges.length) { el.innerHTML = '<div class="empty">All edges have high confidence.</div>'; return; }
+      el.innerHTML = edges.slice(0,10).map(e => {
+        const pct = Math.round(e.entropy*100);
+        const bc = e.entropy>0.8?'var(--red)':e.entropy>0.5?'var(--amber)':'var(--blue)';
+        return `<div class="unc-item">
+          <span class="unc-edge">${e.cause} → ${e.effect}</span>
+          <div class="unc-bar-wrap"><div class="unc-bar" style="width:${pct}%;background:${bc}"></div></div>
+          <span class="unc-h">H=${e.entropy}</span>
+        </div>`;
+      }).join('');
+    }).catch(()=>{});
+  }
+}
+
+function renderValidation() {
+  const el = document.getElementById('val-list');
+  if (!S.valid.length) { el.innerHTML='<div class="empty">Runs every 75 ticks.</div>'; return; }
+  document.getElementById('val-cnt').textContent = `${S.valid.length}`;
+  el.innerHTML = [...S.valid].reverse().slice(0,15).map(e => {
+    const vc = e.verdict==='supported' ? 'v-sup' : e.verdict==='contradicted' ? 'v-con' : 'v-inc';
+    return `<div class="vi">
+      <span class="verdict ${vc}">${e.verdict}</span>
+      <span class="vr">${(e.rule||'').slice(0,55)}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── Hypotheses tab ─────────────────────────────────────────────────────────
+function renderHypotheses() {
+  const rules = S.wm_rules;
+  document.getElementById('hyp-cnt').textContent = `${rules.length} rules`;
+  const filter = document.getElementById('hyp-filter').value.toLowerCase();
+  const filtered = filter ? rules.filter(r => JSON.stringify(r).toLowerCase().includes(filter)) : rules;
+  document.getElementById('hyp-tbody').innerHTML = filtered.slice(0,100).map(r => {
+    const conf = parseFloat(r.confidence||0);
+    const pct = Math.round(conf*100);
+    return `<tr>
+      <td style="color:var(--violet);max-width:380px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${
+        (r.condition||r.rule||r.name||JSON.stringify(r)).toString().slice(0,80)
+      }</td>
+      <td style="white-space:nowrap">
+        <span class="conf-bar"><span class="conf-fill" style="width:${pct}%"></span></span>
+        <span style="margin-left:6px;color:var(--muted)">${conf.toFixed(3)}</span>
+      </td>
+      <td style="color:var(--dim)">${r.type||r.kind||'—'}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="3" class="empty" style="padding:14px">No hypotheses yet.</td></tr>';
+
+  // Confidence distribution chart
+  renderHypDistChart(rules);
+}
+
+document.getElementById('hyp-filter').addEventListener('input', renderHypotheses);
+
+function renderHypDistChart(rules) {
+  const cEl = document.getElementById('hypDistChart');
+  if (!cEl._chart) cEl._chart = echarts.init(cEl, null, {renderer:'svg'});
+  const buckets = [{b:'0.0–0.2',n:0},{b:'0.2–0.4',n:0},{b:'0.4–0.6',n:0},{b:'0.6–0.8',n:0},{b:'0.8–1.0',n:0}];
+  rules.forEach(r => {
+    const idx = Math.min(4, Math.floor(parseFloat(r.confidence||0)*5));
+    buckets[idx].n++;
+  });
+  const ts = {color:'#4a5680',fontSize:9,fontFamily:'Space Mono'};
+  cEl._chart.setOption({
+    backgroundColor:'transparent',
+    grid:{top:8,bottom:22,left:36,right:8},
+    xAxis:{type:'category',data:buckets.map(b=>b.b),axisLabel:ts,axisLine:{lineStyle:{color:'#232a3e'}},splitLine:{show:false}},
+    yAxis:{type:'value',axisLabel:ts,splitLine:{lineStyle:{color:'#111827'}}},
+    series:[{
+      type:'bar',barMaxWidth:30,data:buckets.map(b=>({
+        value:b.n,itemStyle:{color:'#9b72ff',borderRadius:[3,3,0,0]}
+      }))
+    }],
+  });
+}
+
+// ── Discoveries tab ─────────────────────────────────────────────────────────
+function renderDiscoveries() {
+  const laws = S.laws;
+  document.getElementById('disc-cnt').textContent = `${laws.length} laws`;
+  const el = document.getElementById('disc-list');
+  if (!laws.length) { el.innerHTML='<div class="empty">No laws discovered yet.</div>'; return; }
+  el.innerHTML = [...laws].reverse().map(l => {
+    const r2 = l.r2 != null ? `<span class="disc-r2">r²=${parseFloat(l.r2).toFixed(3)}</span>` : '';
+    const n  = l.n   ? `<span style="font-size:9px;color:var(--muted)">n=${l.n}</span>` : '';
+    return `<div class="disc-item">
+      <span class="disc-tick">${l.tick ? `t${l.tick}` : '—'}</span>
+      <span class="disc-eq">${(l.equation||'').slice(0,120)}</span>
+      <div style="display:flex;flex-direction:column;gap:2px;align-items:flex-end">${r2}${n}</div>
+    </div>`;
+  }).join('');
+
+  renderDiscRateChart(laws);
+}
+
+function renderDiscRateChart(laws) {
+  const cEl = document.getElementById('discRateChart');
+  if (!cEl._chart) cEl._chart = echarts.init(cEl, null, {renderer:'svg'});
+  const counts = {};
+  laws.forEach(l => { const k = Math.floor((l.tick||0)/25)*25; counts[k] = (counts[k]||0)+1; });
+  const sorted = Object.entries(counts).sort((a,b)=>+a[0]-+b[0]);
+  const ts = {color:'#4a5680',fontSize:9,fontFamily:'Space Mono'};
+  cEl._chart.setOption({
+    backgroundColor:'transparent',
+    grid:{top:8,bottom:22,left:28,right:8},
+    xAxis:{type:'category',data:sorted.map(e=>e[0]),axisLabel:ts,axisLine:{lineStyle:{color:'#232a3e'}},splitLine:{show:false}},
+    yAxis:{type:'value',axisLabel:ts,splitLine:{lineStyle:{color:'#111827'}}},
+    series:[{type:'bar',barMaxWidth:22,data:sorted.map(e=>({value:e[1],itemStyle:{color:'#f5a623',borderRadius:[2,2,0,0]}}))}],
+  });
+}
+
+// ── Causal tab ──────────────────────────────────────────────────────────────
+async function loadCausalChains() {
+  if (S.causalChains && Date.now() - S.causalChains._ts < 15000) {
+    renderCausalChains(S.causalChains);
+    return;
+  }
+  try {
+    const d = await (await fetch('/api/causal_chains')).json();
+    d._ts = Date.now();
+    S.causalChains = d;
+    renderCausalChains(d);
+  } catch(e) {}
+}
+
+function renderCausalChains(d) {
+  document.getElementById('direct-cnt').textContent = `${d.stats?.direct_count||0} direct`;
+  document.getElementById('inferred-cnt').textContent = `${d.stats?.inferred_count||0} inferred`;
+
+  const dte = document.getElementById('direct-causal-list');
+  if (!d.direct?.length) { dte.innerHTML = '<div class="empty" style="padding:16px">No direct causal rules yet.</div>'; }
+  else {
+    dte.innerHTML = `<table class="ht"><thead><tr><th>Cause</th><th>Effect</th><th>Direction</th><th>Confidence</th><th>Obs</th></tr></thead><tbody>
+      ${d.direct.slice(0,40).map(e => {
+        const dc = e.direction==='positive'?'var(--green)':e.direction==='negative'?'var(--red)':'var(--amber)';
+        const pct = Math.round((e.confidence||0)*100);
+        return `<tr>
+          <td style="color:var(--text)">${e.source||''}</td>
+          <td style="color:var(--text)">${e.target||''}</td>
+          <td style="color:${dc}">${e.direction||'?'}</td>
+          <td><span class="conf-bar"><span class="conf-fill" style="width:${pct}%"></span></span> ${pct}%</td>
+          <td style="color:var(--muted)">${e.observations||e.evidence||'—'}</td>
+        </tr>`;
+      }).join('')}
+    </tbody></table>`;
+  }
+
+  const iel = document.getElementById('inferred-chain-list');
+  if (!d.inferred?.length) { iel.innerHTML='<div class="empty">No inferred chains yet.</div>'; }
+  else {
+    iel.innerHTML = d.inferred.slice(0,30).map(e => {
+      const pct = Math.round((e.confidence||0)*100);
+      return `<div class="ci">
+        <span class="ci-lbl" style="color:var(--blue)">${e.source} ⇒ ${e.target}</span>
+        <span class="ci-stat">
+          <span class="ct"><span class="cf" style="width:${pct}%"></span></span> ${pct}%
+        </span>
+      </div>`;
+    }).join('');
+  }
+}
+
+// ── Memory tab ──────────────────────────────────────────────────────────────
+async function loadSnapCharts() {
+  if (S.snapCharts && Date.now() - S.snapCharts._ts < 20000) { renderSnapCharts(S.snapCharts); return; }
+  try {
+    const d = await (await fetch('/api/snapshot_charts')).json();
+    d._ts = Date.now();
+    S.snapCharts = d;
+    renderSnapCharts(d);
+  } catch(e) {}
+}
+
+function renderSnapCharts(d) {
+  const ts = {color:'#4a5680',fontSize:9,fontFamily:'Space Mono'};
+  const sl = {lineStyle:{color:'#111827'}};
+
+  // Pattern support
+  const pEl = document.getElementById('patternChart');
+  if (pEl && d.top_patterns?.length) {
+    if (!pEl._chart) pEl._chart = echarts.init(pEl, null, {renderer:'svg'});
+    pEl._chart.setOption({
+      backgroundColor:'transparent',
+      grid:{top:8,bottom:50,left:36,right:8},
+      xAxis:{type:'category',data:d.top_patterns.map(p=>p.relation),axisLabel:{...ts,rotate:35},axisLine:{lineStyle:{color:'#232a3e'}},splitLine:{show:false}},
+      yAxis:{type:'value',axisLabel:ts,splitLine:sl},
+      series:[{type:'bar',barMaxWidth:22,data:d.top_patterns.map(p=>({value:p.support,itemStyle:{color:'#4f94ff',borderRadius:[2,2,0,0]}}))}],
+    });
+  }
+
+  // Evidence distribution
+  const eEl = document.getElementById('evidenceChart');
+  if (eEl && d.evidence_dist?.length) {
+    if (!eEl._chart) eEl._chart = echarts.init(eEl, null, {renderer:'svg'});
+    eEl._chart.setOption({
+      backgroundColor:'transparent',
+      grid:{top:8,bottom:22,left:36,right:8},
+      xAxis:{type:'category',data:d.evidence_dist.map(e=>e.bucket),axisLabel:ts,axisLine:{lineStyle:{color:'#232a3e'}},splitLine:{show:false}},
+      yAxis:{type:'value',axisLabel:ts,splitLine:sl},
+      series:[{type:'bar',barMaxWidth:28,data:d.evidence_dist.map(e=>({value:e.count,itemStyle:{color:'#22c97b',borderRadius:[2,2,0,0]}}))}],
+    });
+  }
+
+  // Hypothesis confidence
+  const hEl = document.getElementById('memHypChart');
+  if (hEl && d.hypothesis_dist?.length) {
+    if (!hEl._chart) hEl._chart = echarts.init(hEl, null, {renderer:'svg'});
+    hEl._chart.setOption({
+      backgroundColor:'transparent',
+      grid:{top:8,bottom:22,left:36,right:8},
+      xAxis:{type:'category',data:d.hypothesis_dist.map(h=>h.bucket),axisLabel:ts,axisLine:{lineStyle:{color:'#232a3e'}},splitLine:{show:false}},
+      yAxis:{type:'value',axisLabel:ts,splitLine:sl},
+      series:[{type:'bar',barMaxWidth:28,data:d.hypothesis_dist.map(h=>({value:h.count,itemStyle:{color:'#9b72ff',borderRadius:[2,2,0,0]}}))}],
+    });
+  }
+
+  // Memory evidence chart (duplicate for memory tab)
+  const me = document.getElementById('memEvChart');
+  if (me && d.evidence_dist?.length) {
+    if (!me._chart) me._chart = echarts.init(me, null, {renderer:'svg'});
+    me._chart.setOption({
+      backgroundColor:'transparent',
+      grid:{top:8,bottom:22,left:36,right:8},
+      xAxis:{type:'category',data:d.evidence_dist.map(e=>e.bucket),axisLabel:ts,axisLine:{lineStyle:{color:'#232a3e'}},splitLine:{show:false}},
+      yAxis:{type:'value',axisLabel:ts,splitLine:sl},
+      series:[{type:'bar',barMaxWidth:28,data:d.evidence_dist.map(e=>({value:e.count,itemStyle:{color:'#f5a623',borderRadius:[2,2,0,0]}}))}],
+    });
+  }
+}
+
+async function loadProvenance() {
+  try {
+    const d = await (await fetch('/api/graph_provenance')).json();
+    const cEl = document.getElementById('memProvChart');
+    if (!cEl || !Object.keys(d).length) return;
+    if (!cEl._chart) cEl._chart = echarts.init(cEl, null, {renderer:'svg'});
+    const colors = {internal:'#2a3650',ingestion:'#4f94ff',causal:'#22c97b',causal_chain:'#9b72ff',abstraction:'#e055c8'};
+    cEl._chart.setOption({
+      backgroundColor:'transparent',
+      legend:{top:4,textStyle:{color:'#4a5680',fontSize:9,fontFamily:'Space Mono'}},
+      series:[{
+        type:'pie',radius:['42%','70%'],center:['50%','58%'],
+        label:{color:'#4a5680',fontSize:9,fontFamily:'Space Mono'},
+        data:Object.entries(d).map(([k,v])=>({name:k,value:v,itemStyle:{color:colors[k]||'#4a5680'}})),
+      }],
+    });
+  } catch(e) {}
+}
+
+async function loadAbstractions() {
+  if (S.abstractions && Date.now() - S.abstractions._ts < 30000) { renderAbstractions(S.abstractions); return; }
+  try {
+    const d = await (await fetch('/api/abstraction_nodes')).json();
+    d._ts = Date.now();
+    S.abstractions = d;
+    renderAbstractions(d);
+  } catch(e) {}
+}
+
+function renderAbstractions(d) {
+  const concepts = d.concepts || [];
+  document.getElementById('abs-cnt').textContent = `${concepts.length}`;
+  const el = document.getElementById('abs-list');
+  if (!concepts.length) { el.innerHTML='<div class="empty">No abstractions yet.</div>'; return; }
+  el.innerHTML = concepts.slice(0,20).map(c => `
+    <div style="padding:6px 0;border-bottom:1px solid var(--border)">
+      <div style="font-family:var(--sans);font-size:11.5px;font-weight:500;color:var(--pink)">${c.name}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px">${c.member_count} members · avg conf ${c.avg_confidence}</div>
+      <div style="font-size:10px;color:var(--dim);margin-top:3px;line-height:1.4">${(c.members||[]).slice(0,6).join(', ')}</div>
+    </div>`).join('');
+}
+
+async function loadDiversity() {
+  try {
+    const d = await (await fetch('/api/v2/intervention_diversity')).json();
+    const pct = Math.round((d.diversity_score||0)*100);
+    const sc = pct>65?'var(--green)':pct>35?'var(--amber)':'var(--red)';
+    document.getElementById('div-score').innerHTML = `<span style="color:${sc};font-weight:600">${pct}% diverse</span>`;
+    const el = document.getElementById('div-list');
+    const dist = d.action_distribution||{};
+    const total = d.total_actions||1;
+    const sorted = Object.entries(dist).sort((a,b)=>b[1]-a[1]);
+    if (!sorted.length) { el.innerHTML='<div class="empty">No interventions yet.</div>'; return; }
+    el.innerHTML = sorted.slice(0,12).map(([action,count]) => {
+      const pw = Math.round((count/total)*80);
+      return `<div style="display:flex;align-items:center;gap:6px;padding:3px 0;font-size:11px">
+        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${action.replace(/_/g,' ')}</span>
+        <div style="width:80px;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;flex-shrink:0">
+          <div style="width:${pw}%;height:100%;background:var(--blue);border-radius:3px"></div>
+        </div>
+        <span style="font-size:10px;color:var(--muted);min-width:24px;text-align:right">${count}</span>
+      </div>`;
+    }).join('');
+  } catch(e) {}
+}
+
+// ── Graph tab ───────────────────────────────────────────────────────────────
+let _sim = null;
+let _graphLoaded = false;
+
+function loadGraph() {
+  const relation   = document.getElementById('rel-filter').value;
+  const provenance = document.getElementById('prov-filter').value;
+  const minEv      = document.getElementById('min-ev').value;
+  const minConf    = document.getElementById('min-conf').value;
+
+  const params = new URLSearchParams();
+  if (relation)   params.set('relation',   relation);
+  if (provenance) params.set('provenance', provenance);
+  if (minEv)      params.set('min_evidence', minEv);
+  if (minConf)    params.set('min_confidence', minConf);
+
+  const ov = document.getElementById('kg-ov');
+  const msg = document.getElementById('kg-msg');
+  ov.classList.remove('hidden');
+  msg.textContent = 'Loading graph…';
+
+  fetch('/api/graph?' + params.toString()).then(r=>r.json()).then(data => {
+    renderGraph(data);
+    ov.classList.add('hidden');
+    _graphLoaded = true;
+
+    // Populate relation filter
+    const sel = document.getElementById('rel-filter');
+    const existing = [...sel.options].map(o=>o.value);
+    (data.stats?.relations||[]).forEach(rel => {
+      if (!existing.includes(rel)) {
+        const o = document.createElement('option');
+        o.value = o.textContent = rel;
+        sel.appendChild(o);
+      }
+    });
+
+    document.getElementById('kg-badge').textContent =
+      `${data.stats?.node_count||0} nodes · ${data.stats?.edge_count||0} edges`;
+    document.getElementById('kg-sample-warn').style.display =
+      data.stats?.sampled ? 'block' : 'none';
+  }).catch(e => {
+    msg.textContent = 'Graph load failed: ' + e.message;
+  });
+}
+
+function renderGraph(data) {
+  if (!window.d3) { document.getElementById('kg-msg').textContent = 'D3 not loaded yet…'; return; }
+
+  const svg   = d3.select('#kg-svg');
+  const root  = svg.select('#kg-root');
+  root.selectAll('*').remove();
+
+  const W = document.getElementById('kg-svg').clientWidth;
+  const H = document.getElementById('kg-svg').clientHeight;
+
+  if (_sim) { _sim.stop(); _sim = null; }
+
+  const nodes = data.nodes.map(n => ({...n}));
+  const edges = data.edges.map(e => ({...e}));
+
+  const provColor = {
+    internal:   '#2a3650',
+    ingestion:  '#4f94ff',
+    causal:     '#22c97b',
+    causal_chain:'#9b72ff',
+    abstraction:'#e055c8',
+  };
+
+  function edgeColor(e) {
+    const rel = e.relation||'';
+    if (rel === 'inferred_affects')   return '#9b72ff';
+    if (rel === 'positive_affects')   return '#22c97b';
+    if (rel === 'negative_affects')   return '#f05050';
+    if (rel === 'mixed_affects')      return '#f5a623';
+    if (rel === 'bidirectional_affects') return '#00d4b8';
+    return provColor[e.provenance||'internal'] || '#2a3650';
+  }
+  function markerFor(e) {
+    const rel = e.relation||'';
+    if (rel==='inferred_affects')    return 'url(#m-inf)';
+    if (rel==='positive_affects')    return 'url(#m-pos)';
+    if (rel==='negative_affects')    return 'url(#m-neg)';
+    if (e.provenance==='abstraction') return 'url(#m-abs)';
+    if (e.provenance==='ingestion')  return 'url(#m-ing)';
+    return 'url(#m-def)';
+  }
+
+  const g = root.append('g');
+
+  // Zoom
+  svg.call(d3.zoom().scaleExtent([0.1,8]).on('zoom', ev => g.attr('transform', ev.transform)));
+
+  const link = g.append('g').selectAll('line')
+    .data(edges).join('line')
+    .attr('stroke', edgeColor)
+    .attr('stroke-width', e => Math.max(0.5, (e.confidence||0.5)*1.5))
+    .attr('stroke-opacity', 0.55)
+    .attr('marker-end', markerFor);
+
+  const node = g.append('g').selectAll('g')
+    .data(nodes).join('g')
+    .call(d3.drag()
+      .on('start', (ev,d) => { if (!ev.active) _sim.alphaTarget(0.3).restart(); d.fx=d.x; d.fy=d.y; })
+      .on('drag',  (ev,d) => { d.fx=ev.x; d.fy=ev.y; })
+      .on('end',   (ev,d) => { if (!ev.active) _sim.alphaTarget(0); d.fx=null; d.fy=null; }))
+    .on('click', (ev,d) => showNodeNeighbors(d.id))
+    .on('mouseover', (ev,d) => showTooltip(ev,d))
+    .on('mousemove', (ev)   => moveTooltip(ev))
+    .on('mouseout',  ()     => hideTooltip());
+
+  node.append('circle')
+    .attr('r', d => Math.max(4, Math.min(14, 3 + (d.degree||1)*0.7)))
+    .attr('fill', d => {
+      if (d.type==='abstract_concept') return '#e055c8';
+      return '#1a2235';
+    })
+    .attr('stroke', d => {
+      if (d.type==='abstract_concept') return '#e055c8';
+      return '#4f94ff';
+    })
+    .attr('stroke-width', 1.2);
+
+  node.append('text')
+    .attr('dy', d => -(Math.max(4, Math.min(14, 3 + (d.degree||1)*0.7)) + 3))
+    .attr('text-anchor','middle')
+    .style('font-size','9px')
+    .style('fill','#4a5680')
+    .style('pointer-events','none')
+    .style('font-family','Space Mono')
+    .text(d => d.degree > 3 ? d.id.slice(0,18) : '')
+
+  _sim = d3.forceSimulation(nodes)
+    .force('link',   d3.forceLink(edges).id(d=>d.id).distance(70).strength(0.4))
+    .force('charge', d3.forceManyBody().strength(-100).distanceMax(250))
+    .force('center', d3.forceCenter(W/2, H/2))
+    .force('collide', d3.forceCollide(14))
+    // Stop early — no need to run forever
+    .alphaDecay(0.04)
+    .on('tick', () => {
+      link.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y)
+          .attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
+      node.attr('transform',d=>`translate(${d.x},${d.y})`);
+    });
+
+  // Freeze after convergence
+  _sim.on('end', () => {
+    nodes.forEach(n => { n.fx = n.x; n.fy = n.y; });
+  });
+}
+
+function showNodeNeighbors(nodeId) {
+  const ov = document.getElementById('kg-ov');
+  ov.classList.remove('hidden');
+  document.getElementById('kg-msg').textContent = `Loading neighbors of "${nodeId}"…`;
+  fetch('/api/graph/neighbors/' + encodeURIComponent(nodeId)).then(r=>r.json()).then(data => {
+    renderGraph(data);
+    ov.classList.add('hidden');
+    document.getElementById('kg-badge').textContent =
+      `${data.nodes?.length||0} nodes · ${data.edges?.length||0} edges — 1-hop: ${nodeId}`;
+  }).catch(()=>{ ov.classList.add('hidden'); });
+}
+
+function toggleGraphFull() {
+  document.getElementById('kgwrap').classList.toggle('full');
+  if (_sim) _sim.alpha(0.3).restart();
+}
+
+// Tooltip
+const _tt = document.getElementById('tooltip');
+function showTooltip(ev, d) {
+  _tt.innerHTML = `<div class="tt-title">${d.id}</div>
+    <div class="tt-row">type: <span>${d.type||'concept'}</span></div>
+    <div class="tt-row">connections: <span>${d.degree||0}</span></div>
+    <div class="tt-row" style="font-size:10px;color:var(--dim);margin-top:4px">Click to explore neighbors</div>`;
+  _tt.classList.add('show');
+  moveTooltip(ev);
+}
+function moveTooltip(ev) {
+  _tt.style.left = Math.min(ev.clientX+12, window.innerWidth-280)+'px';
+  _tt.style.top  = (ev.clientY-20)+'px';
+}
+function hideTooltip() { _tt.classList.remove('show'); }
+
+// ── Larry Tool Activity tab ──────────────────────────────────────────────────
+
+const _toolState = {
+  events:      [],   // all received events (most-recent-first for display)
+  lastFetched: 0,    // index of last event we fetched from server
+  toolCounts:  {},   // { toolName: {total, success, error} }
+  callerCounts:{},   // { callerModule: count }
+  visible:     false,
+};
+
+/** Called when a new event arrives via SSE push */
+function _ingestToolEvent(ev) {
+  _toolState.events.unshift(ev);           // newest first
+  if (_toolState.events.length > 200) _toolState.events.length = 200;
+  _updateToolStats(ev);
+  if (_toolState.visible) _renderToolFeed();
+}
+
+function _updateToolStats(ev) {
+  const t = ev.tool;
+  if (!_toolState.toolCounts[t]) _toolState.toolCounts[t] = {total:0,success:0,error:0};
+  _toolState.toolCounts[t].total++;
+  if (ev.status === 'success') _toolState.toolCounts[t].success++;
+  else                          _toolState.toolCounts[t].error++;
+
+  const c = ev.caller || 'unknown';
+  _toolState.callerCounts[c] = (_toolState.callerCounts[c] || 0) + 1;
+}
+
+async function fetchToolEvents() {
+  try {
+    const r   = await fetch('/api/tool-events?since=' + _toolState.lastFetched);
+    const d   = await r.json();
+
+    const badge = document.getElementById('tool-status-badge');
+    if (!d.tools_available) {
+      badge.textContent = '⚠ tools unavailable';
+      badge.style.color = '#e05252';
+      return;
+    }
+    if (!d.file_exists) {
+      badge.textContent = '⏳ waiting for brain…';
+      badge.style.color = 'var(--amber)';
+      badge.style.background = 'rgba(245,166,35,.12)';
+      badge.title = 'Expected: ' + (d.file || '');
+      _renderToolFeed();
+      return;
+    }
+
+    const fresh = (d.events || []);
+    if (fresh.length) {
+      // server returns oldest-first; we want newest-first in state
+      fresh.reverse().forEach(ev => {
+        _toolState.events.unshift(ev);
+        _updateToolStats(ev);
+      });
+      if (_toolState.events.length > 200) _toolState.events.length = 200;
+      _toolState.lastFetched = d.total;
+    }
+
+    badge.textContent = '● tools active';
+    badge.style.color = '#4caf82';
+    badge.style.background = 'rgba(76,175,130,.12)';
+    badge.title = d.file || '';
+
+    _renderToolFeed();
+  } catch(e) {
+    console.warn('tool-events fetch error', e);
+  }
+}
+
+function _renderToolFeed() {
+  const events = _toolState.events;
+
+  // stat cards
+  let success = 0, error = 0;
+  events.forEach(e => { if(e.status==='success') success++; else error++; });
+  document.getElementById('tool-stat-total').textContent   = events.length;
+  document.getElementById('tool-stat-success').textContent = success;
+  document.getElementById('tool-stat-error').textContent   = error;
+  document.getElementById('tool-feed-cnt').textContent     = events.length + ' calls';
+
+  // live feed rows
+  const feed = document.getElementById('tool-feed');
+  if (!events.length) {
+    feed.innerHTML = '<div class="empty" style="padding:16px 12px">Waiting for tool calls…</div>';
+  } else {
+    feed.innerHTML = events.slice(0, 60).map(ev => {
+      const icon = ev.status === 'success' ? '✓' : '✗';
+      const cls  = ev.status === 'success' ? 'tool-ok' : 'tool-err';
+      // For errors, append a truncated reason if available in input_summary
+      const summary = ev.status === 'error' && ev.error_msg
+        ? _esc(ev.error_msg.slice(0, 45))
+        : _esc(ev.input_summary || '');
+      return `<div class="tool-row">
+        <span class="tool-ts">${ev.timestamp || ''}</span>
+        <span class="tool-name">${_esc(ev.tool)}</span>
+        <span class="tool-input">${summary}</span>
+        <span class="tool-caller">${_esc(ev.caller || '')}</span>
+        <span class="${cls}">${icon}</span>
+      </div>`;
+    }).join('');
+  }
+
+  // tool breakdown bars
+  const counts = _toolState.toolCounts;
+  const tools  = Object.keys(counts).sort((a,b) => counts[b].total - counts[a].total);
+  const maxC   = tools.length ? Math.max(...tools.map(t => counts[t].total)) : 1;
+  const bdEl   = document.getElementById('tool-breakdown');
+  if (!tools.length) {
+    bdEl.innerHTML = '<div class="empty">No data yet.</div>';
+  } else {
+    bdEl.innerHTML = tools.map(t => {
+      const c   = counts[t];
+      const pct = Math.round(c.total / maxC * 100);
+      return `<div style="margin-bottom:7px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+          <span style="color:var(--cyan);font-family:var(--mono)">${_esc(t)}</span>
+          <span style="color:var(--muted)">${c.total} <span style="color:#4caf82">${c.success}✓</span> <span style="color:#e05252">${c.error}✗</span></span>
+        </div>
+        <div class="tool-bar-wrap"><div class="tool-bar" style="width:${pct}%"></div></div>
+      </div>`;
+    }).join('');
+  }
+
+  // callers list
+  const callers  = _toolState.callerCounts;
+  const callerKs = Object.keys(callers).sort((a,b) => callers[b] - callers[a]);
+  const callEl   = document.getElementById('tool-callers');
+  if (!callerKs.length) {
+    callEl.innerHTML = '<div class="empty">No data yet.</div>';
+  } else {
+    callEl.innerHTML = callerKs.map(k =>
+      `<div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--border)">
+        <span style="color:var(--text);font-family:var(--mono);font-size:11px">${_esc(k)}</span>
+        <span style="color:var(--cyan);font-weight:600">${callers[k]}</span>
+      </div>`
+    ).join('');
+  }
+}
+
+function clearToolFeed() {
+  _toolState.events      = [];
+  _toolState.toolCounts  = {};
+  _toolState.callerCounts= {};
+  _renderToolFeed();
+}
+
+function _esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Activate fetch when tools tab is opened
+let _toolPollTimer = null;
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    if (t.dataset.tab === 'tools') {
+      _toolState.visible = true;
+      fetchToolEvents();
+      _toolPollTimer = setInterval(fetchToolEvents, 3000);
+    } else {
+      _toolState.visible = false;
+      if (_toolPollTimer) { clearInterval(_toolPollTimer); _toolPollTimer = null; }
+    }
+  });
+});
+
+// ── Debug tab ────────────────────────────────────────────────────────────────
+async function refreshDebug() {
+  try {
+    const h = await (await fetch('/api/health')).json();
+    document.getElementById('debug-health').innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px">
+        <div><span style="color:var(--muted)">status: </span><span style="color:${h.ok?'var(--green)':'var(--red)'}">${h.ok?'OK':'ERROR'}</span></div>
+        <div><span style="color:var(--muted)">seq: </span><span>${h.seq}</span></div>
+        <div><span style="color:var(--muted)">latest tick: </span><span>${h.latest_tick}</span></div>
+        <div><span style="color:var(--muted)">log: </span><span style="color:${h.log_exists?'var(--green)':'var(--red)'}">${h.log_exists?'present':'MISSING'}</span></div>
+        <div><span style="color:var(--muted)">memory: </span><span style="color:${h.mem_exists?'var(--green)':'var(--red)'}">${h.mem_exists?'present':'MISSING'}</span></div>
+        <div><span style="color:var(--muted)">kg: </span><span style="color:${h.kg_exists?'var(--green)':'var(--red)'}">${h.kg_exists?'present':'MISSING'}</span></div>
+      </div>`;
+
+    const d = await (await fetch('/api/delta?seq=0')).json();
+    document.getElementById('debug-delta').innerHTML = `
+      <div style="color:var(--muted)">seq: <b style="color:var(--text)">${d.seq}</b></div>
+      <div style="color:var(--muted)">full_refresh: <b style="color:var(--text)">${d.full_refresh}</b></div>
+      <div style="color:var(--muted)">rewards: <b style="color:var(--text)">${(d.rewards||[]).length} items</b></div>
+      <div style="color:var(--muted)">causal: <b style="color:var(--text)">${(d.causal_discoveries||[]).length} items</b></div>
+      <div style="color:var(--muted)">laws: <b style="color:var(--text)">${(d.law_events||[]).length} items</b></div>
+      <div style="color:var(--muted)">wm_rules: <b style="color:var(--text)">${(d.wm_rules||[]).length} items</b></div>
+      <div style="color:var(--muted)">counters: <b style="color:var(--text)">${JSON.stringify(d.counters||{})}</b></div>`;
+
+    const raw = {...d};
+    delete raw.wm_rules; delete raw.rewards; // trim for display
+    document.getElementById('debug-raw').textContent = JSON.stringify(raw, null, 2);
+  } catch(e) {
+    document.getElementById('debug-health').innerHTML = `<div style="color:var(--red)">${e.message}</div>`;
+  }
+}
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+setInterval(() => {
+  document.getElementById('hdr-time').textContent = new Date().toLocaleTimeString();
+}, 1000);
+
+// Start SSE; fall back to polling if SSE unavailable
+startSSE();
+
+// Initial data fetch
+fetchDelta().then(() => renderAll());
+
+// Periodic fallback poll (SSE may miss events on some proxies)
+setInterval(fetchDelta, 10000);
+</script>
+</body>
+</html>

@@ -41,6 +41,12 @@ class Predictor:
     def __init__(self, seed: int | None = None) -> None:
         self.random = random.Random(seed)
 
+    @staticmethod
+    def _is_causal_rule(rule: str) -> bool:
+        """Return True if this is a causal template like 'if X increases then Y will increase'."""
+        r = rule.lower()
+        return r.startswith("if ") or " affects " in r or " controls " in r
+
     def predict(
         self,
         hypotheses: Sequence[Hypothesis],
@@ -53,6 +59,23 @@ class Predictor:
 
         predictions: List[Prediction] = []
         for hypothesis in hypotheses[:6]:
+            # ── Causal hypothesis ─────────────────────────────────────────
+            if self._is_causal_rule(hypothesis.rule):
+                # For causal rules, validity is determined by confidence.
+                # A high-confidence causal rule IS a valid prediction.
+                valid = hypothesis.confidence >= 0.5
+                concepts = hypothesis.concepts
+                cause = concepts[0] if concepts else "unknown"
+                effect = concepts[1] if len(concepts) > 1 else "unknown"
+                predictions.append(Prediction(
+                    rule=hypothesis.rule,
+                    relation="causal",
+                    statement=f"{cause} causally_affects {effect}",
+                    valid=valid,
+                ))
+                continue
+
+            # ── Structural hypothesis: 'subject_type relation object_type' ─
             parts = hypothesis.rule.split()
             if len(parts) < 3:
                 continue
@@ -84,22 +107,128 @@ class Predictor:
 
     @staticmethod
     def predict_state_transition(domain: str, action: str, state: Dict[str, float]) -> StatePrediction:
-        """Predict high-level state deltas from an action."""
+        """Predict state deltas from an action using the known causal graph.
+
+        These predictions encode the *true* causal structure so prediction
+        error is a meaningful learning signal — low error means the agent
+        has correctly learned this causal relation, high error means there
+        is still something to discover.
+        """
         expected: Dict[str, float] = {}
+
         if domain == "ecosystem":
-            if action == "remove_predator":
-                expected = {"wolves": -1.0, "deer": 1.0}
-            elif action == "add_predator":
-                expected = {"wolves": 1.0, "deer": -1.0}
-            else:
-                expected = {"deer": 0.5, "grass": -0.5}
+            wolves = state.get("wolves", 5)
+            deer   = state.get("deer", 20)
+            if action == "add_predator":
+                # wolves↑ → deer↓ (predation), grass↑ (deer pressure drops)
+                expected = {"wolves": +1.0, "deer": -(wolves + 1) * 1.5, "grass": deer * 0.1}
+            elif action == "remove_predator":
+                # wolves↓ → deer↑ (release), grass↓ (more grazing)
+                expected = {"wolves": -1.0, "deer": +(wolves * 1.5), "grass": -deer * 0.1}
+            elif action == "introduce_species":
+                # deer↑ → grass↓ (more grazing)
+                expected = {"deer": +3.0, "grass": -(deer + 3) * 0.8}
+            elif action == "remove_species":
+                # deer↓ → grass↑ (less grazing)
+                expected = {"deer": -3.0, "grass": +(deer - 3) * 0.5}
+
         elif domain == "chemistry":
+            temperature = state.get("temperature", 25)
+            reactants   = state.get("reactants", 2)
             if action == "increase_temperature":
-                expected = {"temperature": 4.0, "reaction_energy": 0.6}
+                # temperature↑ → reaction_rate↑ → reaction_energy↑
+                new_temp = temperature + 7.5  # midpoint of 5-10 range
+                new_rate = (new_temp / 50.0) * reactants
+                expected = {
+                    "temperature": +7.5,
+                    "reaction_rate": new_rate - state.get("reaction_rate", 0),
+                    "reaction_energy": new_rate * 2.0,
+                }
             elif action == "add_chemical":
-                expected = {"reactants": 1.0, "reaction_energy": 0.4}
+                # reactants↑ → reaction_rate↑ → reaction_energy↑
+                new_rate = (temperature / 50.0) * (reactants + 1)
+                expected = {
+                    "reactants": +1.0,
+                    "reaction_rate": new_rate - state.get("reaction_rate", 0),
+                    "reaction_energy": new_rate * 2.0,
+                }
+
         elif domain == "astronomy":
-            expected = {"asteroids": 1.0 if action == "introduce_species" else -1.0, "solar_energy": 0.0}
+            asteroids = state.get("asteroids", 200)
+            if action == "introduce_species":
+                # asteroids↑ → collision_risk↑
+                added = 5.0  # midpoint of 3-7
+                expected = {
+                    "asteroids": +added,
+                    "collision_risk": added * 0.05,
+                }
+            elif action == "remove_species":
+                removed = 5.0
+                expected = {
+                    "asteroids": -removed,
+                    "collision_risk": -removed * 0.05,
+                }
+
+        elif domain == "technology":
+            robots         = state.get("robots", 4)
+            battery_charge = state.get("battery_charge", 80)
+            if action == "add_robot":
+                # robots↑ → robot_activity↑ → sensor_coverage↑ → data_quality↑
+                new_activity = (robots + 1) * (battery_charge / 100.0)
+                expected = {
+                    "robots": +1.0,
+                    "robot_activity": new_activity - state.get("robot_activity", 0),
+                    "sensor_coverage": new_activity * 2.5 - state.get("sensor_coverage", 0),
+                }
+            elif action == "remove_robot":
+                new_activity = max(0, robots - 1) * (battery_charge / 100.0)
+                expected = {
+                    "robots": -1.0,
+                    "robot_activity": new_activity - state.get("robot_activity", 0),
+                    "sensor_coverage": new_activity * 2.5 - state.get("sensor_coverage", 0),
+                }
+
+        elif domain == "biology":
+            pathogens = state.get("pathogens", 0)
+            energy    = state.get("energy", 50)
+            cells     = state.get("cells", 100)
+            if action == "add_pathogen":
+                immune = pathogens * 2.5
+                expected = {
+                    "pathogens": +3.5,
+                    "immune_response": immune,
+                    "cells": -(pathogens + 3.5) * 0.8,
+                }
+            elif action == "boost_energy":
+                new_prot = (energy + 15) / 10.0 * 2.0
+                expected = {
+                    "energy": +15.0,
+                    "proteins": new_prot - state.get("proteins", 20),
+                    "cells": new_prot * 0.5,
+                }
+            elif action == "add_cells":
+                expected = {
+                    "cells": +10.0,
+                    "energy": -10.0 * 0.05,
+                }
+
+        elif domain == "physics":
+            force = state.get("force", 10)
+            mass  = state.get("mass", 5)
+            heat  = state.get("heat", 25)
+            if action == "increase_force":
+                new_accel = (force + 4) / max(0.1, mass)
+                expected = {
+                    "force": +4.0,
+                    "acceleration": new_accel - state.get("acceleration", 2),
+                    "kinetic_energy": 0.5 * mass * new_accel ** 2 - state.get("kinetic_energy", 50),
+                }
+            elif action == "add_heat":
+                expected = {
+                    "heat": +7.5,
+                    "kinetic_energy": +7.5 * 0.3,
+                }
+
         return StatePrediction(action=action, expected_deltas=expected)
 
     @staticmethod

@@ -14,6 +14,7 @@ class LearningResult:
     topic: str
     learned_facts: int
     new_facts: int
+    reinforcement: int          # known facts re-observed (evidence strengthened)
     unknown_concepts: Set[str]
     unknown_relations: Set[str]
     new_entities: Set[str]
@@ -44,6 +45,7 @@ class Learner:
         new_relation_types: Set[str] = set()
         weak_facts = 0
         new_facts = 0
+        reinforcement = 0       # known facts re-observed this pass
 
         for fact in facts:
             relation = self.reasoner.extract_relation(fact)
@@ -66,10 +68,14 @@ class Learner:
                 is_new = self.memory.add_relation_fact(subj, rel, obj, source_topic=topic, base_confidence=confidence)
                 if is_new:
                     new_facts += 1
+                else:
+                    reinforcement += 1   # existing relation seen again — evidence +1
             else:
                 existing = self.memory.get_fact(fact)
                 if existing is None:
                     new_facts += 1
+                else:
+                    reinforcement += 1
                 self.memory.upsert_fact(fact, confidence, source_topic=topic, evidence_increment=1)
 
             existing = self.memory.get_fact(fact)
@@ -81,6 +87,7 @@ class Learner:
             topic=topic,
             learned_facts=len(facts),
             new_facts=new_facts,
+            reinforcement=reinforcement,
             unknown_concepts=unknown_concepts,
             unknown_relations=unknown_relations,
             new_entities=new_entities,
@@ -89,12 +96,40 @@ class Learner:
         )
 
     def infer_general_rules(self, triplets: List[Tuple[str, str, str]]) -> List[str]:
+        rules: List[str] = []
+
+        # Predator-prey
         predators = {s for s, r, _ in triplets if r == "hunts"}
         prey = {o for _, r, o in triplets if r == "hunts"}
-        repeated = {(s, o) for s, r, o in triplets if r == "eats" and s in predators and o in prey}
-        if len(repeated) >= 2:
-            return ["predator eats prey"]
-        return []
+        if len({(s, o) for s, r, o in triplets if r == "eats" and s in predators and o in prey}) >= 2:
+            rules.append("predator eats prey")
+
+        # Orbital systems
+        orbiters = {s for s, r, _ in triplets if r == "orbits"}
+        if len(orbiters) >= 2:
+            rules.append("body orbits center")
+
+        # Chemical reactions
+        reactants = {s for s, r, _ in triplets if r == "reacts_with"}
+        if len(reactants) >= 2:
+            rules.append("acid reacts_with base")
+
+        # Containment
+        containers = {s for s, r, _ in triplets if r == "contains"}
+        if len(containers) >= 2:
+            rules.append("whole contains part")
+
+        # Habitat
+        inhabitants = {s for s, r, _ in triplets if r == "lives_in"}
+        if len(inhabitants) >= 2:
+            rules.append("animal lives_in ecosystem")
+
+        # Dependency
+        dependents = {s for s, r, _ in triplets if r == "needs"}
+        if len(dependents) >= 2:
+            rules.append("organism needs resource")
+
+        return rules
 
     def discover_causal_candidates(self, transitions: Sequence[Dict[str, float]]) -> List[CausalRuleCandidate]:
         """Infer directional causal candidates from repeated transition pairs.
@@ -131,14 +166,18 @@ class Learner:
             pos = counts["positive"]
             neg = counts["negative"]
             observations = pos + neg
-            if observations < 3:
+            # Require at least 5 co-occurring observations to avoid noise.
+            if observations < 5:
                 continue
-            if pos > neg * 1.5:
+            if pos > neg * 2.0:
                 direction = "positive"
-            elif neg > pos * 1.5:
+            elif neg > pos * 2.0:
                 direction = "negative"
             else:
-                direction = "mixed"
+                # Mixed direction = not reliably causal via correlation.
+                # InterventionCausalDiscovery handles directionality properly;
+                # skip mixed results here to avoid polluting the graph.
+                continue
 
             candidates.append(
                 CausalRuleCandidate(

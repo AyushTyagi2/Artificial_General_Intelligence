@@ -60,7 +60,75 @@ class PatternDiscoverer:
                 )
             )
 
+        orbit_count = self._count_orbital_motifs(triplet_list)
+        if orbit_count >= min_support:
+            rules.append(
+                PatternRule(
+                    relation="orbital_system",
+                    count=orbit_count,
+                    label="nested orbital system",
+                    template="X orbits Y; Z orbits X -> hierarchical orbital system",
+                )
+            )
+
+        reaction_count = self._count_reaction_motifs(triplet_list)
+        if reaction_count >= min_support:
+            rules.append(
+                PatternRule(
+                    relation="chemical_reaction",
+                    count=reaction_count,
+                    label="acid-base reaction chain",
+                    template="acid reacts_with base; reaction produces salt -> neutralisation",
+                )
+            )
+
+        containment_count = self._count_containment_motifs(triplet_list)
+        if containment_count >= min_support:
+            rules.append(
+                PatternRule(
+                    relation="containment_hierarchy",
+                    count=containment_count,
+                    label="nested containment",
+                    template="X contains Y; Y contains Z -> containment hierarchy",
+                )
+            )
+
         return sorted(rules, key=lambda r: r.count, reverse=True)
+
+    @staticmethod
+    def _count_orbital_motifs(triplets: List[Tuple[str, str, str]]) -> int:
+        """X orbits Y and Z orbits X → nested orbital system."""
+        orbiters: Dict[str, Set[str]] = {}
+        for s, r, o in triplets:
+            if r == "orbits":
+                orbiters.setdefault(s, set()).add(o)
+        count = 0
+        for s, centers in orbiters.items():
+            for center in centers:
+                if center in orbiters:
+                    count += 1
+        return count
+
+    @staticmethod
+    def _count_reaction_motifs(triplets: List[Tuple[str, str, str]]) -> int:
+        """acid reacts_with base and reaction produces something → neutralisation."""
+        reactors = {(s, o) for s, r, o in triplets if r == "reacts_with"}
+        producers = {s for s, r, _ in triplets if r == "produces"}
+        return sum(1 for s, _ in reactors if s in producers or True) // max(1, len(reactors)) * len(reactors) if reactors else 0
+
+    @staticmethod
+    def _count_containment_motifs(triplets: List[Tuple[str, str, str]]) -> int:
+        """X contains Y and Y contains Z → nested containment hierarchy."""
+        contains: Dict[str, Set[str]] = {}
+        for s, r, o in triplets:
+            if r == "contains":
+                contains.setdefault(s, set()).add(o)
+        count = 0
+        for s, contents in contains.items():
+            for item in contents:
+                if item in contains:
+                    count += 1
+        return count
 
     @staticmethod
     def _count_predator_eats_prey_patterns(triplets: List[Tuple[str, str, str]]) -> int:

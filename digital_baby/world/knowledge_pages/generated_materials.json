@@ -1,0 +1,21 @@
+{
+  "topic": "materials",
+  "facts": [
+    "brass has_property strength",
+    "conductivity is 5",
+    "crack_growth is 0",
+    "hardness is 59",
+    "nano_robot depends_on nano_robot",
+    "nano_robot is unknown",
+    "porosity is 2",
+    "quenching transforms steel",
+    "steel forms brass",
+    "strain is 0",
+    "stress_level is 23",
+    "temperature is 24",
+    "yield_strength is 233"
+  ],
+  "generated": true,
+  "domain": "materials",
+  "generation": 1
+}

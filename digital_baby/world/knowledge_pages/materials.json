@@ -1,0 +1,26 @@
+{
+    "topic": "materials",
+    "domain": "materials",
+    "facts": [
+        "stress causes strain",
+        "temperature affects conductivity",
+        "crystal_structure determines strength",
+        "dislocation reduces strength",
+        "alloy improves hardness",
+        "carbon_content affects steel_strength",
+        "grain_size affects yield_strength",
+        "fatigue causes crack_growth",
+        "corrosion reduces material_strength",
+        "heat_treatment changes microstructure",
+        "microstructure determines properties",
+        "polymer_chain_length affects viscosity",
+        "crosslinking increases stiffness",
+        "porosity reduces strength",
+        "thermal_conductivity affects heat_dissipation",
+        "electrical_resistivity determines conductivity",
+        "magnetization depends on crystal_structure",
+        "strain_hardening increases yield_strength",
+        "annealing reduces hardness",
+        "quenching increases hardness"
+    ]
+}

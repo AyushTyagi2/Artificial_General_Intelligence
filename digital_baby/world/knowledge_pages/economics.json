@@ -1,0 +1,28 @@
+{
+    "topic": "economics",
+    "domain": "economics",
+    "facts": [
+        "supply affects price",
+        "demand drives production",
+        "inflation reduces purchasing_power",
+        "interest_rate controls inflation",
+        "gdp measures economic_output",
+        "unemployment affects consumption",
+        "investment drives gdp_growth",
+        "tax_rate reduces investment",
+        "government_spending stimulates demand",
+        "trade_balance affects currency_value",
+        "currency_value affects exports",
+        "exports drive gdp_growth",
+        "productivity determines wages",
+        "wages drive consumption",
+        "debt_level constrains investment",
+        "innovation creates productivity",
+        "education increases productivity",
+        "inequality reduces consumption",
+        "savings_rate affects investment",
+        "credit_availability drives investment",
+        "money_supply affects inflation",
+        "interest_rate reduces money_supply"
+    ]
+}

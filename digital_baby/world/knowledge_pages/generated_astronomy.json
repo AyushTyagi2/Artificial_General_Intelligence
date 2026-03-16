@@ -1,0 +1,19 @@
+{
+  "topic": "astronomy",
+  "facts": [
+    "asteroid_drift is 2",
+    "asteroids is 223",
+    "bio_robot is unknown",
+    "bio_robot part_of quantum_sensor",
+    "collision_risk is 11",
+    "deimos orbits earth",
+    "earth orbits sirius",
+    "quantum_sensor is unknown",
+    "radiation_pressure is 2",
+    "sirius emits radiation",
+    "solar_energy is 994"
+  ],
+  "generated": true,
+  "domain": "astronomy",
+  "generation": 1
+}

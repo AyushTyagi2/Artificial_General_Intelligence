@@ -1,5 +1,611 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><title>Knowledge Graph</title></head>
-<body style="margin:0;background:#0f172a;color:#e2e8f0;">
-  <div style="padding:8px;font-family:Arial,sans-serif;">PyVis graph generated. For fully interactive filtered graph use <a href="/" style="color:#38bdf8;">dashboard home</a>.</div>
-</body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>digital_baby — Knowledge Graph</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Top bar ─────────────────────────────────────────────────────── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      background: #111827;
+      border-bottom: 1px solid #1f2937;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+    .topbar .title { font-size: 15px; font-weight: 600; color: #93c5fd; white-space: nowrap; }
+    .topbar a { color: #38bdf8; font-size: 13px; text-decoration: none; }
+    .topbar a:hover { text-decoration: underline; }
+
+    .control { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+    .control label { color: #94a3b8; white-space: nowrap; }
+    .control select,
+    .control input[type="range"],
+    .control input[type="number"] {
+      background: #0b1220;
+      color: #e2e8f0;
+      border: 1px solid #334155;
+      border-radius: 5px;
+      padding: 3px 6px;
+      font-size: 13px;
+    }
+    .control input[type="range"] { width: 100px; padding: 0; }
+
+    .btn {
+      background: #1e40af;
+      color: #e2e8f0;
+      border: none;
+      border-radius: 5px;
+      padding: 4px 12px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .btn:hover { background: #2563eb; }
+
+    .stats-pill {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-size: 12px;
+      color: #94a3b8;
+      white-space: nowrap;
+    }
+
+    /* ── Main layout ─────────────────────────────────────────────────── */
+    .main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── Graph canvas ────────────────────────────────────────────────── */
+    #graph-container {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+    svg#graph {
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+    }
+    svg#graph:active { cursor: grabbing; }
+
+    /* ── Sidebar ─────────────────────────────────────────────────────── */
+    .sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      background: #111827;
+      border-left: 1px solid #1f2937;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .sidebar-section {
+      padding: 12px 14px;
+      border-bottom: 1px solid #1f2937;
+    }
+    .sidebar-section h3 {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      margin-bottom: 8px;
+    }
+
+    /* Legend */
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #cbd5e1;
+      padding: 2px 0;
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .legend-line {
+      width: 24px;
+      height: 3px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    /* Node detail panel */
+    #detail-panel {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px;
+    }
+    #detail-panel .placeholder {
+      color: #475569;
+      font-size: 13px;
+      font-style: italic;
+    }
+    #detail-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #93c5fd;
+      margin-bottom: 4px;
+      word-break: break-all;
+    }
+    #detail-type {
+      font-size: 11px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+    .detail-row {
+      font-size: 12px;
+      color: #cbd5e1;
+      padding: 4px 0;
+      border-bottom: 1px solid #1e293b;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .detail-row .rel-label {
+      color: #94a3b8;
+      white-space: nowrap;
+    }
+    .detail-row .rel-target { word-break: break-all; text-align: right; }
+    .detail-row .ev-badge {
+      font-size: 10px;
+      background: #1e293b;
+      color: #64748b;
+      border-radius: 4px;
+      padding: 1px 4px;
+      margin-left: 4px;
+      flex-shrink: 0;
+    }
+
+    /* Loading overlay */
+    #loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0f172a;
+      font-size: 15px;
+      color: #64748b;
+      z-index: 10;
+    }
+    #loading.hidden { display: none; }
+
+    /* Tooltip */
+    .tooltip {
+      position: fixed;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 12px;
+      color: #e2e8f0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+      max-width: 240px;
+      z-index: 100;
+    }
+    .tooltip.visible { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<!-- ── Top bar ─────────────────────────────────────────────────────────── -->
+<div class="topbar">
+  <span class="title">Knowledge Graph</span>
+  <a href="/">← Dashboard</a>
+
+  <div class="control">
+    <label>Relation</label>
+    <select id="relFilter"><option value="">All</option></select>
+  </div>
+
+  <div class="control">
+    <label>Min evidence</label>
+    <input type="number" id="minEv" value="1" min="1" max="10000" style="width:70px" />
+  </div>
+
+  <div class="control">
+    <label>Min confidence</label>
+    <input type="number" id="minConf" value="0" min="0" max="1" step="0.05" style="width:60px" />
+  </div>
+
+  <button class="btn" onclick="reload()">Apply</button>
+
+  <div class="control">
+    <label>Link distance</label>
+    <input type="range" id="distSlider" min="30" max="300" value="120" oninput="updateForce()" />
+  </div>
+
+  <div class="control">
+    <label>Charge</label>
+    <input type="range" id="chargeSlider" min="-500" max="-10" value="-120" oninput="updateForce()" />
+  </div>
+
+  <span class="stats-pill" id="statsPill">nodes=— edges=—</span>
+</div>
+
+<!-- ── Main ────────────────────────────────────────────────────────────── -->
+<div class="main">
+
+  <div id="graph-container">
+    <div id="loading">Loading knowledge graph…</div>
+    <svg id="graph">
+      <defs>
+        <!-- Arrow markers, one per relation colour group -->
+        <marker id="arr-default"  markerWidth="8" markerHeight="8" refX="14" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#475569"/></marker>
+        <marker id="arr-positive" markerWidth="8" markerHeight="8" refX="14" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#22c55e"/></marker>
+        <marker id="arr-negative" markerWidth="8" markerHeight="8" refX="14" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#ef4444"/></marker>
+        <marker id="arr-food"     markerWidth="8" markerHeight="8" refX="14" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#f97316"/></marker>
+        <marker id="arr-orbit"    markerWidth="8" markerHeight="8" refX="14" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#a78bfa"/></marker>
+        <marker id="arr-struct"   markerWidth="8" markerHeight="8" refX="14" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#38bdf8"/></marker>
+        <marker id="arr-chem"     markerWidth="8" markerHeight="8" refX="14" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#facc15"/></marker>
+        <marker id="arr-tech"     markerWidth="8" markerHeight="8" refX="14" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#67e8f9"/></marker>
+      </defs>
+      <g id="root"></g>
+    </svg>
+  </div>
+
+  <!-- ── Sidebar ──────────────────────────────────────────────────────── -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <h3>Relation legend</h3>
+      <div id="legend"></div>
+    </div>
+    <div class="sidebar-section" style="border-bottom:none; flex:1; overflow:hidden; display:flex; flex-direction:column;">
+      <h3>Selected node</h3>
+      <div id="detail-panel">
+        <div class="placeholder">Click a node to inspect its relations.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Tooltip -->
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+// ── Colour + marker mapping ──────────────────────────────────────────────────
+const REL_STYLE = {
+  positive_affects: { color: "#22c55e", marker: "arr-positive", group: "causal" },
+  negative_affects: { color: "#ef4444", marker: "arr-negative", group: "causal" },
+  mixed_affects:    { color: "#f97316", marker: "arr-food",     group: "causal" },
+  affects:          { color: "#fb923c", marker: "arr-food",     group: "causal" },
+  eats:             { color: "#f97316", marker: "arr-food",     group: "food"   },
+  hunts:            { color: "#dc2626", marker: "arr-negative",  group: "food"   },
+  grows_in:         { color: "#4ade80", marker: "arr-positive",  group: "food"   },
+  orbits:           { color: "#a78bfa", marker: "arr-orbit",    group: "astro"  },
+  emits:            { color: "#c4b5fd", marker: "arr-orbit",    group: "astro"  },
+  reacts_with:      { color: "#facc15", marker: "arr-chem",     group: "chem"   },
+  contains:         { color: "#fde68a", marker: "arr-chem",     group: "chem"   },
+  produces:         { color: "#fcd34d", marker: "arr-chem",     group: "chem"   },
+  part_of:          { color: "#38bdf8", marker: "arr-struct",   group: "struct" },
+  located_in:       { color: "#7dd3fc", marker: "arr-struct",   group: "struct" },
+  depends_on:       { color: "#93c5fd", marker: "arr-struct",   group: "struct" },
+  is:               { color: "#334155", marker: "arr-default",  group: "tax"    },
+  measures:         { color: "#67e8f9", marker: "arr-tech",     group: "tech"   },
+  executes:         { color: "#22d3ee", marker: "arr-tech",     group: "tech"   },
+  powers:           { color: "#06b6d4", marker: "arr-tech",     group: "tech"   },
+};
+
+function relStyle(rel) {
+  return REL_STYLE[rel] || { color: "#475569", marker: "arr-default", group: "other" };
+}
+
+// Node colours by type
+const NODE_COLOR = {
+  state_variable: "#f97316",
+  concept:        "#1d4ed8",
+};
+function nodeColor(type) { return NODE_COLOR[type] || "#1d4ed8"; }
+
+// ── D3 state ─────────────────────────────────────────────────────────────────
+let simulation = null;
+let allNodes = [], allEdges = [];
+let selectedNode = null;
+
+const svg    = d3.select("#graph");
+const root   = d3.select("#root");
+const tip    = document.getElementById("tooltip");
+
+// Zoom
+const zoom = d3.zoom()
+  .scaleExtent([0.05, 8])
+  .on("zoom", (event) => root.attr("transform", event.transform));
+svg.call(zoom);
+
+// ── Load and render ───────────────────────────────────────────────────────────
+async function reload() {
+  document.getElementById("loading").classList.remove("hidden");
+  root.selectAll("*").remove();
+
+  const rel    = document.getElementById("relFilter").value;
+  const minEv  = document.getElementById("minEv").value || 1;
+  const minConf= document.getElementById("minConf").value || 0;
+  const url    = `/api/knowledge_graph?relation=${encodeURIComponent(rel)}&min_evidence=${minEv}&min_confidence=${minConf}`;
+
+  const res  = await fetch(url);
+  const data = await res.json();
+
+  allNodes = data.nodes;
+  allEdges = data.edges;
+
+  document.getElementById("statsPill").textContent =
+    `nodes=${data.stats.node_count} edges=${data.stats.edge_count}`;
+
+  populateRelFilter(data.stats.relations);
+  buildLegend(data.stats.relations);
+  renderGraph();
+  document.getElementById("loading").classList.add("hidden");
+}
+
+function populateRelFilter(relations) {
+  const sel = document.getElementById("relFilter");
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">All</option>';
+  relations.forEach(r => {
+    const o = document.createElement("option");
+    o.value = r; o.textContent = r;
+    if (r === cur) o.selected = true;
+    sel.appendChild(o);
+  });
+}
+
+function buildLegend(relations) {
+  const seen = new Set();
+  const items = [];
+  relations.forEach(r => {
+    const s = relStyle(r);
+    if (!seen.has(s.color)) {
+      seen.add(s.color);
+      items.push({ rel: r, color: s.color });
+    }
+  });
+  const container = document.getElementById("legend");
+  container.innerHTML = "";
+  items.forEach(({ rel, color }) => {
+    container.innerHTML +=
+      `<div class="legend-item">
+         <div class="legend-line" style="background:${color}"></div>
+         <span>${rel}</span>
+       </div>`;
+  });
+}
+
+function renderGraph() {
+  const W = document.getElementById("graph-container").clientWidth;
+  const H = document.getElementById("graph-container").clientHeight;
+
+  // Evidence-based edge width scale
+  const evExtent = d3.extent(allEdges, e => e.evidence || 1);
+  const widthScale = d3.scaleSqrt().domain(evExtent).range([0.8, 6]);
+
+  // Degree-based node radius
+  const degExtent = d3.extent(allNodes, n => n.degree || 1);
+  const rScale = d3.scaleSqrt().domain(degExtent).range([5, 22]);
+
+  // ── Links ─────────────────────────────────────────────────────────────
+  const linkG = root.append("g").attr("class", "links");
+  const link = linkG.selectAll("line")
+    .data(allEdges)
+    .join("line")
+    .attr("stroke", d => relStyle(d.relation).color)
+    .attr("stroke-width", d => widthScale(d.evidence || 1))
+    .attr("stroke-opacity", 0.7)
+    .attr("marker-end", d => `url(#${relStyle(d.relation).marker})`)
+    .on("mouseover", (event, d) => showTip(event,
+      `<b>${d.source.id || d.source} → ${d.target.id || d.target}</b><br>
+       rel: ${d.relation}<br>
+       conf: ${(d.confidence || 0).toFixed(3)}<br>
+       evidence: ${d.evidence}`))
+    .on("mousemove", moveTip)
+    .on("mouseout",  hideTip);
+
+  // Edge labels (only when zoomed in — controlled by opacity on zoom)
+  const edgeLabelG = root.append("g").attr("class", "edge-labels");
+  const edgeLabel = edgeLabelG.selectAll("text")
+    .data(allEdges)
+    .join("text")
+    .attr("font-size", "9px")
+    .attr("fill", d => relStyle(d.relation).color)
+    .attr("fill-opacity", 0.7)
+    .attr("text-anchor", "middle")
+    .attr("pointer-events", "none")
+    .text(d => d.relation);
+
+  // ── Nodes ─────────────────────────────────────────────────────────────
+  const nodeG = root.append("g").attr("class", "nodes");
+  const nodeGroup = nodeG.selectAll("g")
+    .data(allNodes)
+    .join("g")
+    .attr("class", "node-group")
+    .style("cursor", "pointer")
+    .call(d3.drag()
+      .on("start", dragStart)
+      .on("drag",  dragged)
+      .on("end",   dragEnd))
+    .on("click", (event, d) => {
+      event.stopPropagation();
+      selectNode(d);
+    })
+    .on("mouseover", (event, d) => showTip(event,
+      `<b>${d.id}</b><br>type: ${d.type}<br>degree: ${d.degree}`))
+    .on("mousemove", moveTip)
+    .on("mouseout",  hideTip);
+
+  nodeGroup.append("circle")
+    .attr("r", d => rScale(d.degree || 1))
+    .attr("fill", d => nodeColor(d.type))
+    .attr("stroke", "#1e40af")
+    .attr("stroke-width", 1.5);
+
+  nodeGroup.append("text")
+    .attr("dy", "0.35em")
+    .attr("x", d => rScale(d.degree || 1) + 4)
+    .attr("font-size", "11px")
+    .attr("fill", "#cbd5e1")
+    .attr("pointer-events", "none")
+    .text(d => d.id);
+
+  // Deselect on background click
+  svg.on("click", () => clearDetail());
+
+  // ── Force simulation ───────────────────────────────────────────────────
+  const dist  = +document.getElementById("distSlider").value;
+  const chg   = +document.getElementById("chargeSlider").value;
+
+  // Build node-id → node-object map for link resolution
+  const nodeById = new Map(allNodes.map(n => [n.id, n]));
+  // D3 needs mutable source/target on edges
+  const simEdges = allEdges.map(e => ({
+    ...e,
+    source: nodeById.get(e.source) || e.source,
+    target: nodeById.get(e.target) || e.target,
+  }));
+
+  simulation = d3.forceSimulation(allNodes)
+    .force("link",   d3.forceLink(simEdges).id(d => d.id).distance(dist))
+    .force("charge", d3.forceManyBody().strength(chg))
+    .force("center", d3.forceCenter(W / 2, H / 2))
+    .force("collide",d3.forceCollide().radius(d => rScale(d.degree || 1) + 4))
+    .on("tick", () => {
+      link
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
+
+      edgeLabel
+        .attr("x", d => ((d.source.x + d.target.x) / 2))
+        .attr("y", d => ((d.source.y + d.target.y) / 2));
+
+      nodeGroup.attr("transform", d => `translate(${d.x},${d.y})`);
+    });
+
+  // Store simEdges on window so updateForce can access them
+  window._simEdges = simEdges;
+}
+
+function updateForce() {
+  if (!simulation) return;
+  const dist = +document.getElementById("distSlider").value;
+  const chg  = +document.getElementById("chargeSlider").value;
+  simulation.force("link").distance(dist);
+  simulation.force("charge").strength(chg);
+  simulation.alpha(0.3).restart();
+}
+
+// ── Drag ─────────────────────────────────────────────────────────────────────
+function dragStart(event, d) {
+  if (!event.active) simulation.alphaTarget(0.3).restart();
+  d.fx = d.x; d.fy = d.y;
+}
+function dragged(event, d) { d.fx = event.x; d.fy = event.y; }
+function dragEnd(event, d) {
+  if (!event.active) simulation.alphaTarget(0);
+  d.fx = null; d.fy = null;
+}
+
+// ── Tooltip ───────────────────────────────────────────────────────────────────
+function showTip(event, html) {
+  tip.innerHTML = html;
+  tip.classList.add("visible");
+  moveTip(event);
+}
+function moveTip(event) {
+  tip.style.left = (event.clientX + 12) + "px";
+  tip.style.top  = (event.clientY + 12) + "px";
+}
+function hideTip() { tip.classList.remove("visible"); }
+
+// ── Node detail panel ─────────────────────────────────────────────────────────
+function selectNode(d) {
+  selectedNode = d;
+  const panel = document.getElementById("detail-panel");
+
+  const outEdges = allEdges.filter(e => (e.source.id || e.source) === d.id);
+  const inEdges  = allEdges.filter(e => (e.target.id || e.target) === d.id);
+
+  let html = `
+    <div id="detail-name">${d.id}</div>
+    <div id="detail-type">${d.type} · degree ${d.degree}</div>`;
+
+  if (outEdges.length) {
+    html += `<div style="font-size:11px;color:#64748b;margin-bottom:4px;margin-top:8px;">OUTGOING (${outEdges.length})</div>`;
+    outEdges.sort((a,b) => (b.evidence||1) - (a.evidence||1)).forEach(e => {
+      const color = relStyle(e.relation).color;
+      const tgt   = e.target.id || e.target;
+      html += `<div class="detail-row">
+        <span class="rel-label" style="color:${color}">${e.relation}</span>
+        <span class="rel-target">${tgt}<span class="ev-badge">ev ${e.evidence}</span></span>
+      </div>`;
+    });
+  }
+
+  if (inEdges.length) {
+    html += `<div style="font-size:11px;color:#64748b;margin-bottom:4px;margin-top:8px;">INCOMING (${inEdges.length})</div>`;
+    inEdges.sort((a,b) => (b.evidence||1) - (a.evidence||1)).forEach(e => {
+      const color = relStyle(e.relation).color;
+      const src   = e.source.id || e.source;
+      html += `<div class="detail-row">
+        <span class="rel-label" style="color:${color}">${e.relation}</span>
+        <span class="rel-target">${src}<span class="ev-badge">ev ${e.evidence}</span></span>
+      </div>`;
+    });
+  }
+
+  panel.innerHTML = html;
+
+  // Highlight selected node
+  d3.selectAll(".node-group circle")
+    .attr("stroke", n => n.id === d.id ? "#f59e0b" : "#1e40af")
+    .attr("stroke-width", n => n.id === d.id ? 3 : 1.5);
+}
+
+function clearDetail() {
+  selectedNode = null;
+  document.getElementById("detail-panel").innerHTML =
+    '<div class="placeholder">Click a node to inspect its relations.</div>';
+  d3.selectAll(".node-group circle")
+    .attr("stroke", "#1e40af")
+    .attr("stroke-width", 1.5);
+}
+
+// ── Auto-refresh every 10 s when agent is running ─────────────────────────────
+setInterval(() => {
+  // Only reload if no node is currently selected, to avoid disrupting inspection
+  if (!selectedNode) reload();
+}, 10000);
+
+// Initial load
+reload();
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "topic": "economics",
+  "facts": [
+    "cond_inflation_on_investment is 0",
+    "cond_season_factor_on_grass is 0",
+    "consumer participates_in commodity_market",
+    "consumption is 75",
+    "copper traded_in commodity_market",
+    "debt_level is 127",
+    "gdp_growth is 8",
+    "inflation is 15",
+    "interest_rate is 2",
+    "investment is 57",
+    "productivity is 9",
+    "unemployment is 1",
+    "yen denominates copper"
+  ],
+  "generated": true,
+  "domain": "economics",
+  "generation": 1
+}

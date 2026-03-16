@@ -1,0 +1,12 @@
+{
+  "topic": "expanded_concepts",
+  "domain": "taxonomy",
+  "facts": [
+    "lion is predator",
+    "rabbit is prey",
+    "reptile is animal",
+    "shrub is plant",
+    "tiger is predator",
+    "wolf is predator"
+  ]
+}

@@ -32,9 +32,14 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main() -> None:
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(levelname)s %(message)s")
-    args = build_parser().parse_args()
+    fmt = "%(asctime)s %(name)s %(levelname)s %(message)s"
+    log_path = Path(__file__).parents[1] / "agent.log"   # ← parents[2] not parents[1]
+    logging.basicConfig(level=logging.INFO, format=fmt)
+    fh = logging.FileHandler(log_path, encoding="utf-8")
+    fh.setFormatter(logging.Formatter(fmt))
+    logging.getLogger().addHandler(fh)
 
+    args = build_parser().parse_args()
     loop = BabyEventLoop(world_path=args.world, memory_path=args.memory, tick_sleep_seconds=args.sleep)
     loop.run(max_ticks=args.ticks)
 

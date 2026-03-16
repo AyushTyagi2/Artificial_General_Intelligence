@@ -1,0 +1,1822 @@
+{
+  "facts": [
+    {
+      "statement": "cat is mammal",
+      "confidence": 0.9690356394129979,
+      "source_topic": "animals",
+      "timestamp": 1773550548.169304,
+      "evidence": 467,
+      "compressed": false,
+      "last_tick": 231
+    },
+    {
+      "statement": "bird is animal",
+      "confidence": 0.9690356394129979,
+      "source_topic": "animals",
+      "timestamp": 1773550548.1702921,
+      "evidence": 467,
+      "compressed": false,
+      "last_tick": 231
+    },
+    {
+      "statement": "octopus has intelligence",
+      "confidence": 0.9690356394129979,
+      "source_topic": "animals",
+      "timestamp": 1773550548.1713057,
+      "evidence": 467,
+      "compressed": false,
+      "last_tick": 231
+    },
+    {
+      "statement": "star emits light",
+      "confidence": 0.9795501022494888,
+      "source_topic": "astronomy",
+      "timestamp": 1773550592.4816942,
+      "evidence": 479,
+      "compressed": false,
+      "last_tick": 242
+    },
+    {
+      "statement": "planet orbits star",
+      "confidence": 0.9795501022494888,
+      "source_topic": "astronomy",
+      "timestamp": 1773550592.483695,
+      "evidence": 479,
+      "compressed": false,
+      "last_tick": 242
+    },
+    {
+      "statement": "moon orbits planet",
+      "confidence": 0.9795501022494888,
+      "source_topic": "astronomy",
+      "timestamp": 1773550592.4846835,
+      "evidence": 479,
+      "compressed": false,
+      "last_tick": 242
+    },
+    {
+      "statement": "radiation_pressure_delta is 0.02",
+      "confidence": 0.860013698630137,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550562.9831417,
+      "evidence": 63,
+      "compressed": false,
+      "last_tick": 238
+    },
+    {
+      "statement": "asteroid_drift_delta is 0.03",
+      "confidence": 0.7584418604651163,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550550.332036,
+      "evidence": 33,
+      "compressed": false,
+      "last_tick": 232
+    },
+    {
+      "statement": "asteroids_delta is 7",
+      "confidence": 0.854072463768116,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550587.4687703,
+      "evidence": 59,
+      "compressed": false,
+      "last_tick": 240
+    },
+    {
+      "statement": "radiation_pressure_delta is -0.02",
+      "confidence": 0.855072463768116,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550592.669443,
+      "evidence": 59,
+      "compressed": false,
+      "last_tick": 242
+    },
+    {
+      "statement": "asteroid_drift_delta is -0.06",
+      "confidence": 0.6274193548387096,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550400.980293,
+      "evidence": 21,
+      "compressed": false,
+      "last_tick": 191
+    },
+    {
+      "statement": "asteroids_delta is -4",
+      "confidence": 0.8362698412698413,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550558.8268976,
+      "evidence": 53,
+      "compressed": false,
+      "last_tick": 236
+    },
+    {
+      "statement": "cell is living_unit",
+      "confidence": 0.9434126394052045,
+      "source_topic": "biology",
+      "timestamp": 1773550454.6413462,
+      "evidence": 528,
+      "compressed": false,
+      "last_tick": 203
+    },
+    {
+      "statement": "dna stores information",
+      "confidence": 0.9434126394052045,
+      "source_topic": "biology",
+      "timestamp": 1773550454.6423593,
+      "evidence": 528,
+      "compressed": false,
+      "last_tick": 203
+    },
+    {
+      "statement": "cat is reptile",
+      "confidence": 0.9434126394052045,
+      "source_topic": "biology",
+      "timestamp": 1773550454.6433465,
+      "evidence": 528,
+      "compressed": false,
+      "last_tick": 203
+    },
+    {
+      "statement": "pathogens_delta is 0.02",
+      "confidence": 0.4463846153846154,
+      "source_topic": "biology_state",
+      "timestamp": 1773549954.9148455,
+      "evidence": 16,
+      "compressed": false,
+      "last_tick": 72
+    },
+    {
+      "statement": "atom forms molecule",
+      "confidence": 0.9543080260303688,
+      "source_topic": "chemistry",
+      "timestamp": 1773550485.3086877,
+      "evidence": 451,
+      "compressed": false,
+      "last_tick": 217
+    },
+    {
+      "statement": "water is compound",
+      "confidence": 0.9543080260303688,
+      "source_topic": "chemistry",
+      "timestamp": 1773550485.309674,
+      "evidence": 451,
+      "compressed": false,
+      "last_tick": 217
+    },
+    {
+      "statement": "oxygen supports combustion",
+      "confidence": 0.9543080260303688,
+      "source_topic": "chemistry",
+      "timestamp": 1773550485.3106902,
+      "evidence": 451,
+      "compressed": false,
+      "last_tick": 217
+    },
+    {
+      "statement": "forest supports biodiversity",
+      "confidence": 0.9763593380614657,
+      "source_topic": "ecology",
+      "timestamp": 1773550604.2576666,
+      "evidence": 413,
+      "compressed": false,
+      "last_tick": 248
+    },
+    {
+      "statement": "predator regulates prey",
+      "confidence": 0.9763593380614657,
+      "source_topic": "ecology",
+      "timestamp": 1773550604.2586715,
+      "evidence": 413,
+      "compressed": false,
+      "last_tick": 248
+    },
+    {
+      "statement": "pollinator helps plant",
+      "confidence": 0.9763593380614657,
+      "source_topic": "ecology",
+      "timestamp": 1773550604.2596705,
+      "evidence": 413,
+      "compressed": false,
+      "last_tick": 248
+    },
+    {
+      "statement": "reptile is animal",
+      "confidence": 0.9644705882352941,
+      "source_topic": "expanded_concepts",
+      "timestamp": 1773550543.8503995,
+      "evidence": 415,
+      "compressed": false,
+      "last_tick": 229
+    },
+    {
+      "statement": "bacterium is microbe",
+      "confidence": 0.976303317535545,
+      "source_topic": "microbiology",
+      "timestamp": 1773550602.0857692,
+      "evidence": 412,
+      "compressed": false,
+      "last_tick": 247
+    },
+    {
+      "statement": "virus infects cell",
+      "confidence": 0.976303317535545,
+      "source_topic": "microbiology",
+      "timestamp": 1773550602.0867693,
+      "evidence": 412,
+      "compressed": false,
+      "last_tick": 247
+    },
+    {
+      "statement": "microbe evolves rapidly",
+      "confidence": 0.976303317535545,
+      "source_topic": "microbiology",
+      "timestamp": 1773550602.0867693,
+      "evidence": 412,
+      "compressed": false,
+      "last_tick": 247
+    },
+    {
+      "statement": "light has speed",
+      "confidence": 0.9572448418156808,
+      "source_topic": "physics",
+      "timestamp": 1773550475.4827204,
+      "evidence": 717,
+      "compressed": false,
+      "last_tick": 212
+    },
+    {
+      "statement": "gravity affects mass",
+      "confidence": 0.9572448418156808,
+      "source_topic": "physics",
+      "timestamp": 1773550475.4837341,
+      "evidence": 717,
+      "compressed": false,
+      "last_tick": 212
+    },
+    {
+      "statement": "energy is conserved",
+      "confidence": 0.9572448418156808,
+      "source_topic": "physics",
+      "timestamp": 1773550475.4847362,
+      "evidence": 717,
+      "compressed": false,
+      "last_tick": 212
+    },
+    {
+      "statement": "acceleration_delta is -0.18",
+      "confidence": 0.18433333333333332,
+      "source_topic": "physics_state",
+      "timestamp": 1773550036.0346634,
+      "evidence": 5,
+      "compressed": false,
+      "last_tick": 92
+    },
+    {
+      "statement": "plant performs photosynthesis",
+      "confidence": 0.9571167048054919,
+      "source_topic": "plants",
+      "timestamp": 1773550512.3432806,
+      "evidence": 427,
+      "compressed": false,
+      "last_tick": 221
+    },
+    {
+      "statement": "root absorbs water",
+      "confidence": 0.9571167048054919,
+      "source_topic": "plants",
+      "timestamp": 1773550512.3442826,
+      "evidence": 427,
+      "compressed": false,
+      "last_tick": 221
+    },
+    {
+      "statement": "leaf exchanges gas",
+      "confidence": 0.9571167048054919,
+      "source_topic": "plants",
+      "timestamp": 1773550512.345281,
+      "evidence": 427,
+      "compressed": false,
+      "last_tick": 221
+    },
+    {
+      "statement": "eco_species is unknown",
+      "confidence": 0.649,
+      "source_topic": "open_world_novelty",
+      "timestamp": 1773550195.823684,
+      "evidence": 30,
+      "compressed": false,
+      "last_tick": 140
+    },
+    {
+      "statement": "robot_activity_delta is -0.07",
+      "confidence": 0.47368421052631576,
+      "source_topic": "technology_state",
+      "timestamp": 1773548114.3998423,
+      "evidence": 9,
+      "compressed": false,
+      "last_tick": 454
+    },
+    {
+      "statement": "gpu executes optimizer",
+      "confidence": 0.4646666666666666,
+      "source_topic": "technology",
+      "timestamp": 1773549854.3880973,
+      "evidence": 20,
+      "compressed": false,
+      "last_tick": 39
+    },
+    {
+      "statement": "lithium_pack powers arm_bot",
+      "confidence": 0.7435897435897436,
+      "source_topic": "technology",
+      "timestamp": 1773548932.6243482,
+      "evidence": 29,
+      "compressed": false,
+      "last_tick": 729
+    },
+    {
+      "statement": "robots is 4",
+      "confidence": 0.8636969696969697,
+      "source_topic": "technology",
+      "timestamp": 1773549700.6486576,
+      "evidence": 320,
+      "compressed": false,
+      "last_tick": 135
+    },
+    {
+      "statement": "robot_activity_delta is -0.26",
+      "confidence": 0.2857142857142857,
+      "source_topic": "technology_state",
+      "timestamp": 1773548113.4990895,
+      "evidence": 4,
+      "compressed": false,
+      "last_tick": 453
+    },
+    {
+      "statement": "alien_ecosystem is unknown",
+      "confidence": 0.5012222222222222,
+      "source_topic": "open_world_novelty",
+      "timestamp": 1773549793.977206,
+      "evidence": 26,
+      "compressed": false,
+      "last_tick": 20
+    },
+    {
+      "statement": "cpu executes classifier",
+      "confidence": 0.7617777777777778,
+      "source_topic": "technology",
+      "timestamp": 1773550520.417916,
+      "evidence": 35,
+      "compressed": false,
+      "last_tick": 225
+    },
+    {
+      "statement": "data_quality is 5",
+      "confidence": 0.6411818181818183,
+      "source_topic": "technology",
+      "timestamp": 1773549165.3071961,
+      "evidence": 45,
+      "compressed": false,
+      "last_tick": 64
+    },
+    {
+      "statement": "fuel_cell powers rover",
+      "confidence": 0.6616666666666666,
+      "source_topic": "technology",
+      "timestamp": 1773549626.8478527,
+      "evidence": 38,
+      "compressed": false,
+      "last_tick": 111
+    },
+    {
+      "statement": "quantum_plant is unknown",
+      "confidence": 0.5465,
+      "source_topic": "open_world_novelty",
+      "timestamp": 1773550054.0256033,
+      "evidence": 22,
+      "compressed": false,
+      "last_tick": 100
+    },
+    {
+      "statement": "robot_activity is 2",
+      "confidence": 0.7322105263157894,
+      "source_topic": "technology",
+      "timestamp": 1773549854.39209,
+      "evidence": 142,
+      "compressed": false,
+      "last_tick": 39
+    },
+    {
+      "statement": "thermometer measures temperature",
+      "confidence": 0.62,
+      "source_topic": "technology",
+      "timestamp": 1773549626.8518527,
+      "evidence": 30,
+      "compressed": false,
+      "last_tick": 111
+    },
+    {
+      "statement": "fuel_cell powers submarine_bot",
+      "confidence": 0.7386666666666666,
+      "source_topic": "technology",
+      "timestamp": 1773550394.506463,
+      "evidence": 38,
+      "compressed": false,
+      "last_tick": 188
+    },
+    {
+      "statement": "gpu executes filter",
+      "confidence": 0.557969696969697,
+      "source_topic": "technology",
+      "timestamp": 1773550089.6858776,
+      "evidence": 23,
+      "compressed": false,
+      "last_tick": 102
+    },
+    {
+      "statement": "thermometer measures distance",
+      "confidence": 0.7368421052631579,
+      "source_topic": "technology",
+      "timestamp": 1773548389.7880585,
+      "evidence": 28,
+      "compressed": false,
+      "last_tick": 546
+    },
+    {
+      "statement": "robot_activity_delta is -0.01",
+      "confidence": 0.4444444444444444,
+      "source_topic": "technology_state",
+      "timestamp": 1773510701.043236,
+      "evidence": 8,
+      "compressed": false,
+      "last_tick": 452
+    },
+    {
+      "statement": "asic executes filter",
+      "confidence": 0.5138823529411765,
+      "source_topic": "technology",
+      "timestamp": 1773549414.8251061,
+      "evidence": 24,
+      "compressed": false,
+      "last_tick": 49
+    },
+    {
+      "statement": "fuel_cell powers arm_bot",
+      "confidence": 0.7619047619047619,
+      "source_topic": "technology",
+      "timestamp": 1773550616.2532244,
+      "evidence": 32,
+      "compressed": false,
+      "last_tick": 251
+    },
+    {
+      "statement": "thermometer measures image",
+      "confidence": 0.7296086956521739,
+      "source_topic": "technology",
+      "timestamp": 1773550394.5114605,
+      "evidence": 36,
+      "compressed": false,
+      "last_tick": 188
+    },
+    {
+      "statement": "sensor_coverage_delta is -0.21",
+      "confidence": 0.375,
+      "source_topic": "technology_state",
+      "timestamp": 1773512576.67578,
+      "evidence": 6,
+      "compressed": false,
+      "last_tick": 1078
+    },
+    {
+      "statement": "robot_activity_delta is -0.05",
+      "confidence": 0.375,
+      "source_topic": "technology_state",
+      "timestamp": 1773512861.6214917,
+      "evidence": 6,
+      "compressed": false,
+      "last_tick": 1153
+    },
+    {
+      "statement": "lion hunts zebra",
+      "confidence": 0.40280952380952384,
+      "source_topic": "ecosystem",
+      "timestamp": 1773549649.6735122,
+      "evidence": 11,
+      "compressed": false,
+      "last_tick": 120
+    },
+    {
+      "statement": "tree grows_in meadow",
+      "confidence": 0.5588421052631578,
+      "source_topic": "ecosystem",
+      "timestamp": 1773549933.9166162,
+      "evidence": 28,
+      "compressed": false,
+      "last_tick": 63
+    },
+    {
+      "statement": "wolves is 5",
+      "confidence": 0.8302542372881356,
+      "source_topic": "ecosystem",
+      "timestamp": 1773550265.7413032,
+      "evidence": 108,
+      "compressed": false,
+      "last_tick": 156
+    },
+    {
+      "statement": "zebra eats tree",
+      "confidence": 0.517,
+      "source_topic": "ecosystem",
+      "timestamp": 1773550269.745874,
+      "evidence": 15,
+      "compressed": false,
+      "last_tick": 158
+    },
+    {
+      "statement": "radiation_pressure is 2",
+      "confidence": 0.5,
+      "source_topic": "astronomy",
+      "timestamp": 1773502891.0657508,
+      "evidence": 10,
+      "compressed": false,
+      "last_tick": 566
+    },
+    {
+      "statement": "asteroid_drift_delta is -0.02",
+      "confidence": 0.7222222222222222,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550592.671442,
+      "evidence": 26,
+      "compressed": false,
+      "last_tick": 242
+    },
+    {
+      "statement": "asteroids_delta is 4",
+      "confidence": 0.8387096774193549,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550592.669443,
+      "evidence": 52,
+      "compressed": false,
+      "last_tick": 242
+    },
+    {
+      "statement": "reactants_delta is 1",
+      "confidence": 0.9158202247191011,
+      "source_topic": "chemistry_state",
+      "timestamp": 1773550477.359967,
+      "evidence": 168,
+      "compressed": false,
+      "last_tick": 213
+    },
+    {
+      "statement": "temperature_delta is 6.2",
+      "confidence": 0.16666666666666666,
+      "source_topic": "chemistry_state",
+      "timestamp": 1773511590.0545845,
+      "evidence": 2,
+      "compressed": false,
+      "last_tick": 750
+    },
+    {
+      "statement": "bush grows_in soil",
+      "confidence": 0.573608695652174,
+      "source_topic": "ecosystem",
+      "timestamp": 1773549840.8529484,
+      "evidence": 36,
+      "compressed": false,
+      "last_tick": 32
+    },
+    {
+      "statement": "lion hunts rabbit",
+      "confidence": 0.5988823529411765,
+      "source_topic": "ecosystem",
+      "timestamp": 1773549698.714874,
+      "evidence": 24,
+      "compressed": false,
+      "last_tick": 134
+    },
+    {
+      "statement": "rabbit eats bush",
+      "confidence": 0.4513846153846154,
+      "source_topic": "ecosystem",
+      "timestamp": 1773549975.8575277,
+      "evidence": 16,
+      "compressed": false,
+      "last_tick": 77
+    },
+    {
+      "statement": "wolves_delta is 1",
+      "confidence": 0.8564705882352941,
+      "source_topic": "ecosystem_state",
+      "timestamp": 1773550326.2243876,
+      "evidence": 126,
+      "compressed": false,
+      "last_tick": 171
+    },
+    {
+      "statement": "lion is predator",
+      "confidence": 0.9644150943396226,
+      "source_topic": "expanded_concepts",
+      "timestamp": 1773550543.848409,
+      "evidence": 414,
+      "compressed": false,
+      "last_tick": 229
+    },
+    {
+      "statement": "rabbit is prey",
+      "confidence": 0.9644150943396226,
+      "source_topic": "expanded_concepts",
+      "timestamp": 1773550543.8494103,
+      "evidence": 414,
+      "compressed": false,
+      "last_tick": 229
+    },
+    {
+      "statement": "asteroid_drift_delta is 0.08",
+      "confidence": 0.45345454545454544,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550238.4119155,
+      "evidence": 12,
+      "compressed": false,
+      "last_tick": 149
+    },
+    {
+      "statement": "asteroids_delta is -3",
+      "confidence": 0.803921568627451,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550590.7351708,
+      "evidence": 41,
+      "compressed": false,
+      "last_tick": 241
+    },
+    {
+      "statement": "wolves_delta is -1",
+      "confidence": 0.821256880733945,
+      "source_topic": "ecosystem_state",
+      "timestamp": 1773550261.769563,
+      "evidence": 99,
+      "compressed": false,
+      "last_tick": 154
+    },
+    {
+      "statement": "camera measures image",
+      "confidence": 0.599,
+      "source_topic": "technology",
+      "timestamp": 1773550030.2475379,
+      "evidence": 30,
+      "compressed": false,
+      "last_tick": 90
+    },
+    {
+      "statement": "data_quality is 0",
+      "confidence": 0.8888888888888888,
+      "source_topic": "technology",
+      "timestamp": 1773550616.2532244,
+      "evidence": 80,
+      "compressed": false,
+      "last_tick": 251
+    },
+    {
+      "statement": "eco_ecosystem is unknown",
+      "confidence": 0.5937297297297297,
+      "source_topic": "technology",
+      "timestamp": 1773549614.695308,
+      "evidence": 27,
+      "compressed": false,
+      "last_tick": 105
+    },
+    {
+      "statement": "microcontroller executes classifier",
+      "confidence": 0.5817777777777777,
+      "source_topic": "technology",
+      "timestamp": 1773549117.7844827,
+      "evidence": 35,
+      "compressed": false,
+      "last_tick": 45
+    },
+    {
+      "statement": "robot_activity is 0",
+      "confidence": 0.9236641221374046,
+      "source_topic": "technology",
+      "timestamp": 1773550616.257215,
+      "evidence": 121,
+      "compressed": false,
+      "last_tick": 251
+    },
+    {
+      "statement": "sensor_coverage is 0",
+      "confidence": 0.7656086956521739,
+      "source_topic": "technology",
+      "timestamp": 1773550518.2605343,
+      "evidence": 36,
+      "compressed": false,
+      "last_tick": 224
+    },
+    {
+      "statement": "sensor_coverage_delta is -0.18",
+      "confidence": 0.16666666666666666,
+      "source_topic": "technology_state",
+      "timestamp": 1773504023.3536572,
+      "evidence": 2,
+      "compressed": false,
+      "last_tick": 853
+    },
+    {
+      "statement": "data_quality_delta is -0.26",
+      "confidence": 0.05976923076923077,
+      "source_topic": "technology_state",
+      "timestamp": 1773549473.8503373,
+      "evidence": 3,
+      "compressed": false,
+      "last_tick": 70
+    },
+    {
+      "statement": "heat_delta is 7.97",
+      "confidence": 0.2857142857142857,
+      "source_topic": "physics_state",
+      "timestamp": 1773510997.3052413,
+      "evidence": 4,
+      "compressed": false,
+      "last_tick": 540
+    },
+    {
+      "statement": "acceleration_delta is 0.03",
+      "confidence": 0.375,
+      "source_topic": "physics_state",
+      "timestamp": 1773548614.7062938,
+      "evidence": 6,
+      "compressed": false,
+      "last_tick": 620
+    },
+    {
+      "statement": "heat_delta is -1.08",
+      "confidence": 0.27968421052631576,
+      "source_topic": "physics_state",
+      "timestamp": 1773549892.4689307,
+      "evidence": 9,
+      "compressed": false,
+      "last_tick": 47
+    },
+    {
+      "statement": "acceleration_delta is -0.17",
+      "confidence": 0.3333333333333333,
+      "source_topic": "physics_state",
+      "timestamp": 1773512976.5806074,
+      "evidence": 5,
+      "compressed": false,
+      "last_tick": 1184
+    },
+    {
+      "statement": "neuro_species is unknown",
+      "confidence": 0.4586296296296296,
+      "source_topic": "ecosystem",
+      "timestamp": 1773549948.8771386,
+      "evidence": 17,
+      "compressed": false,
+      "last_tick": 70
+    },
+    {
+      "statement": "asteroid_drift_delta is -0.03",
+      "confidence": 0.5518823529411765,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550024.1729274,
+      "evidence": 24,
+      "compressed": false,
+      "last_tick": 87
+    },
+    {
+      "statement": "asteroids_delta is -6",
+      "confidence": 0.7564848484848485,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550238.4099114,
+      "evidence": 56,
+      "compressed": false,
+      "last_tick": 149
+    },
+    {
+      "statement": "asic executes classifier",
+      "confidence": 0.7342340425531915,
+      "source_topic": "technology",
+      "timestamp": 1773550394.5034606,
+      "evidence": 37,
+      "compressed": false,
+      "last_tick": 188
+    },
+    {
+      "statement": "microphone measures audio",
+      "confidence": 0.6403207547169811,
+      "source_topic": "technology",
+      "timestamp": 1773549473.6961966,
+      "evidence": 43,
+      "compressed": false,
+      "last_tick": 70
+    },
+    {
+      "statement": "supercapacitor powers submarine_bot",
+      "confidence": 0.6146666666666667,
+      "source_topic": "technology",
+      "timestamp": 1773549935.8917298,
+      "evidence": 38,
+      "compressed": false,
+      "last_tick": 64
+    },
+    {
+      "statement": "data_quality_delta is 0.5",
+      "confidence": 0.23076923076923078,
+      "source_topic": "technology_state",
+      "timestamp": 1773511720.8386548,
+      "evidence": 3,
+      "compressed": false,
+      "last_tick": 799
+    },
+    {
+      "statement": "quantum_sensor is unknown",
+      "confidence": 0.5038571428571429,
+      "source_topic": "technology",
+      "timestamp": 1773550089.689413,
+      "evidence": 18,
+      "compressed": false,
+      "last_tick": 102
+    },
+    {
+      "statement": "shrub grows_in meadow",
+      "confidence": 0.6341549295774648,
+      "source_topic": "ecosystem",
+      "timestamp": 1773548981.6236784,
+      "evidence": 61,
+      "compressed": false,
+      "last_tick": 16
+    },
+    {
+      "statement": "wolves is 3",
+      "confidence": 0.5057297297297297,
+      "source_topic": "ecosystem",
+      "timestamp": 1773546817.3807814,
+      "evidence": 27,
+      "compressed": false,
+      "last_tick": 17
+    },
+    {
+      "statement": "zebra eats shrub",
+      "confidence": 0.6666666666666666,
+      "source_topic": "ecosystem",
+      "timestamp": 1773548876.5244882,
+      "evidence": 20,
+      "compressed": false,
+      "last_tick": 712
+    },
+    {
+      "statement": "shrub is plant",
+      "confidence": 0.964303317535545,
+      "source_topic": "expanded_concepts",
+      "timestamp": 1773550543.8513944,
+      "evidence": 412,
+      "compressed": false,
+      "last_tick": 229
+    },
+    {
+      "statement": "acceleration_delta is -0.11",
+      "confidence": 0.14933333333333332,
+      "source_topic": "physics_state",
+      "timestamp": 1773549433.0574183,
+      "evidence": 5,
+      "compressed": false,
+      "last_tick": 57
+    },
+    {
+      "statement": "pathogens_delta is 0.61",
+      "confidence": 0.23076923076923078,
+      "source_topic": "biology_state",
+      "timestamp": 1773512075.039985,
+      "evidence": 3,
+      "compressed": false,
+      "last_tick": 910
+    },
+    {
+      "statement": "bush grows_in wetland",
+      "confidence": 0.532969696969697,
+      "source_topic": "ecosystem",
+      "timestamp": 1773549975.853987,
+      "evidence": 23,
+      "compressed": false,
+      "last_tick": 77
+    },
+    {
+      "statement": "wolves is 2",
+      "confidence": 0.6666666666666666,
+      "source_topic": "ecosystem",
+      "timestamp": 1773510370.0553684,
+      "evidence": 20,
+      "compressed": false,
+      "last_tick": 349
+    },
+    {
+      "statement": "zebra eats bush",
+      "confidence": 0.5564193548387096,
+      "source_topic": "ecosystem",
+      "timestamp": 1773549649.6775126,
+      "evidence": 21,
+      "compressed": false,
+      "last_tick": 120
+    },
+    {
+      "statement": "acceleration_delta is -0.41",
+      "confidence": 0.4444444444444444,
+      "source_topic": "physics_state",
+      "timestamp": 1773511134.5631893,
+      "evidence": 8,
+      "compressed": false,
+      "last_tick": 589
+    },
+    {
+      "statement": "bio_species is unknown",
+      "confidence": 0.5238095238095238,
+      "source_topic": "open_world_novelty",
+      "timestamp": 1773548125.8852334,
+      "evidence": 11,
+      "compressed": false,
+      "last_tick": 460
+    },
+    {
+      "statement": "nano_ecosystem is unknown",
+      "confidence": 0.5065,
+      "source_topic": "open_world_novelty",
+      "timestamp": 1773549918.7712653,
+      "evidence": 22,
+      "compressed": false,
+      "last_tick": 60
+    },
+    {
+      "statement": "quantum_habitat is unknown",
+      "confidence": 0.4418571428571429,
+      "source_topic": "open_world_novelty",
+      "timestamp": 1773549859.7794895,
+      "evidence": 18,
+      "compressed": false,
+      "last_tick": 40
+    },
+    {
+      "statement": "pathogens_delta is -0.85",
+      "confidence": 0.23076923076923078,
+      "source_topic": "biology_state",
+      "timestamp": 1773511703.7278483,
+      "evidence": 3,
+      "compressed": false,
+      "last_tick": 782
+    },
+    {
+      "statement": "sulfuric_acid reacts_with ammonia",
+      "confidence": 0.23076923076923078,
+      "source_topic": "chemistry",
+      "timestamp": 1773502788.2583704,
+      "evidence": 3,
+      "compressed": false,
+      "last_tick": 540
+    },
+    {
+      "statement": "antelope eats grass",
+      "confidence": 0.6,
+      "source_topic": "ecosystem",
+      "timestamp": 1773547891.6650062,
+      "evidence": 15,
+      "compressed": false,
+      "last_tick": 392
+    },
+    {
+      "statement": "deer is 1",
+      "confidence": 0.2857142857142857,
+      "source_topic": "ecosystem",
+      "timestamp": 1773504027.209017,
+      "evidence": 4,
+      "compressed": false,
+      "last_tick": 859
+    },
+    {
+      "statement": "grass grows_in wetland",
+      "confidence": 0.7311818181818183,
+      "source_topic": "ecosystem",
+      "timestamp": 1773550261.6257966,
+      "evidence": 45,
+      "compressed": false,
+      "last_tick": 154
+    },
+    {
+      "statement": "lion hunts antelope",
+      "confidence": 0.5652173913043478,
+      "source_topic": "ecosystem",
+      "timestamp": 1773513207.9104335,
+      "evidence": 13,
+      "compressed": false,
+      "last_tick": 1249
+    },
+    {
+      "statement": "asteroid_drift is 3",
+      "confidence": 0.375,
+      "source_topic": "astronomy",
+      "timestamp": 1773502891.0637426,
+      "evidence": 6,
+      "compressed": false,
+      "last_tick": 566
+    },
+    {
+      "statement": "radiation_pressure_delta is -0.03",
+      "confidence": 0.698,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550396.7850807,
+      "evidence": 30,
+      "compressed": false,
+      "last_tick": 189
+    },
+    {
+      "statement": "asteroid_drift_delta is -0.05",
+      "confidence": 0.5472222222222222,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773549940.0601876,
+      "evidence": 26,
+      "compressed": false,
+      "last_tick": 66
+    },
+    {
+      "statement": "gpu executes planner",
+      "confidence": 0.6888823529411765,
+      "source_topic": "technology",
+      "timestamp": 1773550518.2555344,
+      "evidence": 24,
+      "compressed": false,
+      "last_tick": 224
+    },
+    {
+      "statement": "microphone measures temperature",
+      "confidence": 0.7222222222222222,
+      "source_topic": "technology",
+      "timestamp": 1773550616.2552145,
+      "evidence": 26,
+      "compressed": false,
+      "last_tick": 251
+    },
+    {
+      "statement": "supercapacitor powers rover",
+      "confidence": 0.6970655737704918,
+      "source_topic": "technology",
+      "timestamp": 1773550089.692409,
+      "evidence": 51,
+      "compressed": false,
+      "last_tick": 102
+    },
+    {
+      "statement": "sensor_coverage_delta is -0.34",
+      "confidence": 0.5,
+      "source_topic": "technology_state",
+      "timestamp": 1773548735.6191366,
+      "evidence": 10,
+      "compressed": false,
+      "last_tick": 664
+    },
+    {
+      "statement": "radiation_pressure_delta is 0.01",
+      "confidence": 0.869,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550556.7071075,
+      "evidence": 70,
+      "compressed": false,
+      "last_tick": 235
+    },
+    {
+      "statement": "asteroid_drift_delta is 0.04",
+      "confidence": 0.5682857142857143,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773549273.905785,
+      "evidence": 25,
+      "compressed": false,
+      "last_tick": 95
+    },
+    {
+      "statement": "asic executes optimizer",
+      "confidence": 0.6950975609756098,
+      "source_topic": "technology",
+      "timestamp": 1773550350.482425,
+      "evidence": 31,
+      "compressed": false,
+      "last_tick": 180
+    },
+    {
+      "statement": "robot_activity_delta is -0.12",
+      "confidence": 0.34368421052631576,
+      "source_topic": "technology_state",
+      "timestamp": 1773549626.9835954,
+      "evidence": 9,
+      "compressed": false,
+      "last_tick": 111
+    },
+    {
+      "statement": "pathogens_delta is -0.19",
+      "confidence": 0.23076923076923078,
+      "source_topic": "biology_state",
+      "timestamp": 1773503445.2485213,
+      "evidence": 3,
+      "compressed": false,
+      "last_tick": 687
+    },
+    {
+      "statement": "camera measures distance",
+      "confidence": 0.5724418604651162,
+      "source_topic": "technology",
+      "timestamp": 1773549407.7594209,
+      "evidence": 33,
+      "compressed": false,
+      "last_tick": 46
+    },
+    {
+      "statement": "supercapacitor powers drone",
+      "confidence": 0.5926086956521739,
+      "source_topic": "technology",
+      "timestamp": 1773549900.0306356,
+      "evidence": 36,
+      "compressed": false,
+      "last_tick": 51
+    },
+    {
+      "statement": "alien_robot is unknown",
+      "confidence": 0.6296296296296297,
+      "source_topic": "open_world_novelty",
+      "timestamp": 1773548708.855412,
+      "evidence": 17,
+      "compressed": false,
+      "last_tick": 660
+    },
+    {
+      "statement": "neuro_habitat is unknown",
+      "confidence": 0.579,
+      "source_topic": "ecosystem",
+      "timestamp": 1773549948.8761387,
+      "evidence": 30,
+      "compressed": false,
+      "last_tick": 70
+    },
+    {
+      "statement": "radiation_pressure_delta is -0.01",
+      "confidence": 0.783,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550238.4089005,
+      "evidence": 70,
+      "compressed": false,
+      "last_tick": 149
+    },
+    {
+      "statement": "asteroid_drift_delta is -0.07",
+      "confidence": 0.44699999999999995,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550026.2448714,
+      "evidence": 15,
+      "compressed": false,
+      "last_tick": 88
+    },
+    {
+      "statement": "pathogens_delta is -0.09",
+      "confidence": 0.4444444444444444,
+      "source_topic": "biology_state",
+      "timestamp": 1773514193.5426524,
+      "evidence": 8,
+      "compressed": false,
+      "last_tick": 360
+    },
+    {
+      "statement": "camera measures temperature",
+      "confidence": 0.5176666666666666,
+      "source_topic": "technology",
+      "timestamp": 1773549268.3800344,
+      "evidence": 20,
+      "compressed": false,
+      "last_tick": 92
+    },
+    {
+      "statement": "lithium_pack powers submarine_bot",
+      "confidence": 0.7137297297297297,
+      "source_topic": "technology",
+      "timestamp": 1773550520.4184349,
+      "evidence": 27,
+      "compressed": false,
+      "last_tick": 225
+    },
+    {
+      "statement": "energy_delta is 4.61",
+      "confidence": 0.16666666666666666,
+      "source_topic": "biology_state",
+      "timestamp": 1773511256.0250204,
+      "evidence": 2,
+      "compressed": false,
+      "last_tick": 636
+    },
+    {
+      "statement": "deer is 0",
+      "confidence": 0.9135501022494887,
+      "source_topic": "ecosystem",
+      "timestamp": 1773550334.2554917,
+      "evidence": 479,
+      "compressed": false,
+      "last_tick": 175
+    },
+    {
+      "statement": "grass grows_in meadow",
+      "confidence": 0.5779047619047619,
+      "source_topic": "ecosystem",
+      "timestamp": 1773549911.5156362,
+      "evidence": 32,
+      "compressed": false,
+      "last_tick": 57
+    },
+    {
+      "statement": "tiger hunts rabbit",
+      "confidence": 0.7057777777777778,
+      "source_topic": "ecosystem",
+      "timestamp": 1773550320.7913413,
+      "evidence": 35,
+      "compressed": false,
+      "last_tick": 169
+    },
+    {
+      "statement": "deer_delta is 0.08",
+      "confidence": 0.5473846153846154,
+      "source_topic": "ecosystem_state",
+      "timestamp": 1773550330.3249466,
+      "evidence": 16,
+      "compressed": false,
+      "last_tick": 173
+    },
+    {
+      "statement": "grass_delta is 2.28",
+      "confidence": 0.29068421052631577,
+      "source_topic": "ecosystem_state",
+      "timestamp": 1773549914.4326072,
+      "evidence": 9,
+      "compressed": false,
+      "last_tick": 58
+    },
+    {
+      "statement": "asteroid_drift_delta is 0.14",
+      "confidence": 0.16666666666666666,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773513063.1957655,
+      "evidence": 2,
+      "compressed": false,
+      "last_tick": 1202
+    },
+    {
+      "statement": "asteroids_delta is 6",
+      "confidence": 0.801921568627451,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550565.1508434,
+      "evidence": 41,
+      "compressed": false,
+      "last_tick": 239
+    },
+    {
+      "statement": "solar_energy_delta is -0.19",
+      "confidence": 0.22876923076923078,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550565.1508434,
+      "evidence": 3,
+      "compressed": false,
+      "last_tick": 239
+    },
+    {
+      "statement": "tiger is predator",
+      "confidence": 0.9640191846522782,
+      "source_topic": "expanded_concepts",
+      "timestamp": 1773550543.852405,
+      "evidence": 407,
+      "compressed": false,
+      "last_tick": 229
+    },
+    {
+      "statement": "wolf hunts zebra",
+      "confidence": 0.6045,
+      "source_topic": "ecosystem",
+      "timestamp": 1773550269.7443004,
+      "evidence": 22,
+      "compressed": false,
+      "last_tick": 158
+    },
+    {
+      "statement": "wolves is 4",
+      "confidence": 0.6643043478260869,
+      "source_topic": "ecosystem",
+      "timestamp": 1773549311.3093214,
+      "evidence": 82,
+      "compressed": false,
+      "last_tick": 14
+    },
+    {
+      "statement": "deer_delta is 0.07",
+      "confidence": 0.5238095238095238,
+      "source_topic": "ecosystem_state",
+      "timestamp": 1773547965.1669097,
+      "evidence": 11,
+      "compressed": false,
+      "last_tick": 406
+    },
+    {
+      "statement": "wolf is predator",
+      "confidence": 0.9639615384615384,
+      "source_topic": "expanded_concepts",
+      "timestamp": 1773550543.8534052,
+      "evidence": 406,
+      "compressed": false,
+      "last_tick": 229
+    },
+    {
+      "statement": "temperature_delta is -0.89",
+      "confidence": 0.3074444444444444,
+      "source_topic": "chemistry_state",
+      "timestamp": 1773550093.8345714,
+      "evidence": 8,
+      "compressed": false,
+      "last_tick": 104
+    },
+    {
+      "statement": "temperature_delta is -1.13",
+      "confidence": 0.4117647058823529,
+      "source_topic": "chemistry_state",
+      "timestamp": 1773547888.4350247,
+      "evidence": 7,
+      "compressed": false,
+      "last_tick": 389
+    },
+    {
+      "statement": "temperature_delta is -0.96",
+      "confidence": 0.2857142857142857,
+      "source_topic": "chemistry_state",
+      "timestamp": 1773508242.3525462,
+      "evidence": 4,
+      "compressed": false,
+      "last_tick": 548
+    },
+    {
+      "statement": "asteroid_drift_delta is 0.01",
+      "confidence": 0.7222222222222222,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550590.736274,
+      "evidence": 26,
+      "compressed": false,
+      "last_tick": 241
+    },
+    {
+      "statement": "deer eats bush",
+      "confidence": 0.40638461538461546,
+      "source_topic": "ecosystem",
+      "timestamp": 1773549840.8539488,
+      "evidence": 16,
+      "compressed": false,
+      "last_tick": 32
+    },
+    {
+      "statement": "lynx hunts deer",
+      "confidence": 0.6074193548387097,
+      "source_topic": "ecosystem",
+      "timestamp": 1773550326.076934,
+      "evidence": 21,
+      "compressed": false,
+      "last_tick": 171
+    },
+    {
+      "statement": "acceleration_delta is 0.08",
+      "confidence": 0.23076923076923078,
+      "source_topic": "physics_state",
+      "timestamp": 1773512455.3765788,
+      "evidence": 3,
+      "compressed": false,
+      "last_tick": 1046
+    },
+    {
+      "statement": "heat_delta is 3.99",
+      "confidence": 0.16666666666666666,
+      "source_topic": "physics_state",
+      "timestamp": 1773512417.3901837,
+      "evidence": 2,
+      "compressed": false,
+      "last_tick": 1026
+    },
+    {
+      "statement": "eco_robot is unknown",
+      "confidence": 0.6465,
+      "source_topic": "open_world_novelty",
+      "timestamp": 1773550420.937475,
+      "evidence": 22,
+      "compressed": false,
+      "last_tick": 200
+    },
+    {
+      "statement": "lidar measures audio",
+      "confidence": 0.5687777777777778,
+      "source_topic": "technology",
+      "timestamp": 1773549064.681017,
+      "evidence": 35,
+      "compressed": false,
+      "last_tick": 32
+    },
+    {
+      "statement": "neuro_sensor is unknown",
+      "confidence": 0.575969696969697,
+      "source_topic": "open_world_novelty",
+      "timestamp": 1773550128.3382304,
+      "evidence": 23,
+      "compressed": false,
+      "last_tick": 120
+    },
+    {
+      "statement": "temperature_delta is -1.07",
+      "confidence": 0.3333333333333333,
+      "source_topic": "chemistry_state",
+      "timestamp": 1773510702.4411154,
+      "evidence": 5,
+      "compressed": false,
+      "last_tick": 454
+    },
+    {
+      "statement": "acceleration_delta is 0.21",
+      "confidence": 0.11633333333333332,
+      "source_topic": "physics_state",
+      "timestamp": 1773549823.1830795,
+      "evidence": 5,
+      "compressed": false,
+      "last_tick": 24
+    },
+    {
+      "statement": "immune_response_delta is -0.13",
+      "confidence": 0.16666666666666666,
+      "source_topic": "biology_state",
+      "timestamp": 1773511562.4036999,
+      "evidence": 2,
+      "compressed": false,
+      "last_tick": 737
+    },
+    {
+      "statement": "force_delta is 3.31",
+      "confidence": 0.2857142857142857,
+      "source_topic": "physics_state",
+      "timestamp": 1773512945.1922243,
+      "evidence": 4,
+      "compressed": false,
+      "last_tick": 1176
+    },
+    {
+      "statement": "acceleration_delta is 0.65",
+      "confidence": 0.23076923076923078,
+      "source_topic": "physics_state",
+      "timestamp": 1773504022.5569282,
+      "evidence": 3,
+      "compressed": false,
+      "last_tick": 851
+    },
+    {
+      "statement": "nano_habitat is unknown",
+      "confidence": 0.4854193548387096,
+      "source_topic": "technology",
+      "timestamp": 1773549414.831115,
+      "evidence": 21,
+      "compressed": false,
+      "last_tick": 49
+    },
+    {
+      "statement": "acceleration_delta is -0.07",
+      "confidence": 0.1043333333333333,
+      "source_topic": "physics_state",
+      "timestamp": 1773549777.4165843,
+      "evidence": 5,
+      "compressed": false,
+      "last_tick": 12
+    },
+    {
+      "statement": "heat_delta is 8.99",
+      "confidence": 0.23076923076923078,
+      "source_topic": "physics_state",
+      "timestamp": 1773511394.1871505,
+      "evidence": 3,
+      "compressed": false,
+      "last_tick": 679
+    },
+    {
+      "statement": "lion hunts deer",
+      "confidence": 0.5122222222222222,
+      "source_topic": "ecosystem",
+      "timestamp": 1773549361.3337665,
+      "evidence": 26,
+      "compressed": false,
+      "last_tick": 31
+    },
+    {
+      "statement": "eco_plant is unknown",
+      "confidence": 0.48366666666666663,
+      "source_topic": "ecosystem",
+      "timestamp": 1773549914.3177698,
+      "evidence": 20,
+      "compressed": false,
+      "last_tick": 58
+    },
+    {
+      "statement": "fern grows_in meadow",
+      "confidence": 0.7212340425531916,
+      "source_topic": "ecosystem",
+      "timestamp": 1773550334.2564917,
+      "evidence": 37,
+      "compressed": false,
+      "last_tick": 175
+    },
+    {
+      "statement": "mouse eats fern",
+      "confidence": 0.43162962962962964,
+      "source_topic": "ecosystem",
+      "timestamp": 1773549884.6678364,
+      "evidence": 17,
+      "compressed": false,
+      "last_tick": 43
+    },
+    {
+      "statement": "wolf hunts mouse",
+      "confidence": 0.5218823529411765,
+      "source_topic": "ecosystem",
+      "timestamp": 1773549911.5179887,
+      "evidence": 24,
+      "compressed": false,
+      "last_tick": 57
+    },
+    {
+      "statement": "grass_delta is 2.24",
+      "confidence": 0.23076923076923078,
+      "source_topic": "ecosystem_state",
+      "timestamp": 1773512425.5466404,
+      "evidence": 3,
+      "compressed": false,
+      "last_tick": 1034
+    },
+    {
+      "statement": "collision_risk_delta is -0.15",
+      "confidence": 0.16666666666666666,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773512102.8864071,
+      "evidence": 2,
+      "compressed": false,
+      "last_tick": 925
+    },
+    {
+      "statement": "asteroids_delta is -5",
+      "confidence": 0.7603207547169811,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550398.8642387,
+      "evidence": 43,
+      "compressed": false,
+      "last_tick": 190
+    },
+    {
+      "statement": "asteroid_drift_delta is -0.04",
+      "confidence": 0.6754193548387096,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550565.1528423,
+      "evidence": 21,
+      "compressed": false,
+      "last_tick": 239
+    },
+    {
+      "statement": "cpu executes planner",
+      "confidence": 0.5389047619047619,
+      "source_topic": "technology",
+      "timestamp": 1773549317.8164942,
+      "evidence": 32,
+      "compressed": false,
+      "last_tick": 18
+    },
+    {
+      "statement": "lidar measures image",
+      "confidence": 0.6008823529411765,
+      "source_topic": "technology",
+      "timestamp": 1773550185.7860081,
+      "evidence": 24,
+      "compressed": false,
+      "last_tick": 136
+    },
+    {
+      "statement": "lithium_pack powers rover",
+      "confidence": 0.6217272727272727,
+      "source_topic": "technology",
+      "timestamp": 1773550030.249537,
+      "evidence": 34,
+      "compressed": false,
+      "last_tick": 90
+    },
+    {
+      "statement": "robot_activity_delta is 0.11",
+      "confidence": 0.47368421052631576,
+      "source_topic": "technology_state",
+      "timestamp": 1773512610.4827108,
+      "evidence": 9,
+      "compressed": false,
+      "last_tick": 1090
+    },
+    {
+      "statement": "sensor_coverage_delta is 0.3",
+      "confidence": 0.23076923076923078,
+      "source_topic": "technology_state",
+      "timestamp": 1773511251.3571556,
+      "evidence": 3,
+      "compressed": false,
+      "last_tick": 630
+    },
+    {
+      "statement": "deer_delta is 0.12",
+      "confidence": 0.4344545454545454,
+      "source_topic": "ecosystem_state",
+      "timestamp": 1773549690.5065396,
+      "evidence": 12,
+      "compressed": false,
+      "last_tick": 130
+    },
+    {
+      "statement": "acceleration_delta is -0.2",
+      "confidence": 0.05771428571428569,
+      "source_topic": "physics_state",
+      "timestamp": 1773548976.6339543,
+      "evidence": 4,
+      "compressed": false,
+      "last_tick": 13
+    },
+    {
+      "statement": "alien_plant is unknown",
+      "confidence": 0.7212222222222222,
+      "source_topic": "open_world_novelty",
+      "timestamp": 1773550567.939216,
+      "evidence": 26,
+      "compressed": false,
+      "last_tick": 240
+    },
+    {
+      "statement": "bio_plant is unknown",
+      "confidence": 0.5618571428571429,
+      "source_topic": "open_world_novelty",
+      "timestamp": 1773550276.8418386,
+      "evidence": 18,
+      "compressed": false,
+      "last_tick": 160
+    },
+    {
+      "statement": "solar_energy is 1006",
+      "confidence": 0.16666666666666666,
+      "source_topic": "astronomy",
+      "timestamp": 1773503131.2145472,
+      "evidence": 2,
+      "compressed": false,
+      "last_tick": 641
+    },
+    {
+      "statement": "asteroid_drift_delta is 0.12",
+      "confidence": 0.4117647058823529,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773514127.457355,
+      "evidence": 7,
+      "compressed": false,
+      "last_tick": 332
+    },
+    {
+      "statement": "reaction produces ammonium_acetate",
+      "confidence": 0.3333333333333333,
+      "source_topic": "chemistry",
+      "timestamp": 1773503112.4781694,
+      "evidence": 5,
+      "compressed": false,
+      "last_tick": 640
+    },
+    {
+      "statement": "asteroids_delta is 3",
+      "confidence": 0.6546923076923077,
+      "source_topic": "astronomy_state",
+      "timestamp": 1773550026.243867,
+      "evidence": 42,
+      "compressed": false,
+      "last_tick": 88
+    },
+    {
+      "statement": "lidar measures temperature",
+      "confidence": 0.5951724137931034,
+      "source_topic": "technology",
+      "timestamp": 1773550378.1587365,
+      "evidence": 19,
+      "compressed": false,
+      "last_tick": 181
+    },
+    {
+      "statement": "robot_activity_delta is -0.24",
+      "confidence": 0.2857142857142857,
+      "source_topic": "technology_state",
+      "timestamp": 1773511777.5804086,
+      "evidence": 4,
+      "compressed": false,
+      "last_tick": 812
+    },
+    {
+      "statement": "sensor_coverage_delta is -0.37",
+      "confidence": 0.16666666666666666,
+      "source_topic": "technology_state",
+      "timestamp": 1773504216.2370794,
+      "evidence": 2,
+      "compressed": false,
+      "last_tick": 907
+    },
+    {
+      "statement": "heat_delta is -0.89",
+      "confidence": 0.145,
+      "source_topic": "physics_state",
+      "timestamp": 1773549305.7761161,
+      "evidence": 6,
+      "compressed": false,
+      "last_tick": 11
+    },
+    {
+      "statement": "acceleration_delta is -0.09",
+      "confidence": 0.0937142857142857,
+      "source_topic": "physics_state",
+      "timestamp": 1773549124.8974383,
+      "evidence": 4,
+      "compressed": false,
+      "last_tick": 49
+    },
+    {
+      "statement": "acceleration_delta is 0.73",
+      "confidence": 0.3333333333333333,
+      "source_topic": "physics_state",
+      "timestamp": 1773513071.6455932,
+      "evidence": 5,
+      "compressed": false,
+      "last_tick": 1210
+    },
+    {
+      "statement": "lidar measures distance",
+      "confidence": 0.6888823529411765,
+      "source_topic": "technology",
+      "timestamp": 1773550518.2565372,
+      "evidence": 24,
+      "compressed": false,
+      "last_tick": 224
+    },
+    {
+      "statement": "camera measures audio",
+      "confidence": 0.5787297297297297,
+      "source_topic": "technology",
+      "timestamp": 1773549550.0607262,
+      "evidence": 27,
+      "compressed": false,
+      "last_tick": 90
+    },
+    {
+      "statement": "eco_habitat is unknown",
+      "confidence": 0.6551724137931034,
+      "source_topic": "open_world_novelty",
+      "timestamp": 1773548708.8569198,
+      "evidence": 19,
+      "compressed": false,
+      "last_tick": 660
+    },
+    {
+      "statement": "microcontroller executes filter",
+      "confidence": 0.7727272727272727,
+      "source_topic": "technology",
+      "timestamp": 1773548389.7820623,
+      "evidence": 34,
+      "compressed": false,
+      "last_tick": 546
+    },
+    {
+      "statement": "nano_robot is unknown",
+      "confidence": 0.5612222222222222,
+      "source_topic": "open_world_novelty",
+      "timestamp": 1773549982.6286383,
+      "evidence": 26,
+      "compressed": false,
+      "last_tick": 80
+    },
+    {
+      "statement": "robot_activity_delta is 0.14",
+      "confidence": 0.375,
+      "source_topic": "technology_state",
+      "timestamp": 1773550118.2644377,
+      "evidence": 10,
+      "compressed": false,
+      "last_tick": 116
+    },
+    {
+      "statement": "sensor_coverage_delta is 0.08",
+      "confidence": 0.23076923076923078,
+      "source_topic": "technology_state",
+      "timestamp": 1773548382.8207994,
+      "evidence": 3,
+      "compressed": false,
+      "last_tick": 540
+    },
+    {
+      "statement": "quantum_species is unknown",
+      "confidence": 0.6612222222222222,
+      "source_topic": "open_world_novelty",
+      "timestamp": 1773550350.4714236,
+      "evidence": 26,
+      "compressed": false,
+      "last_tick": 180
+    },
+    {
+      

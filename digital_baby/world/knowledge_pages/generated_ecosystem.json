@@ -1,0 +1,21 @@
+{
+  "topic": "ecosystem",
+  "facts": [
+    "deer is 0",
+    "deer_rate is 0",
+    "eco_species is unknown",
+    "grass is 312",
+    "grass_high is 0",
+    "neuro_ecosystem interacts_with eco_species",
+    "neuro_ecosystem is unknown",
+    "season_factor is 1",
+    "tiger hunts zebra",
+    "toxin_level is 0",
+    "tree grows_in wetland",
+    "wolves is 0",
+    "zebra eats tree"
+  ],
+  "generated": true,
+  "domain": "ecosystem",
+  "generation": 2
+}

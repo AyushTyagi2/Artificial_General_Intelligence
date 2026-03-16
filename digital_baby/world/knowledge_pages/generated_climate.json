@@ -1,0 +1,20 @@
+{
+  "topic": "climate",
+  "facts": [
+    "albedo is 0",
+    "co2_level is 423",
+    "co2_level_rate is 0",
+    "glacier_melt is 16",
+    "ocean interacts_with ocean",
+    "ocean_heat is 120",
+    "precipitation is 71",
+    "sea_level_rise is 5",
+    "temperature_anomaly is 0",
+    "tundra absorbs water_vapor",
+    "vegetation_cover is 72",
+    "water_vapor warms atmosphere"
+  ],
+  "generated": true,
+  "domain": "climate",
+  "generation": 1
+}

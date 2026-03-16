@@ -1,0 +1,29 @@
+{
+    "topic": "climate",
+    "domain": "climate",
+    "facts": [
+        "co2 traps heat",
+        "methane is greenhouse_gas",
+        "ocean absorbs co2",
+        "deforestation increases co2",
+        "solar_radiation heats atmosphere",
+        "albedo reflects radiation",
+        "cloud_cover reduces temperature",
+        "humidity affects precipitation",
+        "wind_speed transports heat",
+        "glacier reflects solar_radiation",
+        "permafrost stores carbon",
+        "ocean_temperature drives evaporation",
+        "evaporation forms clouds",
+        "precipitation replenishes groundwater",
+        "groundwater_level affects vegetation",
+        "vegetation reduces temperature",
+        "co2_level increases temperature",
+        "temperature_rise melts glacier",
+        "glacier_melt raises sea_level",
+        "sea_level rise causes flooding",
+        "flooding reduces vegetation",
+        "deforestation increases albedo",
+        "wildfire_frequency increases co2"
+    ]
+}

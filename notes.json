@@ -1,0 +1,4325 @@
+[
+  {
+    "id": 1,
+    "title": "Confirmed: 0.02 is unknown",
+    "content": "Rule: 0.02 is unknown\nConfidence: 0.732\nSupporting evidence: 9554\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:16Z",
+    "updated_at": "2026-03-15T19:22:16Z"
+  },
+  {
+    "id": 2,
+    "title": "Confirmed: unknown food_chain unknown",
+    "content": "Rule: unknown food_chain unknown\nConfidence: 0.996\nSupporting evidence: 125\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 3,
+    "title": "Confirmed: unknown part_of unknown",
+    "content": "Rule: unknown part_of unknown\nConfidence: 0.990\nSupporting evidence: 47\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 4,
+    "title": "Confirmed: unknown interacts_with unknown",
+    "content": "Rule: unknown interacts_with unknown\nConfidence: 0.989\nSupporting evidence: 44\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 5,
+    "title": "Confirmed: unknown located_in unknown",
+    "content": "Rule: unknown located_in unknown\nConfidence: 0.987\nSupporting evidence: 38\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 6,
+    "title": "Confirmed: unknown depends_on unknown",
+    "content": "Rule: unknown depends_on unknown\nConfidence: 0.986\nSupporting evidence: 36\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 7,
+    "title": "Confirmed: animal eats plant",
+    "content": "Rule: animal eats plant\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 8,
+    "title": "Confirmed: predator hunts animal",
+    "content": "Rule: predator hunts animal\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 9,
+    "title": "Confirmed: unknown forms unknown",
+    "content": "Rule: unknown forms unknown\nConfidence: 0.978\nSupporting evidence: 22\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 10,
+    "title": "Confirmed: unknown transforms unknown",
+    "content": "Rule: unknown transforms unknown\nConfidence: 0.976\nSupporting evidence: 20\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 11,
+    "title": "Confirmed: unknown measures unknown",
+    "content": "Rule: unknown measures unknown\nConfidence: 0.804\nSupporting evidence: 18\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 12,
+    "title": "Confirmed: unknown executes unknown",
+    "content": "Rule: unknown executes unknown\nConfidence: 0.971\nSupporting evidence: 16\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 13,
+    "title": "Confirmed: plant grows_in unknown",
+    "content": "Rule: plant grows_in unknown\nConfidence: 0.969\nSupporting evidence: 15\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 14,
+    "title": "Confirmed: unknown powers unknown",
+    "content": "Rule: unknown powers unknown\nConfidence: 0.962\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 15,
+    "title": "Confirmed: unknown enables unknown",
+    "content": "Rule: unknown enables unknown\nConfidence: 0.735\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 16,
+    "title": "Confirmed: planet orbits star",
+    "content": "Rule: planet orbits star\nConfidence: 0.812\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 17,
+    "title": "Confirmed: molecule contains atom",
+    "content": "Rule: molecule contains atom\nConfidence: 0.812\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 18,
+    "title": "Confirmed: reactant reacts_with reactant",
+    "content": "Rule: reactant reacts_with reactant\nConfidence: 0.917\nSupporting evidence: 5\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 19,
+    "title": "Confirmed: unknown chemical_reaction unknown",
+    "content": "Rule: unknown chemical_reaction unknown\nConfidence: 0.917\nSupporting evidence: 5\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 20,
+    "title": "Confirmed: if deer changes then grass may change",
+    "content": "Rule: if deer changes then grass may change\nConfidence: 0.898\nSupporting evidence: 6835\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 21,
+    "title": "Confirmed: if wolf changes then deer may change",
+    "content": "Rule: if wolf changes then deer may change\nConfidence: 0.703\nSupporting evidence: 513\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 22,
+    "title": "Confirmed: if wolves increases then grass will increase",
+    "content": "Rule: if wolves increases then grass will increase\nConfidence: 0.873\nSupporting evidence: 4461\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 23,
+    "title": "Confirmed: if grass changes then wolves may change",
+    "content": "Rule: if grass changes then wolves may change\nConfidence: 0.787\nSupporting evidence: 1733\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 24,
+    "title": "Confirmed: if gdp_growth increases then investment will increase",
+    "content": "Rule: if gdp_growth increases then investment will increase\nConfidence: 0.794\nSupporting evidence: 208\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 25,
+    "title": "Confirmed: if debt_level changes then gdp_growth may change",
+    "content": "Rule: if debt_level changes then gdp_growth may change\nConfidence: 0.990\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 26,
+    "title": "Confirmed: if productivity increases then investment will increase",
+    "content": "Rule: if productivity increases then investment will increase\nConfidence: 0.727\nSupporting evidence: 16\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 27,
+    "title": "Confirmed: if debt_level changes then investment may change",
+    "content": "Rule: if debt_level changes then investment may change\nConfidence: 0.787\nSupporting evidence: 14662\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 28,
+    "title": "Causal law: deer mixed grass",
+    "content": "Cause: deer\nEffect: grass\nDirection: mixed\nConfidence: 0.898\nObservations: 6835\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 29,
+    "title": "Causal law: wolves positive grass",
+    "content": "Cause: wolves\nEffect: grass\nDirection: positive\nConfidence: 0.873\nObservations: 4461\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 30,
+    "title": "Causal law: grass mixed wolves",
+    "content": "Cause: grass\nEffect: wolves\nDirection: mixed\nConfidence: 0.787\nObservations: 1733\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 31,
+    "title": "Causal law: gdp_growth positive investment",
+    "content": "Cause: gdp_growth\nEffect: investment\nDirection: positive\nConfidence: 0.794\nObservations: 208\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 32,
+    "title": "Causal law: debt_level mixed gdp_growth",
+    "content": "Cause: debt_level\nEffect: gdp_growth\nDirection: mixed\nConfidence: 1.000\nObservations: 8\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-15T19:22:17Z",
+    "updated_at": "2026-03-15T19:22:17Z"
+  },
+  {
+    "id": 33,
+    "title": "Confirmed: unknown affects unknown",
+    "content": "Rule: unknown affects unknown\nConfidence: 0.999\nSupporting evidence: 6847\nDiscovered at tick: 51",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-15T19:30:54Z",
+    "updated_at": "2026-03-15T19:30:54Z"
+  },
+  {
+    "id": 34,
+    "title": "Confirmed: unknown food_chain unknown",
+    "content": "Rule: unknown food_chain unknown\nConfidence: 0.996\nSupporting evidence: 125\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 35,
+    "title": "Confirmed: unknown part_of unknown",
+    "content": "Rule: unknown part_of unknown\nConfidence: 0.989\nSupporting evidence: 44\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 36,
+    "title": "Confirmed: unknown interacts_with unknown",
+    "content": "Rule: unknown interacts_with unknown\nConfidence: 0.988\nSupporting evidence: 42\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 37,
+    "title": "Confirmed: unknown located_in unknown",
+    "content": "Rule: unknown located_in unknown\nConfidence: 0.988\nSupporting evidence: 39\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 38,
+    "title": "Confirmed: unknown depends_on unknown",
+    "content": "Rule: unknown depends_on unknown\nConfidence: 0.985\nSupporting evidence: 32\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 39,
+    "title": "Confirmed: animal eats plant",
+    "content": "Rule: animal eats plant\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 40,
+    "title": "Confirmed: predator hunts animal",
+    "content": "Rule: predator hunts animal\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 41,
+    "title": "Confirmed: unknown forms unknown",
+    "content": "Rule: unknown forms unknown\nConfidence: 0.978\nSupporting evidence: 22\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 42,
+    "title": "Confirmed: unknown transforms unknown",
+    "content": "Rule: unknown transforms unknown\nConfidence: 0.976\nSupporting evidence: 20\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 43,
+    "title": "Confirmed: unknown measures unknown",
+    "content": "Rule: unknown measures unknown\nConfidence: 0.804\nSupporting evidence: 18\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 44,
+    "title": "Confirmed: unknown executes unknown",
+    "content": "Rule: unknown executes unknown\nConfidence: 0.971\nSupporting evidence: 16\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 45,
+    "title": "Confirmed: plant grows_in unknown",
+    "content": "Rule: plant grows_in unknown\nConfidence: 0.969\nSupporting evidence: 15\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 46,
+    "title": "Confirmed: unknown powers unknown",
+    "content": "Rule: unknown powers unknown\nConfidence: 0.962\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 47,
+    "title": "Confirmed: unknown enables unknown",
+    "content": "Rule: unknown enables unknown\nConfidence: 0.735\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 48,
+    "title": "Confirmed: planet orbits star",
+    "content": "Rule: planet orbits star\nConfidence: 0.812\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 49,
+    "title": "Confirmed: molecule contains atom",
+    "content": "Rule: molecule contains atom\nConfidence: 0.812\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 50,
+    "title": "Confirmed: reactant reacts_with reactant",
+    "content": "Rule: reactant reacts_with reactant\nConfidence: 0.917\nSupporting evidence: 5\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 51,
+    "title": "Confirmed: unknown chemical_reaction unknown",
+    "content": "Rule: unknown chemical_reaction unknown\nConfidence: 0.917\nSupporting evidence: 5\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 52,
+    "title": "Confirmed: if deer changes then grass may change",
+    "content": "Rule: if deer changes then grass may change\nConfidence: 0.899\nSupporting evidence: 6898\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 53,
+    "title": "Confirmed: if wolves increases then grass will increase",
+    "content": "Rule: if wolves increases then grass will increase\nConfidence: 0.875\nSupporting evidence: 4527\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 54,
+    "title": "Confirmed: if grass changes then wolves may change",
+    "content": "Rule: if grass changes then wolves may change\nConfidence: 0.785\nSupporting evidence: 1752\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 55,
+    "title": "Confirmed: if gdp_growth increases then investment will increase",
+    "content": "Rule: if gdp_growth increases then investment will increase\nConfidence: 0.794\nSupporting evidence: 208\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 56,
+    "title": "Confirmed: if debt_level changes then gdp_growth may change",
+    "content": "Rule: if debt_level changes then gdp_growth may change\nConfidence: 0.990\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 57,
+    "title": "Confirmed: if productivity increases then investment will increase",
+    "content": "Rule: if productivity increases then investment will increase\nConfidence: 0.727\nSupporting evidence: 16\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 58,
+    "title": "Confirmed: if debt_level changes then investment may change",
+    "content": "Rule: if debt_level changes then investment may change\nConfidence: 0.787\nSupporting evidence: 15454\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 59,
+    "title": "Causal law: deer mixed grass",
+    "content": "Cause: deer\nEffect: grass\nDirection: mixed\nConfidence: 0.899\nObservations: 6898\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 60,
+    "title": "Causal law: wolves positive grass",
+    "content": "Cause: wolves\nEffect: grass\nDirection: positive\nConfidence: 0.875\nObservations: 4527\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 61,
+    "title": "Causal law: grass mixed wolves",
+    "content": "Cause: grass\nEffect: wolves\nDirection: mixed\nConfidence: 0.785\nObservations: 1752\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 62,
+    "title": "Causal law: gdp_growth positive investment",
+    "content": "Cause: gdp_growth\nEffect: investment\nDirection: positive\nConfidence: 0.794\nObservations: 208\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 63,
+    "title": "Causal law: debt_level mixed gdp_growth",
+    "content": "Cause: debt_level\nEffect: gdp_growth\nDirection: mixed\nConfidence: 1.000\nObservations: 8\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T05:20:53Z",
+    "updated_at": "2026-03-16T05:20:53Z"
+  },
+  {
+    "id": 64,
+    "title": "Confirmed: unknown affects unknown",
+    "content": "Rule: unknown affects unknown\nConfidence: 0.997\nSupporting evidence: 6920\nDiscovered at tick: 51",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T05:24:21Z",
+    "updated_at": "2026-03-16T05:24:21Z"
+  },
+  {
+    "id": 65,
+    "title": "Confirmed: unknown food_chain unknown",
+    "content": "Rule: unknown food_chain unknown\nConfidence: 0.996\nSupporting evidence: 125\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:17Z",
+    "updated_at": "2026-03-16T07:29:17Z"
+  },
+  {
+    "id": 66,
+    "title": "Confirmed: unknown interacts_with unknown",
+    "content": "Rule: unknown interacts_with unknown\nConfidence: 0.989\nSupporting evidence: 44\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:17Z",
+    "updated_at": "2026-03-16T07:29:17Z"
+  },
+  {
+    "id": 67,
+    "title": "Confirmed: unknown part_of unknown",
+    "content": "Rule: unknown part_of unknown\nConfidence: 0.988\nSupporting evidence: 42\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:17Z",
+    "updated_at": "2026-03-16T07:29:17Z"
+  },
+  {
+    "id": 68,
+    "title": "Confirmed: unknown located_in unknown",
+    "content": "Rule: unknown located_in unknown\nConfidence: 0.987\nSupporting evidence: 37\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:17Z",
+    "updated_at": "2026-03-16T07:29:17Z"
+  },
+  {
+    "id": 69,
+    "title": "Confirmed: unknown depends_on unknown",
+    "content": "Rule: unknown depends_on unknown\nConfidence: 0.986\nSupporting evidence: 35\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:17Z",
+    "updated_at": "2026-03-16T07:29:17Z"
+  },
+  {
+    "id": 70,
+    "title": "Confirmed: animal eats plant",
+    "content": "Rule: animal eats plant\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:17Z",
+    "updated_at": "2026-03-16T07:29:17Z"
+  },
+  {
+    "id": 71,
+    "title": "Confirmed: predator hunts animal",
+    "content": "Rule: predator hunts animal\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:17Z",
+    "updated_at": "2026-03-16T07:29:17Z"
+  },
+  {
+    "id": 72,
+    "title": "Confirmed: unknown forms unknown",
+    "content": "Rule: unknown forms unknown\nConfidence: 0.978\nSupporting evidence: 22\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:17Z",
+    "updated_at": "2026-03-16T07:29:17Z"
+  },
+  {
+    "id": 73,
+    "title": "Confirmed: unknown transforms unknown",
+    "content": "Rule: unknown transforms unknown\nConfidence: 0.976\nSupporting evidence: 20\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:17Z",
+    "updated_at": "2026-03-16T07:29:17Z"
+  },
+  {
+    "id": 74,
+    "title": "Confirmed: unknown measures unknown",
+    "content": "Rule: unknown measures unknown\nConfidence: 0.804\nSupporting evidence: 18\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:17Z",
+    "updated_at": "2026-03-16T07:29:17Z"
+  },
+  {
+    "id": 75,
+    "title": "Confirmed: unknown executes unknown",
+    "content": "Rule: unknown executes unknown\nConfidence: 0.971\nSupporting evidence: 16\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:17Z",
+    "updated_at": "2026-03-16T07:29:17Z"
+  },
+  {
+    "id": 76,
+    "title": "Confirmed: plant grows_in unknown",
+    "content": "Rule: plant grows_in unknown\nConfidence: 0.969\nSupporting evidence: 15\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:17Z",
+    "updated_at": "2026-03-16T07:29:17Z"
+  },
+  {
+    "id": 77,
+    "title": "Confirmed: unknown powers unknown",
+    "content": "Rule: unknown powers unknown\nConfidence: 0.962\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:17Z",
+    "updated_at": "2026-03-16T07:29:17Z"
+  },
+  {
+    "id": 78,
+    "title": "Confirmed: unknown enables unknown",
+    "content": "Rule: unknown enables unknown\nConfidence: 0.735\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:17Z",
+    "updated_at": "2026-03-16T07:29:17Z"
+  },
+  {
+    "id": 79,
+    "title": "Confirmed: molecule contains atom",
+    "content": "Rule: molecule contains atom\nConfidence: 0.833\nSupporting evidence: 7\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:17Z",
+    "updated_at": "2026-03-16T07:29:17Z"
+  },
+  {
+    "id": 80,
+    "title": "Confirmed: planet orbits star",
+    "content": "Rule: planet orbits star\nConfidence: 0.812\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:18Z",
+    "updated_at": "2026-03-16T07:29:18Z"
+  },
+  {
+    "id": 81,
+    "title": "Confirmed: reactant reacts_with reactant",
+    "content": "Rule: reactant reacts_with reactant\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:18Z",
+    "updated_at": "2026-03-16T07:29:18Z"
+  },
+  {
+    "id": 82,
+    "title": "Confirmed: unknown chemical_reaction unknown",
+    "content": "Rule: unknown chemical_reaction unknown\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:18Z",
+    "updated_at": "2026-03-16T07:29:18Z"
+  },
+  {
+    "id": 83,
+    "title": "Confirmed: if deer changes then grass may change",
+    "content": "Rule: if deer changes then grass may change\nConfidence: 0.896\nSupporting evidence: 7487\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:18Z",
+    "updated_at": "2026-03-16T07:29:18Z"
+  },
+  {
+    "id": 84,
+    "title": "Confirmed: if wolves increases then grass will increase",
+    "content": "Rule: if wolves increases then grass will increase\nConfidence: 0.872\nSupporting evidence: 4996\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:18Z",
+    "updated_at": "2026-03-16T07:29:18Z"
+  },
+  {
+    "id": 85,
+    "title": "Confirmed: if grass changes then wolves may change",
+    "content": "Rule: if grass changes then wolves may change\nConfidence: 0.791\nSupporting evidence: 1819\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:18Z",
+    "updated_at": "2026-03-16T07:29:18Z"
+  },
+  {
+    "id": 86,
+    "title": "Confirmed: if gdp_growth increases then investment will increase",
+    "content": "Rule: if gdp_growth increases then investment will increase\nConfidence: 0.819\nSupporting evidence: 245\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:18Z",
+    "updated_at": "2026-03-16T07:29:18Z"
+  },
+  {
+    "id": 87,
+    "title": "Confirmed: if debt_level changes then gdp_growth may change",
+    "content": "Rule: if debt_level changes then gdp_growth may change\nConfidence: 0.769\nSupporting evidence: 10\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:18Z",
+    "updated_at": "2026-03-16T07:29:18Z"
+  },
+  {
+    "id": 88,
+    "title": "Confirmed: if productivity increases then investment will increase",
+    "content": "Rule: if productivity increases then investment will increase\nConfidence: 0.727\nSupporting evidence: 16\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:29:18Z",
+    "updated_at": "2026-03-16T07:29:18Z"
+  },
+  {
+    "id": 89,
+    "title": "Causal law: deer mixed grass",
+    "content": "Cause: deer\nEffect: grass\nDirection: mixed\nConfidence: 0.896\nObservations: 7487\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T07:29:18Z",
+    "updated_at": "2026-03-16T07:29:18Z"
+  },
+  {
+    "id": 90,
+    "title": "Causal law: wolves positive grass",
+    "content": "Cause: wolves\nEffect: grass\nDirection: positive\nConfidence: 0.872\nObservations: 4996\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T07:29:18Z",
+    "updated_at": "2026-03-16T07:29:18Z"
+  },
+  {
+    "id": 91,
+    "title": "Causal law: grass mixed wolves",
+    "content": "Cause: grass\nEffect: wolves\nDirection: mixed\nConfidence: 0.791\nObservations: 1819\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T07:29:18Z",
+    "updated_at": "2026-03-16T07:29:18Z"
+  },
+  {
+    "id": 92,
+    "title": "Causal law: gdp_growth positive investment",
+    "content": "Cause: gdp_growth\nEffect: investment\nDirection: positive\nConfidence: 0.819\nObservations: 245\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T07:29:18Z",
+    "updated_at": "2026-03-16T07:29:18Z"
+  },
+  {
+    "id": 93,
+    "title": "Causal law: debt_level mixed gdp_growth",
+    "content": "Cause: debt_level\nEffect: gdp_growth\nDirection: mixed\nConfidence: 0.769\nObservations: 10\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T07:29:18Z",
+    "updated_at": "2026-03-16T07:29:18Z"
+  },
+  {
+    "id": 94,
+    "title": "Confirmed: unknown affects unknown",
+    "content": "Rule: unknown affects unknown\nConfidence: 0.991\nSupporting evidence: 7496\nDiscovered at tick: 51",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T07:33:10Z",
+    "updated_at": "2026-03-16T07:33:10Z"
+  },
+  {
+    "id": 95,
+    "title": "Confirmed: if wolf changes then deer may change",
+    "content": "Rule: if wolf changes then deer may change\nConfidence: 0.700\nSupporting evidence: 631\nDiscovered at tick: 751",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T08:38:14Z",
+    "updated_at": "2026-03-16T08:38:14Z"
+  },
+  {
+    "id": 96,
+    "title": "Confirmed: unknown food_chain unknown",
+    "content": "Rule: unknown food_chain unknown\nConfidence: 0.996\nSupporting evidence: 125\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:17Z",
+    "updated_at": "2026-03-16T09:27:17Z"
+  },
+  {
+    "id": 97,
+    "title": "Confirmed: unknown interacts_with unknown",
+    "content": "Rule: unknown interacts_with unknown\nConfidence: 0.991\nSupporting evidence: 55\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:17Z",
+    "updated_at": "2026-03-16T09:27:17Z"
+  },
+  {
+    "id": 98,
+    "title": "Confirmed: unknown part_of unknown",
+    "content": "Rule: unknown part_of unknown\nConfidence: 0.991\nSupporting evidence: 54\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:17Z",
+    "updated_at": "2026-03-16T09:27:17Z"
+  },
+  {
+    "id": 99,
+    "title": "Confirmed: unknown located_in unknown",
+    "content": "Rule: unknown located_in unknown\nConfidence: 0.991\nSupporting evidence: 52\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:17Z",
+    "updated_at": "2026-03-16T09:27:17Z"
+  },
+  {
+    "id": 100,
+    "title": "Confirmed: unknown depends_on unknown",
+    "content": "Rule: unknown depends_on unknown\nConfidence: 0.988\nSupporting evidence: 42\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:17Z",
+    "updated_at": "2026-03-16T09:27:17Z"
+  },
+  {
+    "id": 101,
+    "title": "Confirmed: animal eats plant",
+    "content": "Rule: animal eats plant\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:17Z",
+    "updated_at": "2026-03-16T09:27:17Z"
+  },
+  {
+    "id": 102,
+    "title": "Confirmed: predator hunts animal",
+    "content": "Rule: predator hunts animal\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:17Z",
+    "updated_at": "2026-03-16T09:27:17Z"
+  },
+  {
+    "id": 103,
+    "title": "Confirmed: unknown forms unknown",
+    "content": "Rule: unknown forms unknown\nConfidence: 0.978\nSupporting evidence: 22\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:17Z",
+    "updated_at": "2026-03-16T09:27:17Z"
+  },
+  {
+    "id": 104,
+    "title": "Confirmed: unknown transforms unknown",
+    "content": "Rule: unknown transforms unknown\nConfidence: 0.976\nSupporting evidence: 20\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:17Z",
+    "updated_at": "2026-03-16T09:27:17Z"
+  },
+  {
+    "id": 105,
+    "title": "Confirmed: unknown measures unknown",
+    "content": "Rule: unknown measures unknown\nConfidence: 0.804\nSupporting evidence: 18\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:17Z",
+    "updated_at": "2026-03-16T09:27:17Z"
+  },
+  {
+    "id": 106,
+    "title": "Confirmed: unknown executes unknown",
+    "content": "Rule: unknown executes unknown\nConfidence: 0.971\nSupporting evidence: 16\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:17Z",
+    "updated_at": "2026-03-16T09:27:17Z"
+  },
+  {
+    "id": 107,
+    "title": "Confirmed: plant grows_in unknown",
+    "content": "Rule: plant grows_in unknown\nConfidence: 0.969\nSupporting evidence: 15\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:17Z",
+    "updated_at": "2026-03-16T09:27:17Z"
+  },
+  {
+    "id": 108,
+    "title": "Confirmed: unknown powers unknown",
+    "content": "Rule: unknown powers unknown\nConfidence: 0.962\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:17Z",
+    "updated_at": "2026-03-16T09:27:17Z"
+  },
+  {
+    "id": 109,
+    "title": "Confirmed: unknown enables unknown",
+    "content": "Rule: unknown enables unknown\nConfidence: 0.735\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:17Z",
+    "updated_at": "2026-03-16T09:27:17Z"
+  },
+  {
+    "id": 110,
+    "title": "Confirmed: molecule contains atom",
+    "content": "Rule: molecule contains atom\nConfidence: 0.833\nSupporting evidence: 7\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:17Z",
+    "updated_at": "2026-03-16T09:27:17Z"
+  },
+  {
+    "id": 111,
+    "title": "Confirmed: planet orbits star",
+    "content": "Rule: planet orbits star\nConfidence: 0.812\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:17Z",
+    "updated_at": "2026-03-16T09:27:17Z"
+  },
+  {
+    "id": 112,
+    "title": "Confirmed: reactant reacts_with reactant",
+    "content": "Rule: reactant reacts_with reactant\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:17Z",
+    "updated_at": "2026-03-16T09:27:17Z"
+  },
+  {
+    "id": 113,
+    "title": "Confirmed: unknown chemical_reaction unknown",
+    "content": "Rule: unknown chemical_reaction unknown\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:18Z",
+    "updated_at": "2026-03-16T09:27:18Z"
+  },
+  {
+    "id": 114,
+    "title": "Confirmed: if deer changes then grass may change",
+    "content": "Rule: if deer changes then grass may change\nConfidence: 0.888\nSupporting evidence: 8720\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:18Z",
+    "updated_at": "2026-03-16T09:27:18Z"
+  },
+  {
+    "id": 115,
+    "title": "Confirmed: if wolf changes then deer may change",
+    "content": "Rule: if wolf changes then deer may change\nConfidence: 0.724\nSupporting evidence: 710\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:18Z",
+    "updated_at": "2026-03-16T09:27:18Z"
+  },
+  {
+    "id": 116,
+    "title": "Confirmed: if wolves increases then grass will increase",
+    "content": "Rule: if wolves increases then grass will increase\nConfidence: 0.867\nSupporting evidence: 6113\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:18Z",
+    "updated_at": "2026-03-16T09:27:18Z"
+  },
+  {
+    "id": 117,
+    "title": "Confirmed: if grass changes then wolves may change",
+    "content": "Rule: if grass changes then wolves may change\nConfidence: 0.779\nSupporting evidence: 1907\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:18Z",
+    "updated_at": "2026-03-16T09:27:18Z"
+  },
+  {
+    "id": 118,
+    "title": "Confirmed: if gdp_growth increases then investment will increase",
+    "content": "Rule: if gdp_growth increases then investment will increase\nConfidence: 0.782\nSupporting evidence: 757\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:27:18Z",
+    "updated_at": "2026-03-16T09:27:18Z"
+  },
+  {
+    "id": 119,
+    "title": "Causal law: deer mixed grass",
+    "content": "Cause: deer\nEffect: grass\nDirection: mixed\nConfidence: 0.888\nObservations: 8720\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T09:27:18Z",
+    "updated_at": "2026-03-16T09:27:18Z"
+  },
+  {
+    "id": 120,
+    "title": "Causal law: wolves positive grass",
+    "content": "Cause: wolves\nEffect: grass\nDirection: positive\nConfidence: 0.867\nObservations: 6113\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T09:27:18Z",
+    "updated_at": "2026-03-16T09:27:18Z"
+  },
+  {
+    "id": 121,
+    "title": "Causal law: grass mixed wolves",
+    "content": "Cause: grass\nEffect: wolves\nDirection: mixed\nConfidence: 0.779\nObservations: 1907\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T09:27:18Z",
+    "updated_at": "2026-03-16T09:27:18Z"
+  },
+  {
+    "id": 122,
+    "title": "Causal law: gdp_growth positive investment",
+    "content": "Cause: gdp_growth\nEffect: investment\nDirection: positive\nConfidence: 0.782\nObservations: 757\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T09:27:18Z",
+    "updated_at": "2026-03-16T09:27:18Z"
+  },
+  {
+    "id": 123,
+    "title": "Confirmed: unknown affects unknown",
+    "content": "Rule: unknown affects unknown\nConfidence: 0.990\nSupporting evidence: 8732\nDiscovered at tick: 51",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:30:20Z",
+    "updated_at": "2026-03-16T09:30:20Z"
+  },
+  {
+    "id": 124,
+    "title": "Confirmed: star emits unknown",
+    "content": "Rule: star emits unknown\nConfidence: 0.917\nSupporting evidence: 5\nDiscovered at tick: 101",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:34:06Z",
+    "updated_at": "2026-03-16T09:34:06Z"
+  },
+  {
+    "id": 125,
+    "title": "Confirmed: unknown food_chain unknown",
+    "content": "Rule: unknown food_chain unknown\nConfidence: 0.996\nSupporting evidence: 125\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:36Z",
+    "updated_at": "2026-03-16T09:39:36Z"
+  },
+  {
+    "id": 126,
+    "title": "Confirmed: unknown interacts_with unknown",
+    "content": "Rule: unknown interacts_with unknown\nConfidence: 0.991\nSupporting evidence: 56\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 127,
+    "title": "Confirmed: unknown part_of unknown",
+    "content": "Rule: unknown part_of unknown\nConfidence: 0.991\nSupporting evidence: 55\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 128,
+    "title": "Confirmed: unknown located_in unknown",
+    "content": "Rule: unknown located_in unknown\nConfidence: 0.991\nSupporting evidence: 54\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 129,
+    "title": "Confirmed: unknown depends_on unknown",
+    "content": "Rule: unknown depends_on unknown\nConfidence: 0.989\nSupporting evidence: 45\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 130,
+    "title": "Confirmed: animal eats plant",
+    "content": "Rule: animal eats plant\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 131,
+    "title": "Confirmed: predator hunts animal",
+    "content": "Rule: predator hunts animal\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 132,
+    "title": "Confirmed: unknown forms unknown",
+    "content": "Rule: unknown forms unknown\nConfidence: 0.978\nSupporting evidence: 22\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 133,
+    "title": "Confirmed: unknown transforms unknown",
+    "content": "Rule: unknown transforms unknown\nConfidence: 0.976\nSupporting evidence: 20\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 134,
+    "title": "Confirmed: unknown measures unknown",
+    "content": "Rule: unknown measures unknown\nConfidence: 0.804\nSupporting evidence: 18\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 135,
+    "title": "Confirmed: unknown executes unknown",
+    "content": "Rule: unknown executes unknown\nConfidence: 0.971\nSupporting evidence: 16\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 136,
+    "title": "Confirmed: plant grows_in unknown",
+    "content": "Rule: plant grows_in unknown\nConfidence: 0.969\nSupporting evidence: 15\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 137,
+    "title": "Confirmed: unknown powers unknown",
+    "content": "Rule: unknown powers unknown\nConfidence: 0.962\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 138,
+    "title": "Confirmed: unknown enables unknown",
+    "content": "Rule: unknown enables unknown\nConfidence: 0.735\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 139,
+    "title": "Confirmed: planet orbits star",
+    "content": "Rule: planet orbits star\nConfidence: 0.773\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 140,
+    "title": "Confirmed: molecule contains atom",
+    "content": "Rule: molecule contains atom\nConfidence: 0.833\nSupporting evidence: 7\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 141,
+    "title": "Confirmed: reactant reacts_with reactant",
+    "content": "Rule: reactant reacts_with reactant\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 142,
+    "title": "Confirmed: unknown chemical_reaction unknown",
+    "content": "Rule: unknown chemical_reaction unknown\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 143,
+    "title": "Confirmed: star emits unknown",
+    "content": "Rule: star emits unknown\nConfidence: 0.917\nSupporting evidence: 5\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 144,
+    "title": "Confirmed: if deer changes then grass may change",
+    "content": "Rule: if deer changes then grass may change\nConfidence: 0.890\nSupporting evidence: 8866\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 145,
+    "title": "Confirmed: if wolf changes then deer may change",
+    "content": "Rule: if wolf changes then deer may change\nConfidence: 0.719\nSupporting evidence: 722\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 146,
+    "title": "Confirmed: if wolves increases then grass will increase",
+    "content": "Rule: if wolves increases then grass will increase\nConfidence: 0.866\nSupporting evidence: 6184\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 147,
+    "title": "Confirmed: if grass changes then wolves may change",
+    "content": "Rule: if grass changes then wolves may change\nConfidence: 0.784\nSupporting evidence: 1958\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 148,
+    "title": "Confirmed: if gdp_growth increases then investment will increase",
+    "content": "Rule: if gdp_growth increases then investment will increase\nConfidence: 0.782\nSupporting evidence: 757\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 149,
+    "title": "Causal law: deer mixed grass",
+    "content": "Cause: deer\nEffect: grass\nDirection: mixed\nConfidence: 0.890\nObservations: 8866\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 150,
+    "title": "Causal law: wolves positive grass",
+    "content": "Cause: wolves\nEffect: grass\nDirection: positive\nConfidence: 0.866\nObservations: 6184\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 151,
+    "title": "Causal law: grass mixed wolves",
+    "content": "Cause: grass\nEffect: wolves\nDirection: mixed\nConfidence: 0.784\nObservations: 1958\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 152,
+    "title": "Causal law: gdp_growth positive investment",
+    "content": "Cause: gdp_growth\nEffect: investment\nDirection: positive\nConfidence: 0.782\nObservations: 757\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T09:39:37Z",
+    "updated_at": "2026-03-16T09:39:37Z"
+  },
+  {
+    "id": 153,
+    "title": "Confirmed: unknown affects unknown",
+    "content": "Rule: unknown affects unknown\nConfidence: 0.989\nSupporting evidence: 8887\nDiscovered at tick: 51",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T09:42:37Z",
+    "updated_at": "2026-03-16T09:42:37Z"
+  },
+  {
+    "id": 154,
+    "title": "Confirmed: unknown food_chain unknown",
+    "content": "Rule: unknown food_chain unknown\nConfidence: 0.996\nSupporting evidence: 125\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 155,
+    "title": "Confirmed: unknown interacts_with unknown",
+    "content": "Rule: unknown interacts_with unknown\nConfidence: 0.992\nSupporting evidence: 62\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 156,
+    "title": "Confirmed: unknown located_in unknown",
+    "content": "Rule: unknown located_in unknown\nConfidence: 0.992\nSupporting evidence: 61\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 157,
+    "title": "Confirmed: unknown part_of unknown",
+    "content": "Rule: unknown part_of unknown\nConfidence: 0.991\nSupporting evidence: 57\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 158,
+    "title": "Confirmed: unknown depends_on unknown",
+    "content": "Rule: unknown depends_on unknown\nConfidence: 0.990\nSupporting evidence: 47\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 159,
+    "title": "Confirmed: animal eats plant",
+    "content": "Rule: animal eats plant\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 160,
+    "title": "Confirmed: predator hunts animal",
+    "content": "Rule: predator hunts animal\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 161,
+    "title": "Confirmed: unknown forms unknown",
+    "content": "Rule: unknown forms unknown\nConfidence: 0.978\nSupporting evidence: 22\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 162,
+    "title": "Confirmed: unknown transforms unknown",
+    "content": "Rule: unknown transforms unknown\nConfidence: 0.976\nSupporting evidence: 20\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 163,
+    "title": "Confirmed: unknown measures unknown",
+    "content": "Rule: unknown measures unknown\nConfidence: 0.804\nSupporting evidence: 18\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 164,
+    "title": "Confirmed: unknown executes unknown",
+    "content": "Rule: unknown executes unknown\nConfidence: 0.971\nSupporting evidence: 16\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 165,
+    "title": "Confirmed: plant grows_in unknown",
+    "content": "Rule: plant grows_in unknown\nConfidence: 0.969\nSupporting evidence: 15\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 166,
+    "title": "Confirmed: unknown powers unknown",
+    "content": "Rule: unknown powers unknown\nConfidence: 0.962\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 167,
+    "title": "Confirmed: unknown enables unknown",
+    "content": "Rule: unknown enables unknown\nConfidence: 0.735\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 168,
+    "title": "Confirmed: planet orbits star",
+    "content": "Rule: planet orbits star\nConfidence: 0.773\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 169,
+    "title": "Confirmed: molecule contains atom",
+    "content": "Rule: molecule contains atom\nConfidence: 0.944\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 170,
+    "title": "Confirmed: reactant reacts_with reactant",
+    "content": "Rule: reactant reacts_with reactant\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 171,
+    "title": "Confirmed: unknown chemical_reaction unknown",
+    "content": "Rule: unknown chemical_reaction unknown\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 172,
+    "title": "Confirmed: star emits unknown",
+    "content": "Rule: star emits unknown\nConfidence: 0.917\nSupporting evidence: 5\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 173,
+    "title": "Confirmed: if deer changes then grass may change",
+    "content": "Rule: if deer changes then grass may change\nConfidence: 0.895\nSupporting evidence: 9352\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 174,
+    "title": "Confirmed: if wolf changes then deer may change",
+    "content": "Rule: if wolf changes then deer may change\nConfidence: 0.708\nSupporting evidence: 763\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 175,
+    "title": "Confirmed: if wolves increases then grass will increase",
+    "content": "Rule: if wolves increases then grass will increase\nConfidence: 0.862\nSupporting evidence: 6396\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 176,
+    "title": "Confirmed: if grass changes then wolves may change",
+    "content": "Rule: if grass changes then wolves may change\nConfidence: 0.784\nSupporting evidence: 1958\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 177,
+    "title": "Confirmed: if gdp_growth increases then investment will increase",
+    "content": "Rule: if gdp_growth increases then investment will increase\nConfidence: 0.771\nSupporting evidence: 777\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 178,
+    "title": "Causal law: deer mixed grass",
+    "content": "Cause: deer\nEffect: grass\nDirection: mixed\nConfidence: 0.895\nObservations: 9352\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 179,
+    "title": "Causal law: wolves positive grass",
+    "content": "Cause: wolves\nEffect: grass\nDirection: positive\nConfidence: 0.862\nObservations: 6396\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 180,
+    "title": "Causal law: grass mixed wolves",
+    "content": "Cause: grass\nEffect: wolves\nDirection: mixed\nConfidence: 0.784\nObservations: 1958\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 181,
+    "title": "Causal law: gdp_growth positive investment",
+    "content": "Cause: gdp_growth\nEffect: investment\nDirection: positive\nConfidence: 0.771\nObservations: 777\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T10:25:48Z",
+    "updated_at": "2026-03-16T10:25:48Z"
+  },
+  {
+    "id": 182,
+    "title": "Confirmed: unknown affects unknown",
+    "content": "Rule: unknown affects unknown\nConfidence: 0.989\nSupporting evidence: 9373\nDiscovered at tick: 51",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:28:32Z",
+    "updated_at": "2026-03-16T10:28:32Z"
+  },
+  {
+    "id": 183,
+    "title": "Confirmed: unknown food_chain unknown",
+    "content": "Rule: unknown food_chain unknown\nConfidence: 0.996\nSupporting evidence: 125\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 184,
+    "title": "Confirmed: unknown located_in unknown",
+    "content": "Rule: unknown located_in unknown\nConfidence: 0.992\nSupporting evidence: 62\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 185,
+    "title": "Confirmed: unknown interacts_with unknown",
+    "content": "Rule: unknown interacts_with unknown\nConfidence: 0.992\nSupporting evidence: 61\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 186,
+    "title": "Confirmed: unknown part_of unknown",
+    "content": "Rule: unknown part_of unknown\nConfidence: 0.992\nSupporting evidence: 58\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 187,
+    "title": "Confirmed: unknown depends_on unknown",
+    "content": "Rule: unknown depends_on unknown\nConfidence: 0.990\nSupporting evidence: 49\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 188,
+    "title": "Confirmed: animal eats plant",
+    "content": "Rule: animal eats plant\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 189,
+    "title": "Confirmed: predator hunts animal",
+    "content": "Rule: predator hunts animal\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 190,
+    "title": "Confirmed: unknown forms unknown",
+    "content": "Rule: unknown forms unknown\nConfidence: 0.978\nSupporting evidence: 22\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 191,
+    "title": "Confirmed: unknown transforms unknown",
+    "content": "Rule: unknown transforms unknown\nConfidence: 0.976\nSupporting evidence: 20\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 192,
+    "title": "Confirmed: unknown measures unknown",
+    "content": "Rule: unknown measures unknown\nConfidence: 0.804\nSupporting evidence: 18\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 193,
+    "title": "Confirmed: unknown executes unknown",
+    "content": "Rule: unknown executes unknown\nConfidence: 0.971\nSupporting evidence: 16\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 194,
+    "title": "Confirmed: plant grows_in unknown",
+    "content": "Rule: plant grows_in unknown\nConfidence: 0.969\nSupporting evidence: 15\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 195,
+    "title": "Confirmed: unknown powers unknown",
+    "content": "Rule: unknown powers unknown\nConfidence: 0.962\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 196,
+    "title": "Confirmed: unknown enables unknown",
+    "content": "Rule: unknown enables unknown\nConfidence: 0.735\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 197,
+    "title": "Confirmed: planet orbits star",
+    "content": "Rule: planet orbits star\nConfidence: 0.773\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 198,
+    "title": "Confirmed: molecule contains atom",
+    "content": "Rule: molecule contains atom\nConfidence: 0.944\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 199,
+    "title": "Confirmed: reactant reacts_with reactant",
+    "content": "Rule: reactant reacts_with reactant\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 200,
+    "title": "Confirmed: unknown chemical_reaction unknown",
+    "content": "Rule: unknown chemical_reaction unknown\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 201,
+    "title": "Confirmed: star emits unknown",
+    "content": "Rule: star emits unknown\nConfidence: 0.917\nSupporting evidence: 5\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 202,
+    "title": "Confirmed: if deer changes then grass may change",
+    "content": "Rule: if deer changes then grass may change\nConfidence: 0.894\nSupporting evidence: 9477\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 203,
+    "title": "Confirmed: if wolf changes then deer may change",
+    "content": "Rule: if wolf changes then deer may change\nConfidence: 0.704\nSupporting evidence: 775\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 204,
+    "title": "Confirmed: if wolves increases then grass will increase",
+    "content": "Rule: if wolves increases then grass will increase\nConfidence: 0.862\nSupporting evidence: 6396\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 205,
+    "title": "Confirmed: if grass changes then wolves may change",
+    "content": "Rule: if grass changes then wolves may change\nConfidence: 0.746\nSupporting evidence: 2091\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 206,
+    "title": "Confirmed: if gdp_growth increases then investment will increase",
+    "content": "Rule: if gdp_growth increases then investment will increase\nConfidence: 0.771\nSupporting evidence: 777\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 207,
+    "title": "Causal law: deer mixed grass",
+    "content": "Cause: deer\nEffect: grass\nDirection: mixed\nConfidence: 0.894\nObservations: 9477\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 208,
+    "title": "Causal law: wolves positive grass",
+    "content": "Cause: wolves\nEffect: grass\nDirection: positive\nConfidence: 0.862\nObservations: 6396\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 209,
+    "title": "Causal law: gdp_growth positive investment",
+    "content": "Cause: gdp_growth\nEffect: investment\nDirection: positive\nConfidence: 0.771\nObservations: 777\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T10:36:59Z",
+    "updated_at": "2026-03-16T10:36:59Z"
+  },
+  {
+    "id": 210,
+    "title": "Confirmed: unknown affects unknown",
+    "content": "Rule: unknown affects unknown\nConfidence: 0.989\nSupporting evidence: 9490\nDiscovered at tick: 51",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T10:39:48Z",
+    "updated_at": "2026-03-16T10:39:48Z"
+  },
+  {
+    "id": 211,
+    "title": "Confirmed: if wolves changes then grass may change",
+    "content": "Rule: if wolves changes then grass may change\nConfidence: 0.859\nSupporting evidence: 6462\nDiscovered at tick: 351",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:01:20Z",
+    "updated_at": "2026-03-16T11:01:20Z"
+  },
+  {
+    "id": 212,
+    "title": "Confirmed: unknown food_chain unknown",
+    "content": "Rule: unknown food_chain unknown\nConfidence: 0.996\nSupporting evidence: 125\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:20Z",
+    "updated_at": "2026-03-16T11:32:20Z"
+  },
+  {
+    "id": 213,
+    "title": "Confirmed: unknown located_in unknown",
+    "content": "Rule: unknown located_in unknown\nConfidence: 0.993\nSupporting evidence: 70\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:20Z",
+    "updated_at": "2026-03-16T11:32:20Z"
+  },
+  {
+    "id": 214,
+    "title": "Confirmed: unknown interacts_with unknown",
+    "content": "Rule: unknown interacts_with unknown\nConfidence: 0.993\nSupporting evidence: 67\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:20Z",
+    "updated_at": "2026-03-16T11:32:20Z"
+  },
+  {
+    "id": 215,
+    "title": "Confirmed: unknown part_of unknown",
+    "content": "Rule: unknown part_of unknown\nConfidence: 0.992\nSupporting evidence: 65\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:20Z",
+    "updated_at": "2026-03-16T11:32:20Z"
+  },
+  {
+    "id": 216,
+    "title": "Confirmed: unknown depends_on unknown",
+    "content": "Rule: unknown depends_on unknown\nConfidence: 0.990\nSupporting evidence: 51\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:20Z",
+    "updated_at": "2026-03-16T11:32:20Z"
+  },
+  {
+    "id": 217,
+    "title": "Confirmed: animal eats plant",
+    "content": "Rule: animal eats plant\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:20Z",
+    "updated_at": "2026-03-16T11:32:20Z"
+  },
+  {
+    "id": 218,
+    "title": "Confirmed: predator hunts animal",
+    "content": "Rule: predator hunts animal\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:20Z",
+    "updated_at": "2026-03-16T11:32:20Z"
+  },
+  {
+    "id": 219,
+    "title": "Confirmed: unknown forms unknown",
+    "content": "Rule: unknown forms unknown\nConfidence: 0.978\nSupporting evidence: 22\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:20Z",
+    "updated_at": "2026-03-16T11:32:20Z"
+  },
+  {
+    "id": 220,
+    "title": "Confirmed: unknown transforms unknown",
+    "content": "Rule: unknown transforms unknown\nConfidence: 0.976\nSupporting evidence: 20\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:20Z",
+    "updated_at": "2026-03-16T11:32:20Z"
+  },
+  {
+    "id": 221,
+    "title": "Confirmed: unknown measures unknown",
+    "content": "Rule: unknown measures unknown\nConfidence: 0.804\nSupporting evidence: 18\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:20Z",
+    "updated_at": "2026-03-16T11:32:20Z"
+  },
+  {
+    "id": 222,
+    "title": "Confirmed: unknown executes unknown",
+    "content": "Rule: unknown executes unknown\nConfidence: 0.971\nSupporting evidence: 16\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:20Z",
+    "updated_at": "2026-03-16T11:32:20Z"
+  },
+  {
+    "id": 223,
+    "title": "Confirmed: plant grows_in unknown",
+    "content": "Rule: plant grows_in unknown\nConfidence: 0.969\nSupporting evidence: 15\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:20Z",
+    "updated_at": "2026-03-16T11:32:20Z"
+  },
+  {
+    "id": 224,
+    "title": "Confirmed: unknown powers unknown",
+    "content": "Rule: unknown powers unknown\nConfidence: 0.962\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:20Z",
+    "updated_at": "2026-03-16T11:32:20Z"
+  },
+  {
+    "id": 225,
+    "title": "Confirmed: unknown enables unknown",
+    "content": "Rule: unknown enables unknown\nConfidence: 0.735\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:20Z",
+    "updated_at": "2026-03-16T11:32:20Z"
+  },
+  {
+    "id": 226,
+    "title": "Confirmed: planet orbits star",
+    "content": "Rule: planet orbits star\nConfidence: 0.773\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:20Z",
+    "updated_at": "2026-03-16T11:32:20Z"
+  },
+  {
+    "id": 227,
+    "title": "Confirmed: molecule contains atom",
+    "content": "Rule: molecule contains atom\nConfidence: 0.944\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:20Z",
+    "updated_at": "2026-03-16T11:32:20Z"
+  },
+  {
+    "id": 228,
+    "title": "Confirmed: reactant reacts_with reactant",
+    "content": "Rule: reactant reacts_with reactant\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:20Z",
+    "updated_at": "2026-03-16T11:32:20Z"
+  },
+  {
+    "id": 229,
+    "title": "Confirmed: unknown chemical_reaction unknown",
+    "content": "Rule: unknown chemical_reaction unknown\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:21Z",
+    "updated_at": "2026-03-16T11:32:21Z"
+  },
+  {
+    "id": 230,
+    "title": "Confirmed: star emits unknown",
+    "content": "Rule: star emits unknown\nConfidence: 0.917\nSupporting evidence: 5\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:21Z",
+    "updated_at": "2026-03-16T11:32:21Z"
+  },
+  {
+    "id": 231,
+    "title": "Confirmed: if deer changes then grass may change",
+    "content": "Rule: if deer changes then grass may change\nConfidence: 0.894\nSupporting evidence: 10102\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:21Z",
+    "updated_at": "2026-03-16T11:32:21Z"
+  },
+  {
+    "id": 232,
+    "title": "Confirmed: if wolves changes then grass may change",
+    "content": "Rule: if wolves changes then grass may change\nConfidence: 0.847\nSupporting evidence: 6775\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:21Z",
+    "updated_at": "2026-03-16T11:32:21Z"
+  },
+  {
+    "id": 233,
+    "title": "Confirmed: if grass changes then wolves may change",
+    "content": "Rule: if grass changes then wolves may change\nConfidence: 0.744\nSupporting evidence: 2167\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:21Z",
+    "updated_at": "2026-03-16T11:32:21Z"
+  },
+  {
+    "id": 234,
+    "title": "Confirmed: if gdp_growth increases then investment will increase",
+    "content": "Rule: if gdp_growth increases then investment will increase\nConfidence: 0.719\nSupporting evidence: 1084\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:32:21Z",
+    "updated_at": "2026-03-16T11:32:21Z"
+  },
+  {
+    "id": 235,
+    "title": "Causal law: deer mixed grass",
+    "content": "Cause: deer\nEffect: grass\nDirection: mixed\nConfidence: 0.894\nObservations: 10102\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T11:32:21Z",
+    "updated_at": "2026-03-16T11:32:21Z"
+  },
+  {
+    "id": 236,
+    "title": "Causal law: wolves mixed grass",
+    "content": "Cause: wolves\nEffect: grass\nDirection: mixed\nConfidence: 0.847\nObservations: 6775\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T11:32:21Z",
+    "updated_at": "2026-03-16T11:32:21Z"
+  },
+  {
+    "id": 237,
+    "title": "Confirmed: unknown affects unknown",
+    "content": "Rule: unknown affects unknown\nConfidence: 0.989\nSupporting evidence: 10110\nDiscovered at tick: 51",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T11:37:58Z",
+    "updated_at": "2026-03-16T11:37:58Z"
+  },
+  {
+    "id": 238,
+    "title": "Causal law: grass mixed wolves",
+    "content": "Cause: grass\nEffect: wolves\nDirection: mixed\nConfidence: 0.751\nObservations: 2247\nRecorded at tick: 151",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T11:47:46Z",
+    "updated_at": "2026-03-16T11:47:46Z"
+  },
+  {
+    "id": 239,
+    "title": "Confirmed: unknown food_chain unknown",
+    "content": "Rule: unknown food_chain unknown\nConfidence: 0.996\nSupporting evidence: 125\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:06Z",
+    "updated_at": "2026-03-16T12:53:06Z"
+  },
+  {
+    "id": 240,
+    "title": "Confirmed: unknown located_in unknown",
+    "content": "Rule: unknown located_in unknown\nConfidence: 0.994\nSupporting evidence: 76\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:06Z",
+    "updated_at": "2026-03-16T12:53:06Z"
+  },
+  {
+    "id": 241,
+    "title": "Confirmed: unknown part_of unknown",
+    "content": "Rule: unknown part_of unknown\nConfidence: 0.993\nSupporting evidence: 73\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:06Z",
+    "updated_at": "2026-03-16T12:53:06Z"
+  },
+  {
+    "id": 242,
+    "title": "Confirmed: unknown interacts_with unknown",
+    "content": "Rule: unknown interacts_with unknown\nConfidence: 0.993\nSupporting evidence: 73\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:06Z",
+    "updated_at": "2026-03-16T12:53:06Z"
+  },
+  {
+    "id": 243,
+    "title": "Confirmed: unknown depends_on unknown",
+    "content": "Rule: unknown depends_on unknown\nConfidence: 0.992\nSupporting evidence: 59\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:06Z",
+    "updated_at": "2026-03-16T12:53:06Z"
+  },
+  {
+    "id": 244,
+    "title": "Confirmed: animal eats plant",
+    "content": "Rule: animal eats plant\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:06Z",
+    "updated_at": "2026-03-16T12:53:06Z"
+  },
+  {
+    "id": 245,
+    "title": "Confirmed: predator hunts animal",
+    "content": "Rule: predator hunts animal\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:06Z",
+    "updated_at": "2026-03-16T12:53:06Z"
+  },
+  {
+    "id": 246,
+    "title": "Confirmed: unknown forms unknown",
+    "content": "Rule: unknown forms unknown\nConfidence: 0.978\nSupporting evidence: 22\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:06Z",
+    "updated_at": "2026-03-16T12:53:06Z"
+  },
+  {
+    "id": 247,
+    "title": "Confirmed: unknown transforms unknown",
+    "content": "Rule: unknown transforms unknown\nConfidence: 0.976\nSupporting evidence: 20\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:06Z",
+    "updated_at": "2026-03-16T12:53:06Z"
+  },
+  {
+    "id": 248,
+    "title": "Confirmed: unknown measures unknown",
+    "content": "Rule: unknown measures unknown\nConfidence: 0.804\nSupporting evidence: 18\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:06Z",
+    "updated_at": "2026-03-16T12:53:06Z"
+  },
+  {
+    "id": 249,
+    "title": "Confirmed: unknown executes unknown",
+    "content": "Rule: unknown executes unknown\nConfidence: 0.971\nSupporting evidence: 16\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:06Z",
+    "updated_at": "2026-03-16T12:53:06Z"
+  },
+  {
+    "id": 250,
+    "title": "Confirmed: plant grows_in unknown",
+    "content": "Rule: plant grows_in unknown\nConfidence: 0.969\nSupporting evidence: 15\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:06Z",
+    "updated_at": "2026-03-16T12:53:06Z"
+  },
+  {
+    "id": 251,
+    "title": "Confirmed: unknown powers unknown",
+    "content": "Rule: unknown powers unknown\nConfidence: 0.962\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:06Z",
+    "updated_at": "2026-03-16T12:53:06Z"
+  },
+  {
+    "id": 252,
+    "title": "Confirmed: unknown enables unknown",
+    "content": "Rule: unknown enables unknown\nConfidence: 0.735\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:06Z",
+    "updated_at": "2026-03-16T12:53:06Z"
+  },
+  {
+    "id": 253,
+    "title": "Confirmed: planet orbits star",
+    "content": "Rule: planet orbits star\nConfidence: 0.773\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:06Z",
+    "updated_at": "2026-03-16T12:53:06Z"
+  },
+  {
+    "id": 254,
+    "title": "Confirmed: molecule contains atom",
+    "content": "Rule: molecule contains atom\nConfidence: 0.944\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:06Z",
+    "updated_at": "2026-03-16T12:53:06Z"
+  },
+  {
+    "id": 255,
+    "title": "Confirmed: reactant reacts_with reactant",
+    "content": "Rule: reactant reacts_with reactant\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:06Z",
+    "updated_at": "2026-03-16T12:53:06Z"
+  },
+  {
+    "id": 256,
+    "title": "Confirmed: unknown chemical_reaction unknown",
+    "content": "Rule: unknown chemical_reaction unknown\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:06Z",
+    "updated_at": "2026-03-16T12:53:06Z"
+  },
+  {
+    "id": 257,
+    "title": "Confirmed: star emits unknown",
+    "content": "Rule: star emits unknown\nConfidence: 0.917\nSupporting evidence: 5\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:06Z",
+    "updated_at": "2026-03-16T12:53:06Z"
+  },
+  {
+    "id": 258,
+    "title": "Confirmed: if deer changes then grass may change",
+    "content": "Rule: if deer changes then grass may change\nConfidence: 0.889\nSupporting evidence: 10866\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:07Z",
+    "updated_at": "2026-03-16T12:53:07Z"
+  },
+  {
+    "id": 259,
+    "title": "Confirmed: if wolves changes then grass may change",
+    "content": "Rule: if wolves changes then grass may change\nConfidence: 0.820\nSupporting evidence: 7278\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:07Z",
+    "updated_at": "2026-03-16T12:53:07Z"
+  },
+  {
+    "id": 260,
+    "title": "Confirmed: if grass changes then wolves may change",
+    "content": "Rule: if grass changes then wolves may change\nConfidence: 0.753\nSupporting evidence: 2374\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:53:07Z",
+    "updated_at": "2026-03-16T12:53:07Z"
+  },
+  {
+    "id": 261,
+    "title": "Causal law: deer mixed grass",
+    "content": "Cause: deer\nEffect: grass\nDirection: mixed\nConfidence: 0.889\nObservations: 10866\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T12:53:07Z",
+    "updated_at": "2026-03-16T12:53:07Z"
+  },
+  {
+    "id": 262,
+    "title": "Causal law: wolves mixed grass",
+    "content": "Cause: wolves\nEffect: grass\nDirection: mixed\nConfidence: 0.820\nObservations: 7278\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T12:53:07Z",
+    "updated_at": "2026-03-16T12:53:07Z"
+  },
+  {
+    "id": 263,
+    "title": "Causal law: grass mixed wolves",
+    "content": "Cause: grass\nEffect: wolves\nDirection: mixed\nConfidence: 0.753\nObservations: 2374\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T12:53:07Z",
+    "updated_at": "2026-03-16T12:53:07Z"
+  },
+  {
+    "id": 264,
+    "title": "Confirmed: unknown affects unknown",
+    "content": "Rule: unknown affects unknown\nConfidence: 0.990\nSupporting evidence: 10896\nDiscovered at tick: 51",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T12:56:59Z",
+    "updated_at": "2026-03-16T12:56:59Z"
+  },
+  {
+    "id": 265,
+    "title": "Confirmed: unknown food_chain unknown",
+    "content": "Rule: unknown food_chain unknown\nConfidence: 0.996\nSupporting evidence: 125\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:27Z",
+    "updated_at": "2026-03-16T13:43:27Z"
+  },
+  {
+    "id": 266,
+    "title": "Confirmed: unknown part_of unknown",
+    "content": "Rule: unknown part_of unknown\nConfidence: 0.994\nSupporting evidence: 81\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:27Z",
+    "updated_at": "2026-03-16T13:43:27Z"
+  },
+  {
+    "id": 267,
+    "title": "Confirmed: unknown located_in unknown",
+    "content": "Rule: unknown located_in unknown\nConfidence: 0.994\nSupporting evidence: 80\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:27Z",
+    "updated_at": "2026-03-16T13:43:27Z"
+  },
+  {
+    "id": 268,
+    "title": "Confirmed: unknown interacts_with unknown",
+    "content": "Rule: unknown interacts_with unknown\nConfidence: 0.994\nSupporting evidence: 78\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:27Z",
+    "updated_at": "2026-03-16T13:43:27Z"
+  },
+  {
+    "id": 269,
+    "title": "Confirmed: unknown depends_on unknown",
+    "content": "Rule: unknown depends_on unknown\nConfidence: 0.992\nSupporting evidence: 64\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:27Z",
+    "updated_at": "2026-03-16T13:43:27Z"
+  },
+  {
+    "id": 270,
+    "title": "Confirmed: animal eats plant",
+    "content": "Rule: animal eats plant\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:27Z",
+    "updated_at": "2026-03-16T13:43:27Z"
+  },
+  {
+    "id": 271,
+    "title": "Confirmed: predator hunts animal",
+    "content": "Rule: predator hunts animal\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:27Z",
+    "updated_at": "2026-03-16T13:43:27Z"
+  },
+  {
+    "id": 272,
+    "title": "Confirmed: unknown forms unknown",
+    "content": "Rule: unknown forms unknown\nConfidence: 0.978\nSupporting evidence: 22\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:28Z",
+    "updated_at": "2026-03-16T13:43:28Z"
+  },
+  {
+    "id": 273,
+    "title": "Confirmed: unknown transforms unknown",
+    "content": "Rule: unknown transforms unknown\nConfidence: 0.976\nSupporting evidence: 20\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:28Z",
+    "updated_at": "2026-03-16T13:43:28Z"
+  },
+  {
+    "id": 274,
+    "title": "Confirmed: unknown measures unknown",
+    "content": "Rule: unknown measures unknown\nConfidence: 0.804\nSupporting evidence: 18\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:28Z",
+    "updated_at": "2026-03-16T13:43:28Z"
+  },
+  {
+    "id": 275,
+    "title": "Confirmed: unknown executes unknown",
+    "content": "Rule: unknown executes unknown\nConfidence: 0.971\nSupporting evidence: 16\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:28Z",
+    "updated_at": "2026-03-16T13:43:28Z"
+  },
+  {
+    "id": 276,
+    "title": "Confirmed: plant grows_in unknown",
+    "content": "Rule: plant grows_in unknown\nConfidence: 0.969\nSupporting evidence: 15\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:28Z",
+    "updated_at": "2026-03-16T13:43:28Z"
+  },
+  {
+    "id": 277,
+    "title": "Confirmed: unknown powers unknown",
+    "content": "Rule: unknown powers unknown\nConfidence: 0.962\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:28Z",
+    "updated_at": "2026-03-16T13:43:28Z"
+  },
+  {
+    "id": 278,
+    "title": "Confirmed: unknown enables unknown",
+    "content": "Rule: unknown enables unknown\nConfidence: 0.735\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:28Z",
+    "updated_at": "2026-03-16T13:43:28Z"
+  },
+  {
+    "id": 279,
+    "title": "Confirmed: planet orbits star",
+    "content": "Rule: planet orbits star\nConfidence: 0.773\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:28Z",
+    "updated_at": "2026-03-16T13:43:28Z"
+  },
+  {
+    "id": 280,
+    "title": "Confirmed: molecule contains atom",
+    "content": "Rule: molecule contains atom\nConfidence: 0.944\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:28Z",
+    "updated_at": "2026-03-16T13:43:28Z"
+  },
+  {
+    "id": 281,
+    "title": "Confirmed: reactant reacts_with reactant",
+    "content": "Rule: reactant reacts_with reactant\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:28Z",
+    "updated_at": "2026-03-16T13:43:28Z"
+  },
+  {
+    "id": 282,
+    "title": "Confirmed: unknown chemical_reaction unknown",
+    "content": "Rule: unknown chemical_reaction unknown\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:28Z",
+    "updated_at": "2026-03-16T13:43:28Z"
+  },
+  {
+    "id": 283,
+    "title": "Confirmed: star emits unknown",
+    "content": "Rule: star emits unknown\nConfidence: 0.917\nSupporting evidence: 5\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:28Z",
+    "updated_at": "2026-03-16T13:43:28Z"
+  },
+  {
+    "id": 284,
+    "title": "Confirmed: if deer changes then grass may change",
+    "content": "Rule: if deer changes then grass may change\nConfidence: 0.888\nSupporting evidence: 11390\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:28Z",
+    "updated_at": "2026-03-16T13:43:28Z"
+  },
+  {
+    "id": 285,
+    "title": "Confirmed: if wolves changes then grass may change",
+    "content": "Rule: if wolves changes then grass may change\nConfidence: 0.817\nSupporting evidence: 7677\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:28Z",
+    "updated_at": "2026-03-16T13:43:28Z"
+  },
+  {
+    "id": 286,
+    "title": "Confirmed: if grass changes then wolves may change",
+    "content": "Rule: if grass changes then wolves may change\nConfidence: 0.753\nSupporting evidence: 2385\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T13:43:28Z",
+    "updated_at": "2026-03-16T13:43:28Z"
+  },
+  {
+    "id": 287,
+    "title": "Causal law: deer mixed grass",
+    "content": "Cause: deer\nEffect: grass\nDirection: mixed\nConfidence: 0.888\nObservations: 11390\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T13:43:28Z",
+    "updated_at": "2026-03-16T13:43:28Z"
+  },
+  {
+    "id": 288,
+    "title": "Causal law: wolves mixed grass",
+    "content": "Cause: wolves\nEffect: grass\nDirection: mixed\nConfidence: 0.817\nObservations: 7677\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T13:43:28Z",
+    "updated_at": "2026-03-16T13:43:28Z"
+  },
+  {
+    "id": 289,
+    "title": "Causal law: grass mixed wolves",
+    "content": "Cause: grass\nEffect: wolves\nDirection: mixed\nConfidence: 0.753\nObservations: 2385\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T13:43:28Z",
+    "updated_at": "2026-03-16T13:43:28Z"
+  },
+  {
+    "id": 290,
+    "title": "Confirmed: unknown food_chain unknown",
+    "content": "Rule: unknown food_chain unknown\nConfidence: 0.996\nSupporting evidence: 125\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:52Z",
+    "updated_at": "2026-03-16T14:50:52Z"
+  },
+  {
+    "id": 291,
+    "title": "Confirmed: unknown part_of unknown",
+    "content": "Rule: unknown part_of unknown\nConfidence: 0.994\nSupporting evidence: 81\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:52Z",
+    "updated_at": "2026-03-16T14:50:52Z"
+  },
+  {
+    "id": 292,
+    "title": "Confirmed: unknown located_in unknown",
+    "content": "Rule: unknown located_in unknown\nConfidence: 0.994\nSupporting evidence: 80\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:52Z",
+    "updated_at": "2026-03-16T14:50:52Z"
+  },
+  {
+    "id": 293,
+    "title": "Confirmed: unknown interacts_with unknown",
+    "content": "Rule: unknown interacts_with unknown\nConfidence: 0.994\nSupporting evidence: 78\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:52Z",
+    "updated_at": "2026-03-16T14:50:52Z"
+  },
+  {
+    "id": 294,
+    "title": "Confirmed: unknown depends_on unknown",
+    "content": "Rule: unknown depends_on unknown\nConfidence: 0.992\nSupporting evidence: 64\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:52Z",
+    "updated_at": "2026-03-16T14:50:52Z"
+  },
+  {
+    "id": 295,
+    "title": "Confirmed: animal eats plant",
+    "content": "Rule: animal eats plant\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:52Z",
+    "updated_at": "2026-03-16T14:50:52Z"
+  },
+  {
+    "id": 296,
+    "title": "Confirmed: predator hunts animal",
+    "content": "Rule: predator hunts animal\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:52Z",
+    "updated_at": "2026-03-16T14:50:52Z"
+  },
+  {
+    "id": 297,
+    "title": "Confirmed: unknown forms unknown",
+    "content": "Rule: unknown forms unknown\nConfidence: 0.978\nSupporting evidence: 22\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:52Z",
+    "updated_at": "2026-03-16T14:50:52Z"
+  },
+  {
+    "id": 298,
+    "title": "Confirmed: unknown transforms unknown",
+    "content": "Rule: unknown transforms unknown\nConfidence: 0.976\nSupporting evidence: 20\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:52Z",
+    "updated_at": "2026-03-16T14:50:52Z"
+  },
+  {
+    "id": 299,
+    "title": "Confirmed: unknown measures unknown",
+    "content": "Rule: unknown measures unknown\nConfidence: 0.804\nSupporting evidence: 18\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:52Z",
+    "updated_at": "2026-03-16T14:50:52Z"
+  },
+  {
+    "id": 300,
+    "title": "Confirmed: unknown executes unknown",
+    "content": "Rule: unknown executes unknown\nConfidence: 0.971\nSupporting evidence: 16\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:52Z",
+    "updated_at": "2026-03-16T14:50:52Z"
+  },
+  {
+    "id": 301,
+    "title": "Confirmed: plant grows_in unknown",
+    "content": "Rule: plant grows_in unknown\nConfidence: 0.969\nSupporting evidence: 15\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:52Z",
+    "updated_at": "2026-03-16T14:50:52Z"
+  },
+  {
+    "id": 302,
+    "title": "Confirmed: unknown powers unknown",
+    "content": "Rule: unknown powers unknown\nConfidence: 0.962\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:52Z",
+    "updated_at": "2026-03-16T14:50:52Z"
+  },
+  {
+    "id": 303,
+    "title": "Confirmed: unknown enables unknown",
+    "content": "Rule: unknown enables unknown\nConfidence: 0.735\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:52Z",
+    "updated_at": "2026-03-16T14:50:52Z"
+  },
+  {
+    "id": 304,
+    "title": "Confirmed: planet orbits star",
+    "content": "Rule: planet orbits star\nConfidence: 0.773\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:52Z",
+    "updated_at": "2026-03-16T14:50:52Z"
+  },
+  {
+    "id": 305,
+    "title": "Confirmed: molecule contains atom",
+    "content": "Rule: molecule contains atom\nConfidence: 0.944\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:52Z",
+    "updated_at": "2026-03-16T14:50:52Z"
+  },
+  {
+    "id": 306,
+    "title": "Confirmed: reactant reacts_with reactant",
+    "content": "Rule: reactant reacts_with reactant\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:52Z",
+    "updated_at": "2026-03-16T14:50:52Z"
+  },
+  {
+    "id": 307,
+    "title": "Confirmed: unknown chemical_reaction unknown",
+    "content": "Rule: unknown chemical_reaction unknown\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:52Z",
+    "updated_at": "2026-03-16T14:50:52Z"
+  },
+  {
+    "id": 308,
+    "title": "Confirmed: star emits unknown",
+    "content": "Rule: star emits unknown\nConfidence: 0.917\nSupporting evidence: 5\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:53Z",
+    "updated_at": "2026-03-16T14:50:53Z"
+  },
+  {
+    "id": 309,
+    "title": "Confirmed: if deer changes then grass may change",
+    "content": "Rule: if deer changes then grass may change\nConfidence: 0.888\nSupporting evidence: 11390\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:53Z",
+    "updated_at": "2026-03-16T14:50:53Z"
+  },
+  {
+    "id": 310,
+    "title": "Confirmed: if wolves changes then grass may change",
+    "content": "Rule: if wolves changes then grass may change\nConfidence: 0.817\nSupporting evidence: 7677\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:53Z",
+    "updated_at": "2026-03-16T14:50:53Z"
+  },
+  {
+    "id": 311,
+    "title": "Confirmed: if grass changes then wolves may change",
+    "content": "Rule: if grass changes then wolves may change\nConfidence: 0.753\nSupporting evidence: 2385\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:50:53Z",
+    "updated_at": "2026-03-16T14:50:53Z"
+  },
+  {
+    "id": 312,
+    "title": "Causal law: deer mixed grass",
+    "content": "Cause: deer\nEffect: grass\nDirection: mixed\nConfidence: 0.888\nObservations: 11390\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T14:50:53Z",
+    "updated_at": "2026-03-16T14:50:53Z"
+  },
+  {
+    "id": 313,
+    "title": "Causal law: wolves mixed grass",
+    "content": "Cause: wolves\nEffect: grass\nDirection: mixed\nConfidence: 0.817\nObservations: 7677\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T14:50:53Z",
+    "updated_at": "2026-03-16T14:50:53Z"
+  },
+  {
+    "id": 314,
+    "title": "Causal law: grass mixed wolves",
+    "content": "Cause: grass\nEffect: wolves\nDirection: mixed\nConfidence: 0.753\nObservations: 2385\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T14:50:53Z",
+    "updated_at": "2026-03-16T14:50:53Z"
+  },
+  {
+    "id": 315,
+    "title": "Confirmed: unknown affects unknown",
+    "content": "Rule: unknown affects unknown\nConfidence: 0.981\nSupporting evidence: 5747\nDiscovered at tick: 51",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T14:55:06Z",
+    "updated_at": "2026-03-16T14:55:06Z"
+  },
+  {
+    "id": 316,
+    "title": "Confirmed: if gdp_growth increases then investment will increase",
+    "content": "Rule: if gdp_growth increases then investment will increase\nConfidence: 0.701\nSupporting evidence: 1615\nDiscovered at tick: 551",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:41:08Z",
+    "updated_at": "2026-03-16T15:41:08Z"
+  },
+  {
+    "id": 317,
+    "title": "Confirmed: unknown food_chain unknown",
+    "content": "Rule: unknown food_chain unknown\nConfidence: 0.996\nSupporting evidence: 125\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:15Z",
+    "updated_at": "2026-03-16T15:42:15Z"
+  },
+  {
+    "id": 318,
+    "title": "Confirmed: unknown part_of unknown",
+    "content": "Rule: unknown part_of unknown\nConfidence: 0.994\nSupporting evidence: 88\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:15Z",
+    "updated_at": "2026-03-16T15:42:15Z"
+  },
+  {
+    "id": 319,
+    "title": "Confirmed: unknown located_in unknown",
+    "content": "Rule: unknown located_in unknown\nConfidence: 0.994\nSupporting evidence: 84\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:15Z",
+    "updated_at": "2026-03-16T15:42:15Z"
+  },
+  {
+    "id": 320,
+    "title": "Confirmed: unknown interacts_with unknown",
+    "content": "Rule: unknown interacts_with unknown\nConfidence: 0.994\nSupporting evidence: 80\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:15Z",
+    "updated_at": "2026-03-16T15:42:15Z"
+  },
+  {
+    "id": 321,
+    "title": "Confirmed: unknown depends_on unknown",
+    "content": "Rule: unknown depends_on unknown\nConfidence: 0.993\nSupporting evidence: 69\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:15Z",
+    "updated_at": "2026-03-16T15:42:15Z"
+  },
+  {
+    "id": 322,
+    "title": "Confirmed: animal eats plant",
+    "content": "Rule: animal eats plant\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:15Z",
+    "updated_at": "2026-03-16T15:42:15Z"
+  },
+  {
+    "id": 323,
+    "title": "Confirmed: predator hunts animal",
+    "content": "Rule: predator hunts animal\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:15Z",
+    "updated_at": "2026-03-16T15:42:15Z"
+  },
+  {
+    "id": 324,
+    "title": "Confirmed: unknown forms unknown",
+    "content": "Rule: unknown forms unknown\nConfidence: 0.978\nSupporting evidence: 22\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:15Z",
+    "updated_at": "2026-03-16T15:42:15Z"
+  },
+  {
+    "id": 325,
+    "title": "Confirmed: unknown transforms unknown",
+    "content": "Rule: unknown transforms unknown\nConfidence: 0.976\nSupporting evidence: 20\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:15Z",
+    "updated_at": "2026-03-16T15:42:15Z"
+  },
+  {
+    "id": 326,
+    "title": "Confirmed: unknown measures unknown",
+    "content": "Rule: unknown measures unknown\nConfidence: 0.804\nSupporting evidence: 18\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:15Z",
+    "updated_at": "2026-03-16T15:42:15Z"
+  },
+  {
+    "id": 327,
+    "title": "Confirmed: unknown executes unknown",
+    "content": "Rule: unknown executes unknown\nConfidence: 0.971\nSupporting evidence: 16\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:15Z",
+    "updated_at": "2026-03-16T15:42:15Z"
+  },
+  {
+    "id": 328,
+    "title": "Confirmed: plant grows_in unknown",
+    "content": "Rule: plant grows_in unknown\nConfidence: 0.969\nSupporting evidence: 15\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:15Z",
+    "updated_at": "2026-03-16T15:42:15Z"
+  },
+  {
+    "id": 329,
+    "title": "Confirmed: unknown powers unknown",
+    "content": "Rule: unknown powers unknown\nConfidence: 0.962\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:15Z",
+    "updated_at": "2026-03-16T15:42:15Z"
+  },
+  {
+    "id": 330,
+    "title": "Confirmed: unknown enables unknown",
+    "content": "Rule: unknown enables unknown\nConfidence: 0.735\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:15Z",
+    "updated_at": "2026-03-16T15:42:15Z"
+  },
+  {
+    "id": 331,
+    "title": "Confirmed: planet orbits star",
+    "content": "Rule: planet orbits star\nConfidence: 0.773\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:16Z",
+    "updated_at": "2026-03-16T15:42:16Z"
+  },
+  {
+    "id": 332,
+    "title": "Confirmed: molecule contains atom",
+    "content": "Rule: molecule contains atom\nConfidence: 0.944\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:16Z",
+    "updated_at": "2026-03-16T15:42:16Z"
+  },
+  {
+    "id": 333,
+    "title": "Confirmed: reactant reacts_with reactant",
+    "content": "Rule: reactant reacts_with reactant\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:16Z",
+    "updated_at": "2026-03-16T15:42:16Z"
+  },
+  {
+    "id": 334,
+    "title": "Confirmed: unknown chemical_reaction unknown",
+    "content": "Rule: unknown chemical_reaction unknown\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:16Z",
+    "updated_at": "2026-03-16T15:42:16Z"
+  },
+  {
+    "id": 335,
+    "title": "Confirmed: star emits unknown",
+    "content": "Rule: star emits unknown\nConfidence: 0.917\nSupporting evidence: 5\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:16Z",
+    "updated_at": "2026-03-16T15:42:16Z"
+  },
+  {
+    "id": 336,
+    "title": "Confirmed: if deer changes then grass may change",
+    "content": "Rule: if deer changes then grass may change\nConfidence: 0.887\nSupporting evidence: 11906\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:16Z",
+    "updated_at": "2026-03-16T15:42:16Z"
+  },
+  {
+    "id": 337,
+    "title": "Confirmed: if wolves changes then grass may change",
+    "content": "Rule: if wolves changes then grass may change\nConfidence: 0.818\nSupporting evidence: 7973\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:16Z",
+    "updated_at": "2026-03-16T15:42:16Z"
+  },
+  {
+    "id": 338,
+    "title": "Confirmed: if grass changes then wolves may change",
+    "content": "Rule: if grass changes then wolves may change\nConfidence: 0.738\nSupporting evidence: 2434\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:16Z",
+    "updated_at": "2026-03-16T15:42:16Z"
+  },
+  {
+    "id": 339,
+    "title": "Confirmed: if gdp_growth increases then investment will increase",
+    "content": "Rule: if gdp_growth increases then investment will increase\nConfidence: 0.701\nSupporting evidence: 1615\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:42:16Z",
+    "updated_at": "2026-03-16T15:42:16Z"
+  },
+  {
+    "id": 340,
+    "title": "Causal law: deer mixed grass",
+    "content": "Cause: deer\nEffect: grass\nDirection: mixed\nConfidence: 0.887\nObservations: 11906\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T15:42:16Z",
+    "updated_at": "2026-03-16T15:42:16Z"
+  },
+  {
+    "id": 341,
+    "title": "Causal law: wolves mixed grass",
+    "content": "Cause: wolves\nEffect: grass\nDirection: mixed\nConfidence: 0.818\nObservations: 7973\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T15:42:16Z",
+    "updated_at": "2026-03-16T15:42:16Z"
+  },
+  {
+    "id": 342,
+    "title": "Confirmed: unknown affects unknown",
+    "content": "Rule: unknown affects unknown\nConfidence: 0.991\nSupporting evidence: 11928\nDiscovered at tick: 51",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T15:46:14Z",
+    "updated_at": "2026-03-16T15:46:14Z"
+  },
+  {
+    "id": 343,
+    "title": "Confirmed: unknown food_chain unknown",
+    "content": "Rule: unknown food_chain unknown\nConfidence: 0.996\nSupporting evidence: 125\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:29Z",
+    "updated_at": "2026-03-16T17:22:29Z"
+  },
+  {
+    "id": 344,
+    "title": "Confirmed: unknown part_of unknown",
+    "content": "Rule: unknown part_of unknown\nConfidence: 0.995\nSupporting evidence: 90\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:29Z",
+    "updated_at": "2026-03-16T17:22:29Z"
+  },
+  {
+    "id": 345,
+    "title": "Confirmed: unknown located_in unknown",
+    "content": "Rule: unknown located_in unknown\nConfidence: 0.994\nSupporting evidence: 87\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:29Z",
+    "updated_at": "2026-03-16T17:22:29Z"
+  },
+  {
+    "id": 346,
+    "title": "Confirmed: unknown interacts_with unknown",
+    "content": "Rule: unknown interacts_with unknown\nConfidence: 0.994\nSupporting evidence: 83\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:29Z",
+    "updated_at": "2026-03-16T17:22:29Z"
+  },
+  {
+    "id": 347,
+    "title": "Confirmed: unknown depends_on unknown",
+    "content": "Rule: unknown depends_on unknown\nConfidence: 0.993\nSupporting evidence: 73\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:29Z",
+    "updated_at": "2026-03-16T17:22:29Z"
+  },
+  {
+    "id": 348,
+    "title": "Confirmed: animal eats plant",
+    "content": "Rule: animal eats plant\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:29Z",
+    "updated_at": "2026-03-16T17:22:29Z"
+  },
+  {
+    "id": 349,
+    "title": "Confirmed: predator hunts animal",
+    "content": "Rule: predator hunts animal\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:29Z",
+    "updated_at": "2026-03-16T17:22:29Z"
+  },
+  {
+    "id": 350,
+    "title": "Confirmed: unknown forms unknown",
+    "content": "Rule: unknown forms unknown\nConfidence: 0.978\nSupporting evidence: 22\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:29Z",
+    "updated_at": "2026-03-16T17:22:29Z"
+  },
+  {
+    "id": 351,
+    "title": "Confirmed: unknown transforms unknown",
+    "content": "Rule: unknown transforms unknown\nConfidence: 0.976\nSupporting evidence: 20\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:29Z",
+    "updated_at": "2026-03-16T17:22:29Z"
+  },
+  {
+    "id": 352,
+    "title": "Confirmed: unknown measures unknown",
+    "content": "Rule: unknown measures unknown\nConfidence: 0.804\nSupporting evidence: 18\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:29Z",
+    "updated_at": "2026-03-16T17:22:29Z"
+  },
+  {
+    "id": 353,
+    "title": "Confirmed: unknown executes unknown",
+    "content": "Rule: unknown executes unknown\nConfidence: 0.971\nSupporting evidence: 16\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:29Z",
+    "updated_at": "2026-03-16T17:22:29Z"
+  },
+  {
+    "id": 354,
+    "title": "Confirmed: plant grows_in unknown",
+    "content": "Rule: plant grows_in unknown\nConfidence: 0.969\nSupporting evidence: 15\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:29Z",
+    "updated_at": "2026-03-16T17:22:29Z"
+  },
+  {
+    "id": 355,
+    "title": "Confirmed: unknown powers unknown",
+    "content": "Rule: unknown powers unknown\nConfidence: 0.962\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:29Z",
+    "updated_at": "2026-03-16T17:22:29Z"
+  },
+  {
+    "id": 356,
+    "title": "Confirmed: unknown enables unknown",
+    "content": "Rule: unknown enables unknown\nConfidence: 0.735\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:30Z",
+    "updated_at": "2026-03-16T17:22:30Z"
+  },
+  {
+    "id": 357,
+    "title": "Confirmed: planet orbits star",
+    "content": "Rule: planet orbits star\nConfidence: 0.773\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:30Z",
+    "updated_at": "2026-03-16T17:22:30Z"
+  },
+  {
+    "id": 358,
+    "title": "Confirmed: molecule contains atom",
+    "content": "Rule: molecule contains atom\nConfidence: 0.944\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:30Z",
+    "updated_at": "2026-03-16T17:22:30Z"
+  },
+  {
+    "id": 359,
+    "title": "Confirmed: reactant reacts_with reactant",
+    "content": "Rule: reactant reacts_with reactant\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:30Z",
+    "updated_at": "2026-03-16T17:22:30Z"
+  },
+  {
+    "id": 360,
+    "title": "Confirmed: unknown chemical_reaction unknown",
+    "content": "Rule: unknown chemical_reaction unknown\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:30Z",
+    "updated_at": "2026-03-16T17:22:30Z"
+  },
+  {
+    "id": 361,
+    "title": "Confirmed: star emits unknown",
+    "content": "Rule: star emits unknown\nConfidence: 0.917\nSupporting evidence: 5\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:30Z",
+    "updated_at": "2026-03-16T17:22:30Z"
+  },
+  {
+    "id": 362,
+    "title": "Confirmed: if deer changes then grass may change",
+    "content": "Rule: if deer changes then grass may change\nConfidence: 0.890\nSupporting evidence: 12296\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:30Z",
+    "updated_at": "2026-03-16T17:22:30Z"
+  },
+  {
+    "id": 363,
+    "title": "Confirmed: if wolves changes then grass may change",
+    "content": "Rule: if wolves changes then grass may change\nConfidence: 0.823\nSupporting evidence: 8204\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:30Z",
+    "updated_at": "2026-03-16T17:22:30Z"
+  },
+  {
+    "id": 364,
+    "title": "Confirmed: if grass changes then wolves may change",
+    "content": "Rule: if grass changes then wolves may change\nConfidence: 0.739\nSupporting evidence: 2457\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:30Z",
+    "updated_at": "2026-03-16T17:22:30Z"
+  },
+  {
+    "id": 365,
+    "title": "Confirmed: if gdp_growth increases then investment will increase",
+    "content": "Rule: if gdp_growth increases then investment will increase\nConfidence: 0.701\nSupporting evidence: 1615\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:22:30Z",
+    "updated_at": "2026-03-16T17:22:30Z"
+  },
+  {
+    "id": 366,
+    "title": "Causal law: deer mixed grass",
+    "content": "Cause: deer\nEffect: grass\nDirection: mixed\nConfidence: 0.890\nObservations: 12296\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T17:22:30Z",
+    "updated_at": "2026-03-16T17:22:30Z"
+  },
+  {
+    "id": 367,
+    "title": "Causal law: wolves mixed grass",
+    "content": "Cause: wolves\nEffect: grass\nDirection: mixed\nConfidence: 0.823\nObservations: 8204\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T17:22:30Z",
+    "updated_at": "2026-03-16T17:22:30Z"
+  },
+  {
+    "id": 368,
+    "title": "Confirmed: unknown food_chain unknown",
+    "content": "Rule: unknown food_chain unknown\nConfidence: 0.996\nSupporting evidence: 125\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:12Z",
+    "updated_at": "2026-03-16T17:29:12Z"
+  },
+  {
+    "id": 369,
+    "title": "Confirmed: unknown part_of unknown",
+    "content": "Rule: unknown part_of unknown\nConfidence: 0.995\nSupporting evidence: 90\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:12Z",
+    "updated_at": "2026-03-16T17:29:12Z"
+  },
+  {
+    "id": 370,
+    "title": "Confirmed: unknown located_in unknown",
+    "content": "Rule: unknown located_in unknown\nConfidence: 0.994\nSupporting evidence: 87\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:12Z",
+    "updated_at": "2026-03-16T17:29:12Z"
+  },
+  {
+    "id": 371,
+    "title": "Confirmed: unknown interacts_with unknown",
+    "content": "Rule: unknown interacts_with unknown\nConfidence: 0.994\nSupporting evidence: 83\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 372,
+    "title": "Confirmed: unknown depends_on unknown",
+    "content": "Rule: unknown depends_on unknown\nConfidence: 0.993\nSupporting evidence: 73\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 373,
+    "title": "Confirmed: animal eats plant",
+    "content": "Rule: animal eats plant\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 374,
+    "title": "Confirmed: predator hunts animal",
+    "content": "Rule: predator hunts animal\nConfidence: 0.981\nSupporting evidence: 25\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 375,
+    "title": "Confirmed: unknown forms unknown",
+    "content": "Rule: unknown forms unknown\nConfidence: 0.978\nSupporting evidence: 22\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 376,
+    "title": "Confirmed: unknown transforms unknown",
+    "content": "Rule: unknown transforms unknown\nConfidence: 0.976\nSupporting evidence: 20\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 377,
+    "title": "Confirmed: unknown measures unknown",
+    "content": "Rule: unknown measures unknown\nConfidence: 0.804\nSupporting evidence: 18\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 378,
+    "title": "Confirmed: unknown executes unknown",
+    "content": "Rule: unknown executes unknown\nConfidence: 0.971\nSupporting evidence: 16\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 379,
+    "title": "Confirmed: plant grows_in unknown",
+    "content": "Rule: plant grows_in unknown\nConfidence: 0.969\nSupporting evidence: 15\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 380,
+    "title": "Confirmed: unknown powers unknown",
+    "content": "Rule: unknown powers unknown\nConfidence: 0.962\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 381,
+    "title": "Confirmed: unknown enables unknown",
+    "content": "Rule: unknown enables unknown\nConfidence: 0.735\nSupporting evidence: 12\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 382,
+    "title": "Confirmed: planet orbits star",
+    "content": "Rule: planet orbits star\nConfidence: 0.773\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 383,
+    "title": "Confirmed: molecule contains atom",
+    "content": "Rule: molecule contains atom\nConfidence: 0.944\nSupporting evidence: 8\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 384,
+    "title": "Confirmed: reactant reacts_with reactant",
+    "content": "Rule: reactant reacts_with reactant\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 385,
+    "title": "Confirmed: unknown chemical_reaction unknown",
+    "content": "Rule: unknown chemical_reaction unknown\nConfidence: 0.929\nSupporting evidence: 6\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 386,
+    "title": "Confirmed: star emits unknown",
+    "content": "Rule: star emits unknown\nConfidence: 0.917\nSupporting evidence: 5\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 387,
+    "title": "Confirmed: if deer changes then grass may change",
+    "content": "Rule: if deer changes then grass may change\nConfidence: 0.890\nSupporting evidence: 12298\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 388,
+    "title": "Confirmed: if wolves changes then grass may change",
+    "content": "Rule: if wolves changes then grass may change\nConfidence: 0.823\nSupporting evidence: 8204\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 389,
+    "title": "Confirmed: if grass changes then wolves may change",
+    "content": "Rule: if grass changes then wolves may change\nConfidence: 0.739\nSupporting evidence: 2457\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 390,
+    "title": "Confirmed: if gdp_growth increases then investment will increase",
+    "content": "Rule: if gdp_growth increases then investment will increase\nConfidence: 0.701\nSupporting evidence: 1615\nDiscovered at tick: 1",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 391,
+    "title": "Causal law: deer mixed grass",
+    "content": "Cause: deer\nEffect: grass\nDirection: mixed\nConfidence: 0.890\nObservations: 12298\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 392,
+    "title": "Causal law: wolves mixed grass",
+    "content": "Cause: wolves\nEffect: grass\nDirection: mixed\nConfidence: 0.823\nObservations: 8204\nRecorded at tick: 1",
+    "tags": [
+      "causal_rule",
+      "high_confidence"
+    ],
+    "created_at": "2026-03-16T17:29:13Z",
+    "updated_at": "2026-03-16T17:29:13Z"
+  },
+  {
+    "id": 393,
+    "title": "Confirmed: unknown affects unknown",
+    "content": "Rule: unknown affects unknown\nConfidence: 0.991\nSupporting evidence: 12310\nDiscovered at tick: 51",
+    "tags": [
+      "hypothesis",
+      "confirmed"
+    ],
+    "created_at": "2026-03-16T17:34:51Z",
+    "updated_at": "2026-03-16T17:34:51Z"
+  }
+]
